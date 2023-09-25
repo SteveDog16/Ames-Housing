@@ -2,6 +2,10 @@
 
 Used data from Kaggle to analyze data regarding housing information in Ames, Iowa.
 
+## Screenshots
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/09e35b07-45b1-48c3-8248-ac49f407e537)
+
+
 ## How to use the Dash application
 
 ### General use
