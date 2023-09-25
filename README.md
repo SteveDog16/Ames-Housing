@@ -22,11 +22,11 @@ To look at the specific information of each data point/bar, hover your cursor ov
 
 To look at another category, click on any tab you are interested in and explore!
 
-### Explore the graph
+### Explore a graph
 
-If you want to zoom into a specific area of a graph, click on an starting point, hold your cursor and move it towards the ending point of the area you want to explore, then release your cursor.
+If you want to zoom into a specific area of a graph, click on an starting point, hold your cursor and move it towards the ending point of the area you want to explore, then release your cursor. 
 
-If you want to go back to the original view, double click on the graph.
+If you want to go back to the original view, double click on the graph. This applies to every feature for the exploration of any graphs.
 
 If you want to move the graph around, hover your cursor to the top right corner of a graph, click on an icon with 4 arrows, and hold and move your mouse to look at a specific area of the graph.
 
