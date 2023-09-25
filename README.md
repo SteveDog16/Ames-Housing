@@ -5,9 +5,15 @@ Used data from Kaggle to analyze data regarding housing information in Ames, Iow
 ## Screenshots
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/09e35b07-45b1-48c3-8248-ac49f407e537)
 
+- Variables MSZoning (general zoning classification) and MSSubClass (building class) are visualized as bar graphs in the frequency and sale price graphs. They are not grouped together since they contain different values.
+
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/f5bd714f-e6bc-4b1e-b738-0f5a8070a258)
 
+- Variables 1stFlrSF (first floor square feet) and 2ndFlrSF (second floor square feet) are visualized as scatter plots in the frequency and sale price graphs. They are grouped together each other since they both have numeric values.
+
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/d635b0c5-ba57-4efe-8223-3423aff7ca41)
+
+- Variables BsmtFullBath (basement full bathrooms), BsmtHalfBath (basement half bathrooms), FullBath (full bathrooms above grade), and HalfBath (half baths above grade) are visualized as bar graphs in the frequency and sale price graphs. They are grouped together since they contain the same values.
 
 
 ## How to use the Dash application
