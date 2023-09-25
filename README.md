@@ -18,6 +18,10 @@ Depending on the variable type, some variables are displayed as either histogram
 
 To look at the specific information of each data point/bar, hover your cursor over them and it will display the values from the x-axis and the y-axis.
 
+If you want to zoom into a specific area of a graph, click on an starting point, hold your cursor and move it towards the ending point of the area you want to explore, then release your cursor.
+
+If you want to go back to the original view, double click on the graph.
+
 To look at another category, click on any tab you are interested in and explore!
 
 
