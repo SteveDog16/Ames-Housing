@@ -22,11 +22,18 @@ To look at the specific information of each data point/bar, hover your cursor ov
 
 To look at another category, click on any tab you are interested in and explore!
 
-### Zooming in
+### Explore the graph
 
 If you want to zoom into a specific area of a graph, click on an starting point, hold your cursor and move it towards the ending point of the area you want to explore, then release your cursor.
 
 If you want to go back to the original view, double click on the graph.
 
+If you want to move the graph around, hover your cursor to the top right corner of a graph, click on an icon with 4 arrows, and hold and move your mouse to look at a specific area of the graph.
 
+If you want to select a bar in a bar graph, click on a dotted square icon, hold and move your mouse on the box(es) you want to select.
 
+If you want to select certain data points in a scatter plot, click on an oval-shaped icon, hold and move your mouse on the data points you want to select.
+
+If you want to zoom in a graph, click on the square with a plus sign.
+
+If you want to zoom out of a graph, click on the square with a minus sign.
