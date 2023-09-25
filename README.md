@@ -2,7 +2,7 @@
 
 Used data from Kaggle to analyze data regarding housing information in Ames, Iowa.
 
-## How to use
+## How to use the Dash application
 
 ### General use
 
