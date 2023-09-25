@@ -37,3 +37,7 @@ If you want to select certain data points in a scatter plot, click on an oval-sh
 If you want to zoom in a graph, click on the square with a plus sign.
 
 If you want to zoom out of a graph, click on the square with a minus sign.
+
+## Link to the housing dataset
+
+https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
