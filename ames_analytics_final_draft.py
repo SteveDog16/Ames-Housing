@@ -1,602 +1,440 @@
-from dash import Dash, html, dash_table, dcc, callback, Output, Input
-import pandas as pd
+from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
-import plotly.graph_objs as go
+import pandas as pd
+import plotly.graph_objects as go
 
-# Incorporate data
+# Create a Dash instance
+app = Dash(__name__, suppress_callback_exceptions=True)
+
+# Read the data from 'train.csv'
 df = pd.read_csv('train.csv')
 
-# Add new column
-new_column_data = df['BsmtUnfSF'] / df['TotalBsmtSF'] * 100
-df['UnfBsmtSFPercent'] = new_column_data
+# Define the number of variables per page
+variables_per_page = 3  # Adjust this as needed
 
-# Initialize the app
-app = Dash(__name__)
+# Split the variable options into pages
+variable_options = df.columns
+variable_pages = [variable_options[i:i + variables_per_page] for i in range(0, len(variable_options), variables_per_page)]
 
-# Update the columns you want to display in Page 1
-page_1_columns = ['MSSubClass', 'MSZoning', 'Alley', 'LandContour', 'LotShape', 'LotConfig', 'Neighborhood', 'LotFrontage', 'LotArea']
-scatter_variables_page_1 = ['LotFrontage', 'LotArea']  # Variables for scatter plots in Page 1
+# Define the neighborhood_labels in the global scope
+neighborhood_labels = {
+    'NAmes': 'North Ames',
+    'CollgCr': 'College Creek',
+    'Crawfor': 'Crawford',
+    'NoRidge': "Northridge Heights",
+    'Mitchel': 'Mitchell',
+    'Somerst': 'Somerset',
+    'NWAmes': 'Northwest Ames',
+    'OldTown': 'Old Town',
+    'BrkSide': 'Brookside',
+    'SawyerW': 'Sawyer West',
+    'NridgHt': 'Northridge Heights',
+    'IDOTRR': 'Iowa Department of Transportation Railroad',
+    'MeadowV': 'Meadow Village',
+    'StoneBr': 'Stone Brooke',
+    'ClearCr': 'Clear Creek',
+    'NPkVill': 'Northpark Village',
+    'Blmngtn': 'Bloomington Heights',
+    'BrDale': 'Briardale',
+    'SWISU': 'Southwest of the Iowa State University (ISU) campus',
+    'Blueste': 'Bluestem'
+    # Add more neighborhood labels here
+}
 
-# Create a separate dropdown for Page 1 scatter plot variables
-page_1_scatter_dropdown_items = [
-    {'label': col, 'value': col}
-    for col in scatter_variables_page_1
+# Define the layout for each page with specific variables
+page1_variables = [
+    {'label': 'Building class', 'value': 'MSSubClass'},
+    {'label': 'General zoning classification', 'value': 'MSZoning'},
+    {'label': 'Flatness of the property', 'value': 'LandContour'},
+    {'label': 'General shape of property', 'value': 'LotShape'},
+    {'label': 'Lot configuration', 'value': 'LotConfig'},
+    {'label': 'Linear feet of street connected to property', 'value': 'LotFrontage'}]
+
+page2_variables = [
+    {'label': 'Proximity to main road or railroad', 'value': 'Condition1'},
+    {'label': 'Type of dwelling', 'value': 'BldgType'},
+    {'label': 'Overall material and finish quality', 'value': 'OverallQual'},
+    {'label': 'Overall condition rating', 'value': 'OverallCond'},
+    {'label': 'Original construction date', 'value': 'YearBuilt'},
+    {'label': 'Remodel date', 'value': 'YearRemodAdd'},
+    {'label': 'Type of roof', 'value': 'RoofStyle'},
+    {'label': 'Roof material', 'value': 'RoofMatl'},
+    {'label': 'Exterior material quality', 'value': 'ExterQual'},
+    {'label': 'Present condition of the material on the exterior', 'value': 'ExterCond'},
+    {'label': 'Type of foundation', 'value': 'Foundation'}
 ]
 
-# Define the layout for the first page (page_1)
-page_1_layout = html.Div([
-    html.Div(
-        children='Property Analysis',
-        style={
-            'font-size': '24px',
-            'font-weight': 'bold',
-            'text-align': 'center',
-            'font-family': 'Roboto, sans-serif',
-            'padding': '20px 0'
-        }
-    ),
-    html.Hr(),
-    dcc.Dropdown(
-        options=[
-            {'label': 'Building class', 'value': 'MSSubClass'},
-            {'label': 'General zoning classification', 'value': 'MSZoning'},
-            {'label': 'Type of alley access', 'value': 'Alley'},
-            {'label': 'Flatness of the property', 'value': 'LandContour'},
-            {'label': 'General shape of property', 'value': 'LotShape'},
-            {'label': 'Lot configuration', 'value': 'LotConfig'},
-            {'label': 'Neighborhood', 'value': 'Neighborhood'},
-            {'label': 'Linear feet of street connected to property', 'value': 'LotFrontage'},
-            {'label': 'Lot size (in square feet)', 'value': 'LotArea'},
-        ],
-        value=['MSSubClass'],
-        multi=True,
-        id='page-1-dropdown-item',
-        style={
-            'width': '300px',
-            'font-family': 'Roboto, sans-serif'
-        },
-        # Use CSS styles to add spacing
-        className='dropdown-with-spacing'
-    ),
-    dcc.Graph(figure={}, id='page-1-frequency-graph'),
-    dcc.Graph(figure={}, id='page-1-saleprice-graph'),
-])
+page3_variables = [
+    {'label': 'Basement quality', 'value': 'BsmtQual'},
+    {'label': 'Walkout/garden level basement walls', 'value': 'BsmtExposure'},
+    {'label': 'Quality of basement finished area', 'value': 'BsmtFinType1'},
+    {'label': 'Quality of second finished area (if present)', 'value': 'BsmtFinType2'},
+    {'label': 'Type 1 finished (in square feet)', 'value': 'BsmtFinSF1'},
+    {'label': 'Type 2 finished (in square feet)', 'value': 'BsmtFinSF2'},
+    {'label': 'Unfinished basement area (in square feet)', 'value': 'BsmtUnfSF'},
+    {'label': 'Total basement area (in square feet)', 'value': 'TotalBsmtSF'}
+]
 
-# Define the layout for the second page (page_2)
-page_2_layout = html.Div([
-    html.Div(
-        children='Building Analysis',
-        style={
-            'font-size': '24px',
-            'font-weight': 'bold',
-            'text-align': 'center',
-            'font-family': 'Roboto, sans-serif',
-            'padding': '20px 0'
-        }
-    ),
-    html.Hr(),
-    dcc.Dropdown(
-        options=[
-            {'label': 'Proximity to main road or railroad', 'value': 'Condition1'},
-            {'label': 'Type of dwelling', 'value': 'BldgType'},
-            {'label': 'Overall material and finish quality', 'value': 'OverallQual'},
-            {'label': 'Overall condition rating', 'value': 'OverallCond'},
-            {'label': 'Original construction date', 'value': 'YearBuilt'},
-            {'label': 'Remodel date', 'value': 'YearRemodAdd'},
-            {'label': 'Type of roof', 'value': 'RoofStyle'},
-            {'label': 'Roof material', 'value': 'RoofMatl'},
-            {'label': 'Exterior material quality', 'value': 'ExterQual'},
-            {'label': 'Present condition of the material on the exterior', 'value': 'ExterCond'},
-            {'label': 'Type of foundation', 'value': 'Foundation'}
-        ],
-        value=['Condition1'],
-        multi=True,
-        id='page-2-dropdown-item',
-        style={'width': '300px', 'font-family': 'Roboto, sans-serif'}
-    ),
-    dcc.Graph(figure={}, id='page-2-frequency-graph'),
-    dcc.Graph(figure={}, id='page-2-saleprice-graph'),
-])
+page4_variables = [
+    {'label': 'Heating quality and condition', 'value': 'HeatingQC'},
+    {'label': 'First floor (in square feet)', 'value': '1stFlrSF'},
+    {'label': 'Second floor (in square feet)', 'value': '2ndFlrSF'},
+    {'label': 'Above grade (ground) living area (in square feet)', 'value': 'GrLivArea'},
+    {'label': 'Number of basement full bathrooms', 'value': 'BsmtFullBath'},
+    {'label': 'Number of basement half bathrooms', 'value': 'BsmtHalfBath'},
+    {'label': 'Number of full bathrooms above grade (ground)', 'value': 'FullBath'},
+    {'label': 'Number of half baths above grade (ground)', 'value': 'HalfBath'},
+    {'label': 'Kitchen quality', 'value': 'KitchenQual'},
+    {'label': 'Total rooms above grade (does not include bathrooms)', 'value': 'TotRmsAbvGrd'},
+    {'label': 'Number of fireplaces', 'value': 'Fireplaces'},
+    {'label': 'Fireplace quality', 'value': 'FireplaceQu'}
+]
+
+page5_variables = [
+    {'label': 'Garage location', 'value': 'GarageType'},
+    {'label': 'Year garage was built', 'value': 'GarageYrBlt'},
+    {'label': 'Interior finish of the garage', 'value': 'GarageFinish'},
+    {'label': 'Size of garage in car capacity', 'value': 'GarageCars'},
+    {'label': 'Size of garage in square feet', 'value': 'GarageArea'},
+    {'label': 'Garage quality', 'value': 'GarageQual'},
+    {'label': 'Garage condition', 'value': 'GarageCond'}
+]
+
+page6_variables = [
+    {'label': 'Wood deck area (in square feet)', 'value': 'WoodDeckSF'},
+    {'label': 'Open porch area (in square feet)', 'value': 'OpenPorchSF'},
+    {'label': 'Enclosed porch area (in square feet)', 'value': 'EnclosedPorch'},
+    {'label': 'Three season porch area (in square feet)', 'value': '3SsnPorch'},
+    {'label': 'Screen porch area (in square feet)', 'value': 'ScreenPorch'},
+    {'label': 'Pool area (in square feet)', 'value': 'PoolArea'},
+    {'label': 'Pool quality', 'value': 'PoolQC'},
+    {'label': 'Fence quality', 'value': 'Fence'},
+    {'label': 'Miscellaneous feature not covered in other categories', 'value': 'MiscFeature'},
+    {'label': 'Value of miscellaneous feature', 'value': 'MiscVal'}
+]
+
+page7_variables = [
+    {'label': 'Month sold', 'value': 'MoSold'},
+    {'label': 'Year sold', 'value': 'YrSold'},
+    {'label': 'Type of sale', 'value': 'SaleType'},
+    {'label': 'Condition of sale', 'value': 'SaleCondition'}
+]
+
+# Define the layout for each page
+page_variables = [
+    page1_variables,
+    page2_variables,
+    page3_variables,
+    page4_variables,
+    page5_variables,
+    page6_variables,
+    page7_variables
+]
 
 
-# Define the layout for the third page (page_3)
-page_3_layout = html.Div([
-    html.Div([
-        html.Div(
-            children='Basement Analysis',
-            style={
-                'font-size': '24px',
-                'font-weight': 'bold',
-                'text-align': 'center',
-                'font-family': 'Roboto, sans-serif',
-                'padding': '20px 0'
-            }
-        ),
-        html.Hr(),
-    ]),
+# Modify the create_page_layout function to accept the page number
+def create_page_layout(page_number):
+    variables_on_page = page_variables[page_number]
 
-    dcc.Dropdown(
-        options=[
-            {'label': 'Basement quality', 'value': 'BsmtQual'},
-            {'label': 'Walkout/garden level basement walls', 'value': 'BsmtExposure'},
-            {'label': 'Quality of basement finished area', 'value': 'BsmtFinType1'},
-            {'label': 'Quality of second finished area (if present)', 'value': 'BsmtFinType2'},
-            {'label': 'Type 1 finished (in square feet)', 'value': 'BsmtFinSF1'},
-            {'label': 'Type 2 finished (in square feet)', 'value': 'BsmtFinSF2'},
-            {'label': 'Unfinished basement area (in square feet)', 'value': 'BsmtUnfSF'},
-            {'label': 'Total basement area (in square feet)', 'value': 'TotalBsmtSF'},
-            {'label': 'Percentage of unfinished squre feet out of total basement area (in square feet)', 'value': 'UnfBsmtSFPercent'}
-        ],
-        value=['BsmtQual'],
-        multi=True,
-        id='page-3-dropdown-item',
-        style={
-            'width': '350px',
-            'font-family': 'Roboto, sans-serif'
-        }
-    ),
-    dcc.Graph(figure={}, id='page-3-frequency-graph'),
-    dcc.Graph(figure={}, id='page-3-saleprice-graph')
-])
-
-page_4_layout = html.Div([
-    html.Div([
-        html.Div(
-            children='Interior Analysis',
-            style={
-                'font-size': '24px',
-                'font-weight': 'bold',
-                'text-align': 'center',
-                'font-family': 'Roboto, sans-serif',
-                'padding': '20px 0'
-            }
-        ),
-        html.Hr(),
-    ]),
-
-    dcc.Dropdown(
-        options=[
-            {'label': 'Heating quality and condition', 'value': 'HeatingQC'},
-            {'label': 'First floor (in square feet)', 'value': '1stFlrSF'},
-            {'label': 'Second floor (in square feet)', 'value': '2ndFlrSF'},
-            {'label': 'Above grade (ground) living area (in square feet)', 'value': 'GrLivArea'},
-            {'label': 'Number of basement full bathrooms', 'value': 'BsmtFullBath'},
-            {'label': 'Number of basement half bathrooms', 'value': 'BsmtHalfBath'},
-            {'label': 'Number of full bathrooms above grade (ground)', 'value': 'FullBath'},
-            {'label': 'Number of half baths above grade (ground)', 'value': 'HalfBath'},
-            {'label': 'Kitchen quality', 'value': 'KitchenQual'},
-            {'label': 'Total rooms above grade (does not include bathrooms)', 'value': 'TotRmsAbvGrd'},
-            {'label': 'Number of fireplaces', 'value': 'Fireplaces'},
-            {'label': 'Fireplace quality', 'value': 'FireplaceQu'}
-        ],
-        value=['HeatingQC'],
-        multi=True,
-        id='page-4-dropdown-item',
-        style={
-            'width': '350px',
-            'font-family': 'Roboto, sans-serif'
-        }
-    ),
-    dcc.Graph(figure={}, id='page-4-frequency-graph'),
-    dcc.Graph(figure={}, id='page-4-saleprice-graph')
-])
-
-
-# Define the layout for the fifth page (page_5)
-# Define the layout for the fifth page (page_5)
-page_5_layout = html.Div([
-    html.Div([
-        html.Div(
-            children='Garage Analysis',
-            style={
-                'font-size': '24px',
-                'font-weight': 'bold',
-                'text-align': 'center',
-                'font-family': 'Roboto, sans-serif',
-                'padding': '20px 0'
-            }
-        ),
-        html.Hr(),
-    ]),
-
-    dcc.Dropdown(
-        options=[
-            {'label': 'Garage location', 'value': 'GarageType'},
-            {'label': 'Year garage was built', 'value': 'GarageYrBlt'},
-            {'label': 'Interior finish of the garage', 'value': 'GarageFinish'},
-            {'label': 'Size of garage in car capacity', 'value': 'GarageCars'},
-            {'label': 'Size of garage in square feet', 'value': 'GarageArea'},
-            {'label': 'Garage quality', 'value': 'GarageQual'},
-            {'label': 'Garage condition', 'value': 'GarageCond'}
-        ],
-        value=['GarageType'],
-        multi=True,
-        id='page-5-dropdown-item',
-        style={
-            'width': '300px',
-            'font-family': 'Roboto, sans-serif'
-        }
-    ),
-    dcc.Graph(figure={}, id='page-5-frequency-graph'),
-    dcc.Graph(figure={}, id='page-5-saleprice-graph')
-])
-
-
-
-# Define the layout for the sixth page (page_6)
-page_6_layout = html.Div([
-    html.Div([
-        html.Div(
-            children='Exterior Analysis',
-            style={
-                'font-size': '24px',
-                'font-weight': 'bold',
-                'text-align': 'center',
-                'font-family': 'Roboto, sans-serif',
-                'padding': '20px 0'
-            }
-        ),
-        html.Hr(),
-    ]),
-
-    dcc.Dropdown(
-        options=[
-            {'label': 'Wood deck area (in square feet)', 'value': 'WoodDeckSF'},
-            {'label': 'Open porch area (in square feet)', 'value': 'OpenPorchSF'},
-            {'label': 'Enclosed porch area (in square feet)', 'value': 'EnclosedPorch'},
-            {'label': 'Three season porch area (in square feet)', 'value': '3SsnPorch'},
-            {'label': 'Screen porch area (in square feet)', 'value': 'ScreenPorch'},
-            {'label': 'Pool area (in square feet)', 'value': 'PoolArea'},
-            {'label': 'Pool quality', 'value': 'PoolQC'},
-            {'label': 'Fence quality', 'value': 'Fence'},
-            {'label': 'Miscellaneous feature not covered in other categories', 'value': 'MiscFeature'},
-            {'label': 'Value of miscellaneous feature', 'value': 'MiscVal'}
-        ],
-        value=['WoodDeckSF'],
-        multi=True,
-        id='page-6-dropdown-item',
-        style={
-            'width': '300px',
-            'font-family': 'Roboto, sans-serif'
-        }
-    ),
-    dcc.Graph(figure={}, id='page-6-frequency-graph'),
-    dcc.Graph(figure={}, id='page-6-saleprice-graph')
-])
-
-# Define the layout for the seventh page (page_7)
-page_7_layout = html.Div([
-    html.Div([
-        html.Div(
-            children='Sale Analysis',
-            style={
-                'font-size': '24px',
-                'font-weight': 'bold',
-                'text-align': 'center',
-                'font-family': 'Roboto, sans-serif',
-                'padding': '20px 0'
-            }
-        ),
-        html.Hr(),
-    ]),
-
-    dcc.Dropdown(
-        options=[
-            {'label': 'Month sold', 'value': 'MoSold'},
-            {'label': 'Year sold', 'value': 'YrSold'},
-            {'label': 'Type of sale', 'value': 'SaleType'},
-            {'label': 'Condition of sale', 'value': 'SaleCondition'}
-        ],
-        value=['MoSold'],
-        multi=True,
-        id='page-7-dropdown-item',
-        style={
-            'width': '200px',
-            'font-family': 'Roboto, sans-serif'
-        }
-    ),
-    dcc.Graph(figure={}, id='page-7-frequency-graph'),
-    dcc.Graph(figure={}, id='page-7-saleprice-graph')
-])
-
-	# Create a main title above the tabs
-main_title_layout = html.Div(
-    children='Ames Housing Price Analysis Dashboard',
-    style={
-        'font-size': '36px',
-        'font-weight': 'bold',
-        'text-align': 'center',
-        'font-family': 'Roboto, sans-serif',
-        'padding-top': '20px',  # Adjust the top padding as needed
-        'padding-bottom': '20px',
+    # Define a dictionary for custom labels
+    neighborhood_labels = {
+        'NAmes': 'North Ames',
+        'CollgCr': 'College Creek',
+        'Crawfor': 'Crawford',
+        'NoRidge': "Northridge Heights",
+        'Mitchel': 'Mitchell',
+        'Somerst': 'Somerset',
+        'NWAmes': 'Northwest Ames',
+        'OldTown': 'Old Town',
+        'BrkSide': 'Brookside',
+        'SawyerW': 'Sawyer West',
+        'NridgHt': 'Northridge Heights',
+        'IDOTRR': 'Iowa Department of Transportation Railroad',
+        'MeadowV': 'Meadow Village',
+        'StoneBr': 'Stone Brooke',
+        'ClearCr': 'Clear Creek',
+        'NPkVill': 'Northpark Village',
+        'Blmngtn': 'Bloomington Heights',
+        'BrDale': 'Briardale',
+        'SWISU': 'Southwest of the Iowa State University (ISU) campus',
+        'Blueste': 'Bluestem'
+        # Add more neighborhood labels here
     }
-)
 
-# Define the Tabs component to switch between pages
+    # Create the neighborhood dropdown options using the custom labels
+    neighborhood_options = [{'label': neighborhood_labels.get(neighborhood, neighborhood), 'value': neighborhood}
+                            for neighborhood in df['Neighborhood'].unique()]
+    return html.Div(children=[
+        dcc.Dropdown(
+            id='neighborhood-dropdown',
+            options=neighborhood_options,
+            multi=True,
+            value=df['Neighborhood'].unique()[:3],
+            style={'width': '300px', 'margin-top': '20px'}  # Add margin-top for spacing
+        ),
+
+        dcc.Dropdown(
+            id='x-axis-variable',
+            options=[{'label': var['label'], 'value': var['value']} for var in variables_on_page],
+            value=variables_on_page[0]['value'],
+            style={'margin-top': '15px', 'width': '400px'}
+        ),
+
+        dcc.Graph(id='example-graph'),
+        dcc.Graph(id='sale-price-graph')
+    ], style={'font-family': 'Roboto, sans-serif'})
+
+
+# Create a list of tab labels and values for the pages
+tab_labels = [
+    "Property Analysis",
+    "Building Analysis",
+    "Basement Analysis",
+    'Interior Analysis',
+    "Garage Analysis",
+    "Exterior Analysis",
+    "Sale Analysis"
+]
+# Combine the tabs and page content
 app.layout = html.Div([
-    main_title_layout,
-    html.Link(
-        rel="stylesheet",
-        href="https://fonts.googleapis.com/css?family=Roboto",
+    html.H1(children='Ames House Price Dashboard', style={'font-family': 'Roboto, sans-serif', 'text-align': 'center'}),
+    
+    dcc.Tabs(
+        id='tabs',
+        value='0',
+        children=[dcc.Tab(label=label, value=str(i)) for i, label in enumerate(tab_labels)],
+        style={'font-family': 'Roboto, sans-serif'}  # Set the font style for tabs
     ),
-    dcc.Tabs([
-        dcc.Tab(label='Property Analysis', value='page-1', children=page_1_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Building Analysis', value='page-2', children=page_2_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Basement Analysis', value='page-3', children=page_3_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Interior Analysis', value='page-4', children=page_4_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Garage Analysis', value='page-5', children=page_5_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Exterior Analysis', value='page-6', children=page_6_layout, style={'font-family': 'Roboto, sans-serif'}),
-        dcc.Tab(label='Sale Analysis', value='page-7', children=page_7_layout, style={'font-family': 'Roboto, sans-serif'}),
-    ],
-    style={'font-family': 'Roboto, sans-serif'}  
-    ),
+    html.Div(id='page-content')
 ])
 
-# Define the callback for Page 7
+# Callback to update the displayed page
+@app.callback(Output('page-content', 'children'), Input('tabs', 'value'))
+def display_page(tab_value):
+    tab_value = int(tab_value)
+    if 0 <= tab_value < len(tab_labels):
+        return create_page_layout(tab_value)
+    else:
+        return html.Div(children=["Page not found"])
+    
+# Variable descriptions
+variable_descriptions = {
+    'MSSubClass': 'Building Class',
+    'MSZoning': 'General Zoning Classification',
+    'LandContour': 'Flatness of the Property',
+    'LotShape': 'General Shape of Property',
+    'LotConfig': 'Lot Configuration',
+    'LotFrontage': 'Linear Feet of Street Connected to Property',
+
+    'Condition1': 'Proximity to Main Road or Railroad',
+    'BldgType': 'Type of Dwelling',
+    'OverallQual': 'Overall Material and Finish Quality',
+    'OverallCond': 'Overall Condition Rating',
+
+    'YearBuilt': 'Original Construction Date',
+    'YearRemodAdd': 'Remodel Date',
+    'RoofStyle': 'Type of Roof',
+    'RoofMatl': 'Roof Material',
+    'ExterQual': 'Exterior Material Quality',
+    'ExterCond': 'Present Condition of the Material on the Exterior',
+    'Foundation': 'Type of Foundation',
+
+    'BsmtQual': 'Basement Quality',
+    'BsmtExposure': 'Walkout/Garden Level Basement Walls',
+    'BsmtFinType1': 'Quality of Basement Finished Area',
+    'BsmtFinType2': 'Quality of Second Finished Area (If Present)',
+    'BsmtFinSF1': 'Type 1 Finished (in Square Feet)',
+    'BsmtFinSF2': 'Type 2 Finished (in Square Feet)',
+    'BsmtUnfSF': 'Unfinished Basement Area (in Square Feet)',
+    'TotalBsmtSF': 'Total Basement Area (in Square Feet)',
+
+    'HeatingQC': 'Heating Quality and Condition',
+    '1stFlrSF': 'First Floor (in Square Feet)',
+    '2ndFlrSF': 'Second Floor (in Square Feet)',
+    'GrLivArea': 'Above Grade (Ground) Living Area (in Square Feet)',
+    'BsmtFullBath': 'Number of Basement Full Bathrooms',
+    'BsmtHalfBath': 'Number of Basement Half Bathrooms',
+    'FullBath': 'Number of Full Bathrooms Above Grade (Ground)',
+    'HalfBath': 'Number of Half Baths Above Grade (Ground)',
+    'KitchenQual': 'Kitchen Quality',
+    'TotRmsAbvGrd': 'Total Rooms Above Grade (Does Not Include Bathrooms)',
+    'Fireplaces': 'Number of Fireplaces',
+    'FireplaceQu': 'Fireplace Quality',
+
+    'GarageType': 'Garage Location',
+    'GarageYrBlt': 'Year Garage Was Built',
+    'GarageFinish': 'Interior Finish of the Garage',
+    'GarageCars': 'Size of Garage in Car Capacity',
+    'GarageArea': 'Size of Garage in Square Feet',
+    'GarageQual': 'Garage Quality',
+    'GarageCond': 'Garage Condition',
+
+    'WoodDeckSF': 'Wood Deck Area (in Square Feet)',
+    'OpenPorchSF': 'Open Porch Area (in Square Feet)',
+    'EnclosedPorch': 'Enclosed Porch Area (in Square Feet)',
+    '3SsnPorch': 'Three Season Porch Area (in Square Feet)',
+    'ScreenPorch': 'Screen Porch Area (in Square Feet)',
+    'PoolArea': 'Pool Area (in Square Feet)',
+    'PoolQC': 'Pool Quality',
+    'Fence': 'Fence Quality',
+    'MiscFeature': 'Miscellaneous Feature Not Covered in Other Categories',
+    'MiscVal': 'Value of Miscellaneous Feature',
+
+    'MoSold': 'Month Sold',
+    'YrSold': 'Year Sold',
+    'SaleType': 'Type of Sale',
+    'SaleCondition': 'Condition of Sale'
+}
+
+
+custom_descriptions_df = pd.DataFrame({
+    'Variable': ['Neighborhood', 'YearBuilt', 'YearRemodAdd', 'Frequency'],
+    'Description': ['Neighborhood Name', 'Year Built Description', 'Year Remodel Description', 'Frequency']
+})
+
+neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
+
+
+# Define a callback for updating the graph
 @app.callback(
-    [Output(component_id='page-7-frequency-graph', component_property='figure'),
-     Output(component_id='page-7-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-7-dropdown-item', component_property='value')]
+    Output('example-graph', 'figure'),
+    Output('sale-price-graph', 'figure'),
+    Input('neighborhood-dropdown', 'value'),
+    Input('x-axis-variable', 'value')
 )
-def update_page_7_graph(selected_variables):
-    if not selected_variables:
-        return {}, {}
 
-    # Create an empty figure for frequency and sale price graphs
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
+def update_graph(selected_neighborhoods, x_axis_variable):
+    filtered_df = df[df['Neighborhood'].isin(selected_neighborhoods) & df['SalePrice'].notnull()]
 
-    # Lists to store the selected variables for which scatter plots should be displayed
-    scatter_variables = []  # Update this list with any specific scatter variables you want for page 7
+    # Define fig with a default value
+    fig = None
+    sale_price_fig = None
 
-    for col_chosen in selected_variables:
-        if col_chosen in scatter_variables:
-            # For selected scatter variables, create scatter plots
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Scatter(x=value_counts.index, y=value_counts.values, mode='markers', name=f'Frequency of {col_chosen}'))
-            sale_price_fig.add_trace(go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price'))
-        else:
-            # For other variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            avg_values = df.groupby(col_chosen)['SalePrice'].mean().reset_index()
-            sale_price_fig.add_trace(go.Bar(x=avg_values[col_chosen], y=avg_values['SalePrice'], name=f'{col_chosen} and Sale Price'))
+    if x_axis_variable in variable_descriptions:
+        # Get the description for the current variable
+        x_variable_description = variable_descriptions[x_axis_variable]
 
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
-
-@app.callback(
-    [Output(component_id='page-6-frequency-graph', component_property='figure'),
-     Output(component_id='page-6-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-6-dropdown-item', component_property='value')]
-)
-def update_page_6_graph(selected_variables):
-    if not selected_variables:
-        return {}, {}
-
-    # Create an empty figure for frequency and sale price graphs
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
-
-    for col_chosen in selected_variables:
-        if col_chosen in ['WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'MiscVal']:
-            # For the selected variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-
-            # For the selected variables, create scatter plots for Sale Price
-            sale_price_fig.add_trace(go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price'))
-        else:
-            # For other variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            avg_values = df.groupby(col_chosen)['SalePrice'].mean().reset_index()
-            sale_price_fig.add_trace(go.Bar(x=avg_values[col_chosen], y=avg_values['SalePrice'], name=f'{col_chosen} and Sale Price'))
-
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
+        # Update the hover data to include the custom descriptions
+        hover_data = ['Neighborhood', x_axis_variable, 'Frequency']
+        custom_descriptions = {
+            x_axis_variable: x_variable_description,
+            'Neighborhood': 'Neighborhood Name',
+            'Frequency': 'Frequency',
+        }
+        # Update the hover text using custom descriptions
+        for key, value in custom_descriptions.items():
+            hover_data[hover_data.index(key)] = value
 
 
-@app.callback(
-    [Output(component_id='page-5-frequency-graph', component_property='figure'),
-     Output(component_id='page-5-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-5-dropdown-item', component_property='value')]
-)
-def update_page_5_graph(selected_variables):
-    if not selected_variables:
-        return {}, {}
+    x_label = variable_descriptions.get(x_axis_variable, x_axis_variable)
+    y_label = "Frequency"  # Default y-label
 
-    # Create an empty figure for frequency and sale price graphs
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
+    # Custom descriptions for "Year Built" and "Year Remodel Description"
+    custom_descriptions = {
+        'YearBuilt': 'Year Built',
+        'YearRemodAdd': 'Year Remodel'
+    }
 
-    # Lists to store the selected variables for which scatter plots should be displayed
-    scatter_variables = ['GarageYrBlt', 'GarageArea']
+    if x_axis_variable in custom_descriptions:
+        x_label = custom_descriptions[x_axis_variable]
 
-    for col_chosen in selected_variables:
-        if col_chosen in scatter_variables:
-            if col_chosen == 'GarageArea':
-                # Create a bar graph for frequency
-                value_counts = df[col_chosen].value_counts()
-                freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            else:
-                # For selected scatter variables, create scatter plots
-                value_counts = df[col_chosen].value_counts()
-                freq_fig.add_trace(go.Scatter(x=value_counts.index, y=value_counts.values, mode='markers', name=f'Frequency of {col_chosen}'))
-            sale_price_fig.add_trace(go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price'))
-        else:
-            # For other variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            avg_values = df.groupby(col_chosen)['SalePrice'].mean().reset_index()
-            sale_price_fig.add_trace(go.Bar(x=avg_values[col_chosen], y=avg_values['SalePrice'], name=f'{col_chosen} and Sale Price'))
+    if x_axis_variable in ['YearBuilt', 'YearRemodAdd']:
+        # Create line graphs for YearBuilt or YearRemodAdd
+        grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
+        fig = px.line(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood',
+                    labels={x_axis_variable: x_label, 'Frequency': y_label, 'Neighborhood': 'Neighborhood'},
+                    markers=True, title=f'Frequency of {x_label} by Neighborhood')
 
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
+        # Update the custom labels for the legend using for_each_trace
+        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].y]
+        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
-    return freq_fig, sale_price_fig
+        grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
+        sale_price_fig = px.line(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
+                                labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
+                                markers=True, title=f'Sale Price of {x_label} by Neighborhood')
+
+        # Update the custom labels for the legend using for_each_trace for sale_price_fig
+        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].y]
+        sale_price_fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
 
-@app.callback(
-    [Output(component_id='page-4-frequency-graph', component_property='figure'),
-     Output(component_id='page-4-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-4-dropdown-item', component_property='value')]
-)
-def update_page_4_graph(selected_variables):
-    if not selected_variables:
-        return {}, {}
-
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
-
-    # Define a custom color sequence for the variables
-    color_sequence = ['rgb(31, 119, 180)', 'rgb(255, 127, 14)', 'rgb(44, 160, 44)', 'rgb(214, 39, 40)', 'rgb(148, 103, 189)']
-
-    for i, col_chosen in enumerate(selected_variables):
-        # Create histograms for all selected variables in the frequency graph
-        if col_chosen in ['1stFlrSF', '2ndFlrSF', 'GrLivArea']:
-            hist_fig = go.Histogram(x=df[col_chosen], name=f'Frequency of {col_chosen}', marker_color=color_sequence[i % len(color_sequence)])
-            freq_fig.add_trace(hist_fig)
-        else:
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}', marker_color=color_sequence[i % len(color_sequence)]))
-
-        # Check if the variable is one of the specified scatter plot variables for the sale price graph
-        if col_chosen in ['1stFlrSF', '2ndFlrSF', 'GrLivArea']:
-            scatter_plot = go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price')
-            scatter_plot.marker.color = color_sequence[i % len(color_sequence)]
-            sale_price_fig.add_trace(scatter_plot)
-        else:
-            # For other variables in the sale price graph, create histograms
-            hist_fig = go.Histogram(x=df[col_chosen], name=f'Sale Price vs. {col_chosen}', marker_color=color_sequence[i % len(color_sequence)])
-            sale_price_fig.add_trace(hist_fig)
-
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
+    elif x_axis_variable in ['MSZoning', 'LandContour', 'LotShape', 'LotConfig',
+                            'Condition1', 'BldgType', 'RoofStyle', 'RoofMatl', 'ExterQual', 'ExterCond', 'Foundation',
+                            'BsmtQual', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
+                            'HeatingQC', 'KitchenQual', 'FireplaceQu',
+                            'GarageType', 'GarageFinish', 'GarageQual', 'GarageCond',
+                            'Fence', 'MiscFeature',
+                            'SaleType', 'SaleCondition']:
+        # Create a bar chart for x_axis_variable
+        grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
+        fig = px.bar(grouped_counts, x='Frequency', y=x_axis_variable, color='Neighborhood', barmode='stack',
+                     labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
+                     title=f'Frequency of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace
+        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].y]
+        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
 
-
-@app.callback(
-    [Output(component_id='page-3-frequency-graph', component_property='figure'),
-     Output(component_id='page-3-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-3-dropdown-item', component_property='value')]
-)
-def update_page_3_graph(selected_variables):
-    if not selected_variables:
-        return {}, {}
-
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
-
-    # Define a custom color sequence for the variables
-    color_sequence = ['rgb(31, 119, 180)', 'rgb(255, 127, 14)', 'rgb(44, 160, 44)', 'rgb(214, 39, 40)', 'rgb(148, 103, 189)']
-
-    for i, col_chosen in enumerate(selected_variables):
-        # Create histograms for all selected variables in the frequency graph using Plotly Express
-        hist_fig = px.histogram(df, x=col_chosen, title=f'Frequency of {col_chosen}')
-        hist_fig.update_traces(marker_color=color_sequence[i % len(color_sequence)])  # Set distinct colors
-        freq_fig.add_trace(hist_fig['data'][0])
-
-        # Check if the variable is one of the specified scatter plot variables for the sale price graph
-        if col_chosen in ['BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF', 'UnfBsmtSFPercent']:
-            scatter_plot = go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price')
-            scatter_plot.marker.color = color_sequence[i % len(color_sequence)]  # Set distinct colors
-            sale_price_fig.add_trace(scatter_plot)
-        else:
-            # For other variables in the sale price graph, create histograms
-            hist_fig = px.histogram(df, x=col_chosen, title=f'Sale Price vs. {col_chosen}')
-            hist_fig.update_traces(marker_color=color_sequence[i % len(color_sequence)])  # Set distinct colors
-            sale_price_fig.add_trace(hist_fig['data'][0])
-
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
+        # Calculate the sum of Sale Prices for each unique combination of x_axis_variable and its value
+        grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
+        sale_price_fig = px.bar(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
+                                 labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
+                                 barmode='group', title=f'Sale Price of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace for sale_price_fig
+        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].y]
+        sale_price_fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
 
-# Update the callback for Page 2
-@app.callback(
-    [Output(component_id='page-2-frequency-graph', component_property='figure'),
-     Output(component_id='page-2-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-2-dropdown-item', component_property='value')]
-)
-def update_page_2_graph(selected_variables):
-    if not selected_variables:
-        selected_variables = []
+    elif x_axis_variable in ['LotFrontage', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF',
+                         '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea',
+                         'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch',
+                         '3SsnPorch', 'ScreenPorch', 'PoolArea']:
+        # Create a bubble chart for the frequency of the selected variable
+        grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
+        fig = px.scatter(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood',
+                        size='Frequency',  # Use Frequency as the size variable
+                        labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
+                        title=f'Frequency of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace
+        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].y]
+        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
-    # Create an empty figure for frequency and sale price graphs
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
 
-    for col_chosen in selected_variables:
-        if col_chosen in ['YearBuilt', 'YearRemodAdd']:
-            # For 'YearBuilt' and 'YearRemodAdd', create line graphs for frequency
-            value_counts = df[col_chosen].value_counts().sort_index()
-            freq_fig.add_trace(go.Scatter(x=value_counts.index, y=value_counts.values, mode='lines+markers', name=f'Frequency of {col_chosen}'))
-
-            # Create a line graph for sale price
-            sale_price_line = df.groupby(col_chosen)['SalePrice'].median().reset_index().sort_values(by=col_chosen)
-            sale_price_fig.add_trace(go.Scatter(x=sale_price_line[col_chosen], y=sale_price_line['SalePrice'], mode='lines+markers', name=f'{col_chosen} and Sale Price'))
-        else:
-            # For other variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            avg_values = df.groupby(col_chosen)['SalePrice'].mean().reset_index()
-            sale_price_fig.add_trace(go.Bar(x=avg_values[col_chosen], y=avg_values['SalePrice'], name=f'{col_chosen} and Sale Price'))
-
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
-
-# Define the callback for Page 1
-@app.callback(
-    [Output(component_id='page-1-frequency-graph', component_property='figure'),
-     Output(component_id='page-1-saleprice-graph', component_property='figure')],
-    [Input(component_id='page-1-dropdown-item', component_property='value')]
-)
-def update_page_1_graph(selected_variables):
-    if not selected_variables:
-        selected_variables = []
-
-    # Create empty figures for frequency and sale price
-    freq_fig = go.Figure()
-    sale_price_fig = go.Figure()
-
-    for col_chosen in selected_variables:
-        if col_chosen in ['LotFrontage', 'LotArea']:
-            # For 'LotFrontage' and 'LotArea', create histoplots for frequency
-            if col_chosen == 'LotFrontage':
-                hist_fig = px.histogram(df, x=col_chosen, title=f'{col_chosen} Frequency')
-            elif col_chosen == 'LotArea':
-                hist_fig = px.histogram(df, x=col_chosen, title=f'{col_chosen} Frequency')
-
-            freq_fig.add_trace(hist_fig['data'][0])  # Add the histogram trace to the figure
-
-            # Create scatter plots for sale price
-            scatter_plot = go.Scatter(x=df[col_chosen], y=df['SalePrice'], mode='markers', name=f'{col_chosen} and Sale Price')
-            sale_price_fig.add_trace(scatter_plot)
-        else:
-            # For other selected variables, create bar graphs for frequency
-            value_counts = df[col_chosen].value_counts()
-            freq_fig.add_trace(go.Bar(x=value_counts.index, y=value_counts.values, name=f'Frequency of {col_chosen}'))
-            avg_values = df.groupby(col_chosen)['SalePrice'].mean().reset_index()
-            sale_price_fig.add_trace(go.Bar(x=avg_values[col_chosen], y=avg_values['SalePrice'], name=f'{col_chosen} and Sale Price'))
-
-    freq_fig.update_layout(title="Frequency Graph")
-    sale_price_fig.update_layout(title="Sale Price Graph")
-
-    return freq_fig, sale_price_fig
+        # Calculate the sum of Sale Prices for each unique combination of x_axis_variable and its value
+        grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
+        sale_price_fig = px.scatter(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
+                                    size='SalePrice',  # Use Sale Price as the size variable
+                                    labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
+                                    title=f'Sale Price of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace for sale_price_fig
+        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].y]
+        sale_price_fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
 
 
 
-# Run the app
+    else:
+        # Create a bar chart as before for other x-axis variables
+        grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
+        fig = px.bar(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood', barmode='group',
+                     labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
+                     title=f'Frequency of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace
+        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].y]
+        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
+
+        # Calculate the sum of Sale Prices for each unique combination of x_axis_variable and its value
+        grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
+        sale_price_fig = px.bar(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
+                                labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
+                                barmode='group', title=f'Sale Price of {x_label} by Neighborhood')
+        # Update the custom labels for the legend using for_each_trace for sale_price_fig
+        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].y]
+        sale_price_fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
+
+
+    return fig, sale_price_fig
+
 if __name__ == '__main__':
     app.run_server(debug=True)
