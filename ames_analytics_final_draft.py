@@ -300,7 +300,7 @@ neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
     Output('example-graph', 'figure'),
     Output('sale-price-graph', 'figure'),
     Input('neighborhood-dropdown', 'value'),
-    Input('x-axis-variable', 'value')
+    Input('x-axis-variable', 'value'),
 )
 
 def update_graph(selected_neighborhoods, x_axis_variable):
@@ -387,29 +387,28 @@ def update_graph(selected_neighborhoods, x_axis_variable):
 
 
     elif x_axis_variable in ['LotFrontage', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF',
-                         '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea',
-                         'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch',
-                         '3SsnPorch', 'ScreenPorch', 'PoolArea']:
-        # Create a bubble chart for the frequency of the selected variable
-        grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
-        fig = px.scatter(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood',
-                        size='Frequency',  # Use Frequency as the size variable
-                        labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
-                        title=f'Frequency of {x_label} by Neighborhood')
-        # Update the custom labels for the legend using for_each_trace
-        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].y]
-        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
+                            '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea',
+                            'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch',
+                            '3SsnPorch', 'ScreenPorch', 'PoolArea']:
+        # Create histograms for the selected variables
+        fig = px.histogram(filtered_df, x=x_axis_variable, color='Neighborhood', barmode='overlay',
+                        labels={x_axis_variable: x_label, 'count': 'Frequency', 'Neighborhood': 'Neighborhood'},
+                        title=f'Histogram of {x_label} by Neighborhood')
 
+        # Update the custom labels for the legend using for_each_trace
+        custom_legend_labels = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in fig.data[0].x]
+        fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
 
         # Calculate the sum of Sale Prices for each unique combination of x_axis_variable and its value
         grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
-        sale_price_fig = px.scatter(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
-                                    size='SalePrice',  # Use Sale Price as the size variable
+        sale_price_fig = px.histogram(grouped_sales, x=x_axis_variable, color='Neighborhood', barmode='overlay',
                                     labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
-                                    title=f'Sale Price of {x_label} by Neighborhood')
+                                    title=f'Histogram of Sale Price of {x_label} by Neighborhood')
+
         # Update the custom labels for the legend using for_each_trace for sale_price_fig
-        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].y]
+        custom_legend_labels_sale_price = [neighborhood_labels.get(neighborhood, neighborhood) for neighborhood in sale_price_fig.data[0].x]
         sale_price_fig.for_each_trace(lambda trace: trace.update(name=neighborhood_labels.get(trace.name, trace.name)))
+
 
 
 
