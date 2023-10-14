@@ -552,6 +552,13 @@ def create_page_layout(page_number):
         # ... (Your neighborhood labels go here)
     }
 
+    # Define tab titles
+    tab_titles = ["Property Analysis", "Building Analysis", "Basement Analysis", 'Interior Analysis', 'Garage Analysis', 'Exterior Analysis', 'Sale Analysis']  # Replace with your actual tab titles
+
+    # Get the title for the current tab based on page_number
+    tab_title = tab_titles[page_number]
+
+
     variables_on_page = page_variables[page_number]
 
     # Define the neighborhood dropdown options using the custom labels
@@ -567,6 +574,7 @@ def create_page_layout(page_number):
     )]
 
     return html.Div(children=[
+        html.H1(tab_title, className="header-title", style={'font-family': 'Roboto, sans-serif', 'text-align': 'center'}),
         dcc.Dropdown(
             id='neighborhood-dropdown',
             options=neighborhood_options,
