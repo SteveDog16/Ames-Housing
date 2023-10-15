@@ -357,7 +357,7 @@ average_year_built = df_copy['YearBuilt'].mode().values[0]
 
 most_common_mszoning = df_copy['MSZoning'].mode()[0]
 
-most_common_neighborhood = df_copy['Neighborhood'].mode()[0]
+most_common_neighborhood = df_copy['Neighborhood'].mode().values[0]
 
 most_common_dwelling = df_copy['BldgType'].mode()[0]
 
@@ -365,6 +365,13 @@ average_month_sold = df_copy['MoSold'].mode()[0]
 
 average_year_sold = df_copy['YrSold'].mode()[0]
 
+average_year_remodeled = df_copy['YearRemodAdd'].mode().values[0]
+
+average_ground_living_area = df_copy['GrLivArea'].mean()
+
+average_lot_area = df_copy['LotArea'].mean()
+
+average_overall_quality = df_copy['OverallQual'].mean()
 
 data_explanation = [
     {'Building Class': 20, 'Meaning': '1-Story 1946 & Newer'},
@@ -411,55 +418,80 @@ def create_home_layout():
             html.H1("Landing Page", className="header-title", style={'font-family': 'Roboto, sans-serif', 'text-align': 'center'}),
             html.P("This is the landing page for your dashboard. You can navigate to different sections using the tabs above.", className="intro-text", style={'font-family': 'Roboto, sans-serif', 'text-align': 'center'}),
             html.Div(f"Last Updated: {last_updated} (EST)", className="info-text", style={'font-family': 'Roboto, sans-serif', 'text-align': 'right'}),
+            html.Div(f"Property Count: {len(df)}", className="info-text", style={'font-family': 'Roboto, sans-serif', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'text-align': 'right'}),
             # White Line
             html.Div(className="white-line"),
-            html.Div([
                 html.Div([
-                    html.Div('Property Count', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(f'{len(df)}', style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    #html.Div([
+                    #    html.Div('Property Count', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
+                    #    html.Div(f'{len(df)}', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    #], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '15px', 'margin-bottom': '10px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Average Sale Price', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(f'${(average_saleprice):,.2f}', style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Most Common Building Class', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(average_mssubclass + ' (1-Story 1946 & Newer)', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Average Year of Houses Built', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(average_year_built, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '250px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Most Common Zoning Classification', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(most_common_mszoning, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Average Month Sold', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(average_month_sold, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '225px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Most Popular Neighborhood', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(most_common_neighborhood, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Average Year Sold', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(average_year_sold, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '225px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Most Common Dwelling', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(most_common_dwelling, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Most Common Building Class', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(average_mssubclass + ' (1-Story 1946 & Newer)', style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '350px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Average Overall Quality', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(str(round(average_overall_quality)) + ' (Above Average)', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Most Common Zoning Classification', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(most_common_mszoning, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '350px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Most Popular Neighborhood', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(most_common_neighborhood, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '300px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Average Month Sold', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
+                        html.Div(average_month_sold, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-                html.Div([
-                    html.Div('Most Common Dwelling', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    html.Div(most_common_dwelling, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '250px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+                    html.Div([
+                        html.Div('Average Year Sold', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
+                        html.Div(average_year_sold, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
 
-            ]),
+                    html.Div([
+                        html.Div('Average Year of Houses Built', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(average_year_built, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
+
+                    html.Div([
+                        html.Div('Average Year of Houses Remodeled', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(average_year_remodeled, style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
+
+                    html.Div([
+                        html.Div('Average Above Ground Living Area', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
+                        html.Div(f'{(average_ground_living_area):,.2f} sq ft', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
+
+                    html.Div([
+                        html.Div('Average Lot Area', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
+                        html.Div(f'{(average_lot_area):,.2f} sq ft', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
+
+                    html.Div([
+                        html.Div('Average Sale Price', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
+                        html.Div(f'${(average_saleprice):,.2f}', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
+
+
+
+        ]),
+
             html.Table(
                 [
                     html.Thead(
@@ -482,7 +514,8 @@ def create_home_layout():
                     'border': '1px solid white',  # Add border for the entire table
                     'border-collapse': 'collapse',
                     'font-size': '1em',
-                    'margin-bottom': '15px',
+                    'margin-top': '15px',
+                    'margin-bottom': '25px',
                 },
                 className='table',
             ),
@@ -562,6 +595,7 @@ def update_graph(data, selected_y_axis):
 
         # Create the bar chart and add data values
         fig = px.bar(neighborhood_counts, x='Neighborhood', y='Count', text='Count', title='Neighborhood Count Bar Chart')
+        fig.update_traces(marker_color='#0091D5')
     else:
         avg_sale_prices = df_copy.groupby('Neighborhood')['SalePrice'].mean().reset_index()
         avg_sale_prices['SalePrice'] = avg_sale_prices['SalePrice'].round(2)  # Round the SalePrice to two decimal places
@@ -571,7 +605,7 @@ def update_graph(data, selected_y_axis):
         fig = px.bar(avg_sale_prices, x='Neighborhood', y='SalePrice', title='Neighborhood Average Sale Price Bar Chart',
                     text='SalePrice')  # This line adds the data labels
 
-        fig.update_traces(texttemplate='%{text:,.2f}', textposition='outside')  # Formats the labels to two decimal places
+        fig.update_traces(texttemplate='%{text:,.2f}', textposition='outside', marker_color='#0091D5')  # Formats the labels to two decimal places
 
 
 
@@ -819,4 +853,4 @@ def update_graph(selected_neighborhoods, x_axis_variable):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    
+
