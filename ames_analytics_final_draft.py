@@ -23,6 +23,26 @@ numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
 df_copy = df.copy()
 
 abbreviations_map = {
+    'NAmes': 'North Ames',
+    'CollgCr': 'College Creek',
+    'Crawfor': 'Crawford',
+    'NoRidge': "Northridge Heights",
+    'Mitchel': 'Mitchell',
+    'Somerst': 'Somerset',
+    'NWAmes': 'Northwest Ames',
+    'OldTown': 'Old Town',
+    'BrkSide': 'Brookside',
+    'SawyerW': 'Sawyer West',
+    'NridgHt': 'Northridge Heights',
+    'IDOTRR': 'IDOTRR',
+    'MeadowV': 'Meadow Village',
+    'StoneBr': 'Stone Brooke',
+    'ClearCr': 'Clear Creek',
+    'NPkVill': 'Northpark Village',
+    'Blmngtn': 'Bloomington Heights',
+    'BrDale': 'Briardale',
+    'SWISU': 'Southwest of the ISU campus',
+    'Blueste': 'Bluestem',
     'RM': 'Residential Medium Density',
     'RL': 'Residential Low Density',
     'RH': 'Residential High Density',
@@ -107,7 +127,7 @@ abbreviations_map = {
 }
 
 
-columns_to_replace = ['MSZoning', 'LandContour', 'LotShape', 'LotConfig',
+columns_to_replace = ['Neighborhood', 'MSZoning', 'LandContour', 'LotShape', 'LotConfig',
                       'Condition1', 'BldgType', 'RoofMatl', 'ExterQual', 'Foundation', 'ExterCond',
                       'BsmtQual', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
                       'HeatingQC', 'KitchenQual', 'FireplaceQu',
@@ -253,39 +273,14 @@ page_variables = [
 
 # Modify the create_page_layout function to accept the page number
 def create_page_layout(page_number):
-    # Add the neighborhood_labels dictionary here
-    neighborhood_labels = {
-        'NAmes': 'North Ames',
-        'CollgCr': 'College Creek',
-        'Crawfor': 'Crawford',
-        'NoRidge': "Northridge Heights",
-        'Mitchel': 'Mitchell',
-        'Somerst': 'Somerset',
-        'NWAmes': 'Northwest Ames',
-        'OldTown': 'Old Town',
-        'BrkSide': 'Brookside',
-        'SawyerW': 'Sawyer West',
-        'NridgHt': 'Northridge Heights',
-        'IDOTRR': 'Iowa Department of Transportation Railroad',
-        'MeadowV': 'Meadow Village',
-        'StoneBr': 'Stone Brooke',
-        'ClearCr': 'Clear Creek',
-        'NPkVill': 'Northpark Village',
-        'Blmngtn': 'Bloomington Heights',
-        'BrDale': 'Briardale',
-        'SWISU': 'Southwest of the Iowa State University (ISU) campus',
-        'Blueste': 'Bluestem'
-        # Add more neighborhood labels here
-    }
-
-
     variables_on_page = page_variables[page_number]
-
 
     # Define the neighborhood dropdown options using the custom labels
     neighborhood_options = [{'label': neighborhood_labels.get(neighborhood, neighborhood), 'value': neighborhood}
                             for neighborhood in df_copy['Neighborhood'].unique()]
-
+    
+    neighborhood_options = [{'label': neighborhood_labels.get(neighborhood, neighborhood), 'value': neighborhood}
+                            for neighborhood in df_copy['Neighborhood'].unique()]
 
     # Create the x-axis variable dropdown
     variable_inputs = [dcc.Dropdown(
@@ -362,6 +357,15 @@ average_year_built = df_copy['YearBuilt'].mode().values[0]
 
 most_common_mszoning = df_copy['MSZoning'].mode()[0]
 
+most_common_neighborhood = df_copy['Neighborhood'].mode()[0]
+
+most_common_dwelling = df_copy['BldgType'].mode()[0]
+
+average_month_sold = df_copy['MoSold'].mode()[0]
+
+average_year_sold = df_copy['YrSold'].mode()[0]
+
+
 data_explanation = [
     {'Building Class': 20, 'Meaning': '1-Story 1946 & Newer'},
     {'Building Class': 30, 'Meaning': '1-Story 1945 & Older'},
@@ -426,6 +430,16 @@ def create_home_layout():
                 ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '250px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
 
                 html.Div([
+                    html.Div('Average Month Sold', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    html.Div(average_month_sold, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
+                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '225px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+
+                html.Div([
+                    html.Div('Average Year Sold', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    html.Div(average_year_sold, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
+                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '225px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+
+                html.Div([
                     html.Div('Most Common Building Class', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
                     html.Div(average_mssubclass + ' (1-Story 1946 & Newer)', style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
                 ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '350px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
@@ -433,7 +447,18 @@ def create_home_layout():
                 html.Div([
                     html.Div('Most Common Zoning Classification', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
                     html.Div(most_common_mszoning, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
-                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '350px', 'margin-top': '15px', 'margin-bottom': '15px', 'display': 'inline-block'}),
+                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '350px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+
+                html.Div([
+                    html.Div('Most Popular Neighborhood', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    html.Div(most_common_neighborhood, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
+                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '300px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+
+                html.Div([
+                    html.Div('Most Common Dwelling', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
+                    html.Div(most_common_dwelling, style={'font-size': '1.5em', 'color': 'black', 'text-align': 'center'}),
+                ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '250px', 'margin-top': '15px', 'margin-bottom': '15px', 'margin-right': '10px', 'display': 'inline-block'}),
+
             ]),
             html.Table(
                 [
@@ -528,20 +553,27 @@ def create_home_layout():
 )
 def update_graph(data, selected_y_axis):
     # Create a DataFrame from the data
-    df = pd.DataFrame(data)
+    #df = pd.DataFrame(data)
 
     if selected_y_axis == 'Count':
         # Count the occurrences of each neighborhood
-        neighborhood_counts = df['Neighborhood'].value_counts().reset_index()
+        neighborhood_counts = df_copy['Neighborhood'].value_counts().reset_index()
         neighborhood_counts.columns = ['Neighborhood', 'Count']
 
-        fig = px.bar(neighborhood_counts, x='Neighborhood', y='Count', title='Neighborhood Count Bar Chart')
+        # Create the bar chart and add data values
+        fig = px.bar(neighborhood_counts, x='Neighborhood', y='Count', text='Count', title='Neighborhood Count Bar Chart')
     else:
-        # Calculate the average sale price for each neighborhood
-        avg_sale_prices = df.groupby('Neighborhood')['SalePrice'].mean().reset_index()
-        avg_sale_prices.columns = ['Neighborhood', 'AvgSalePrice']
+        avg_sale_prices = df_copy.groupby('Neighborhood')['SalePrice'].mean().reset_index()
+        avg_sale_prices['SalePrice'] = avg_sale_prices['SalePrice'].round(2)  # Round the SalePrice to two decimal places
+        avg_sale_prices = avg_sale_prices.sort_values(by='SalePrice', ascending=False)
 
-        fig = px.bar(avg_sale_prices, x='Neighborhood', y='AvgSalePrice', title='Neighborhood Average Sale Price Bar Chart')
+        # Create the bar chart and add data labels
+        fig = px.bar(avg_sale_prices, x='Neighborhood', y='SalePrice', title='Neighborhood Average Sale Price Bar Chart',
+                    text='SalePrice')  # This line adds the data labels
+
+        fig.update_traces(texttemplate='%{text:,.2f}', textposition='outside')  # Formats the labels to two decimal places
+
+
 
     return fig
 
@@ -675,6 +707,7 @@ custom_descriptions_df = pd.DataFrame({
 neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
 
 
+custom_colors = ['#0091D5', '#EA6A47', '#A5D8DD', '#1C4E80', '#7E909A', '#202020', '#F1F1F1']
 
 
 # Define a callback for updating the graph
@@ -684,6 +717,8 @@ neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
     Input('neighborhood-dropdown', 'value'),
     Input('x-axis-variable', 'value'),
 )
+
+
 def update_graph(selected_neighborhoods, x_axis_variable):
     try:
         if not selected_neighborhoods:
@@ -713,17 +748,18 @@ def update_graph(selected_neighborhoods, x_axis_variable):
 
         if x_axis_variable in ['YearBuilt', 'YearRemodAdd']:
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
-            fig = px.line(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood',
+            fig = px.line(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood', color_discrete_sequence=custom_colors,
                         labels={x_axis_variable: x_label, 'Frequency': y_label, 'Neighborhood': 'Neighborhood'},
                         markers=True, title=f'Frequency of {x_label} by Neighborhood')
 
 
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
-            sale_price_fig = px.line(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
+            sale_price_fig = px.line(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood', color_discrete_sequence=custom_colors,
                                     labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                     markers=True, title=f'Sale Price of {x_label} by Neighborhood')
 
-
+        
+        # Update the code to apply the custom color palette
         elif x_axis_variable in ['MSZoning', 'LandContour', 'LotShape', 'LotConfig', 'Condition1', 'BldgType',
                                 'RoofStyle', 'RoofMatl', 'ExterQual', 'ExterCond', 'Foundation', 'BsmtQual', 'BsmtExposure',
                                 'BsmtFinType1', 'BsmtFinType2', 'HeatingQC', 'KitchenQual', 'FireplaceQu',
@@ -732,13 +768,15 @@ def update_graph(selected_neighborhoods, x_axis_variable):
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
             fig = px.bar(grouped_counts, x='Frequency', y=x_axis_variable, color='Neighborhood', barmode='stack',
                         labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
-                        title=f'Frequency of {x_label} by Neighborhood')
-
+                        title=f'Frequency of {x_label} by Neighborhood',
+                        color_discrete_sequence=custom_colors)
 
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
             sale_price_fig = px.bar(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
                                     labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
-                                    barmode='group', title=f'Sale Price of {x_label} by Neighborhood')
+                                    barmode='group', title=f'Sale Price of {x_label} by Neighborhood',
+                                    color_discrete_sequence=custom_colors)
+
 
 
         elif x_axis_variable in ['LotFrontage', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF',
@@ -746,12 +784,13 @@ def update_graph(selected_neighborhoods, x_axis_variable):
                                 'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch',
                                 '3SsnPorch', 'ScreenPorch', 'PoolArea']:
             fig = px.histogram(filtered_df, x=x_axis_variable, color='Neighborhood', barmode='overlay',
+                            color_discrete_sequence=custom_colors,  # Set the color palette
                             labels={x_axis_variable: x_label, 'count': 'Frequency', 'Neighborhood': 'Neighborhood', x_axis_variable: variable_descriptions[x_axis_variable]},
                             title=f'Histogram of {x_label} by Neighborhood')
 
-
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
             sale_price_fig = px.histogram(grouped_sales, x=x_axis_variable, color='Neighborhood', barmode='overlay',
+                                        color_discrete_sequence=custom_colors,  # Set the color palette
                                         labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                         title=f'Histogram of Sale Price of {x_label} by Neighborhood')
 
@@ -759,14 +798,14 @@ def update_graph(selected_neighborhoods, x_axis_variable):
         else:
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
             fig = px.bar(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood', barmode='stack',
-                        labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
+                        color_discrete_sequence=custom_colors, labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
                         title=f'Frequency of {x_label} by Neighborhood')
 
 
             # Create the sale price graph
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
             sale_price_fig = px.bar(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood',
-                                    labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
+                                    color_discrete_sequence=custom_colors, labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                     barmode='group', title=f'Sale Price of {x_label} by Neighborhood')
 
 
@@ -780,4 +819,4 @@ def update_graph(selected_neighborhoods, x_axis_variable):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
+    
