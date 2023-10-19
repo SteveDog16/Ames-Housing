@@ -172,43 +172,39 @@ neighborhood_labels = {
     # Add more neighborhood labels here
 }
 
-
 # Define the layout for each page with specific variables
 page1_variables = [
     {'label': 'Building class', 'value': 'MSSubClass'},
     {'label': 'General zoning classification', 'value': 'MSZoning'},
-    {'label': 'Flatness of the property', 'value': 'LandContour'},
+    #{'label': 'Flatness of the property', 'value': 'LandContour'},
     {'label': 'General shape of property', 'value': 'LotShape'},
     {'label': 'Lot configuration', 'value': 'LotConfig'},
     {'label': 'Linear feet of street connected to property', 'value': 'LotFrontage'}]
 
-
 page2_variables = [
-    {'label': 'Proximity to main road or railroad', 'value': 'Condition1'},
+    #{'label': 'Proximity to main road or railroad', 'value': 'Condition1'},
     {'label': 'Type of dwelling', 'value': 'BldgType'},
     {'label': 'Overall material and finish quality', 'value': 'OverallQual'},
     {'label': 'Overall condition rating', 'value': 'OverallCond'},
     {'label': 'Original construction date', 'value': 'YearBuilt'},
     {'label': 'Remodel date', 'value': 'YearRemodAdd'},
-    {'label': 'Type of roof', 'value': 'RoofStyle'},
-    {'label': 'Roof material', 'value': 'RoofMatl'},
+    #{'label': 'Type of roof', 'value': 'RoofStyle'},
+    #{'label': 'Roof material', 'value': 'RoofMatl'},
     {'label': 'Exterior material quality', 'value': 'ExterQual'},
-    {'label': 'Present condition of the material on the exterior', 'value': 'ExterCond'},
+    #{'label': 'Present condition of the material on the exterior', 'value': 'ExterCond'},
     {'label': 'Type of foundation', 'value': 'Foundation'}
 ]
 
-
 page3_variables = [
     {'label': 'Basement quality', 'value': 'BsmtQual'},
-    {'label': 'Walkout/garden level basement walls', 'value': 'BsmtExposure'},
+    #{'label': 'Walkout/garden level basement walls', 'value': 'BsmtExposure'},
     {'label': 'Quality of basement finished area', 'value': 'BsmtFinType1'},
-    {'label': 'Quality of second finished area (if present)', 'value': 'BsmtFinType2'},
+    #{'label': 'Quality of second finished area (if present)', 'value': 'BsmtFinType2'},
     {'label': 'Type 1 finished (in square feet)', 'value': 'BsmtFinSF1'},
-    {'label': 'Type 2 finished (in square feet)', 'value': 'BsmtFinSF2'},
+    #{'label': 'Type 2 finished (in square feet)', 'value': 'BsmtFinSF2'},
     {'label': 'Unfinished basement area (in square feet)', 'value': 'BsmtUnfSF'},
     {'label': 'Total basement area (in square feet)', 'value': 'TotalBsmtSF'}
 ]
-
 
 page4_variables = [
     {'label': 'Heating quality and condition', 'value': 'HeatingQC'},
@@ -216,15 +212,14 @@ page4_variables = [
     {'label': 'Second floor (in square feet)', 'value': '2ndFlrSF'},
     {'label': 'Above grade (ground) living area (in square feet)', 'value': 'GrLivArea'},
     {'label': 'Number of basement full bathrooms', 'value': 'BsmtFullBath'},
-    {'label': 'Number of basement half bathrooms', 'value': 'BsmtHalfBath'},
+    #{'label': 'Number of basement half bathrooms', 'value': 'BsmtHalfBath'},
     {'label': 'Number of full bathrooms above grade (ground)', 'value': 'FullBath'},
     {'label': 'Number of half baths above grade (ground)', 'value': 'HalfBath'},
     {'label': 'Kitchen quality', 'value': 'KitchenQual'},
     {'label': 'Total rooms above grade (does not include bathrooms)', 'value': 'TotRmsAbvGrd'},
     {'label': 'Number of fireplaces', 'value': 'Fireplaces'},
-    {'label': 'Fireplace quality', 'value': 'FireplaceQu'}
+    #{'label': 'Fireplace quality', 'value': 'FireplaceQu'}
 ]
-
 
 page5_variables = [
     {'label': 'Garage location', 'value': 'GarageType'},
@@ -236,20 +231,18 @@ page5_variables = [
     {'label': 'Garage condition', 'value': 'GarageCond'}
 ]
 
-
 page6_variables = [
     {'label': 'Wood deck area (in square feet)', 'value': 'WoodDeckSF'},
     {'label': 'Open porch area (in square feet)', 'value': 'OpenPorchSF'},
     {'label': 'Enclosed porch area (in square feet)', 'value': 'EnclosedPorch'},
     {'label': 'Three season porch area (in square feet)', 'value': '3SsnPorch'},
     {'label': 'Screen porch area (in square feet)', 'value': 'ScreenPorch'},
-    {'label': 'Pool area (in square feet)', 'value': 'PoolArea'},
-    {'label': 'Pool quality', 'value': 'PoolQC'},
+    #{'label': 'Pool area (in square feet)', 'value': 'PoolArea'},
+    #{'label': 'Pool quality', 'value': 'PoolQC'},
     {'label': 'Fence quality', 'value': 'Fence'},
-    {'label': 'Miscellaneous feature not covered in other categories', 'value': 'MiscFeature'},
-    {'label': 'Value of miscellaneous feature', 'value': 'MiscVal'}
+    #{'label': 'Miscellaneous feature not covered in other categories', 'value': 'MiscFeature'},
+    #{'label': 'Value of miscellaneous feature', 'value': 'MiscVal'}
 ]
-
 
 page7_variables = [
     {'label': 'Month sold', 'value': 'MoSold'},
@@ -257,7 +250,6 @@ page7_variables = [
     {'label': 'Type of sale', 'value': 'SaleType'},
     {'label': 'Condition of sale', 'value': 'SaleCondition'}
 ]
-
 
 # Define the layout for each page
 page_variables = [
@@ -853,4 +845,3 @@ def update_graph(selected_neighborhoods, x_axis_variable):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
