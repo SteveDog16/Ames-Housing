@@ -1,3 +1,4 @@
+# Import necessary libraries
 from dash import Dash, html, dcc, Input, Output, dash_table
 import plotly.express as px
 import pandas as pd
@@ -6,22 +7,16 @@ from dash import html
 from dash.dependencies import Input, Output
 from datetime import datetime  # Import the datetime module
 
-
 # Create a Dash instance
 app = Dash(__name__, suppress_callback_exceptions=True)
-
-google_fonts_link = "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
 
 # Read the data from 'train.csv'
 df = pd.read_csv('train.csv')
 
-
-numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
-
-
 # Make a copy of the original dataframe
 df_copy = df.copy()
 
+# Define a mapping of abbreviations for data cleaning
 abbreviations_map = {
     'NAmes': 'North Ames',
     'CollgCr': 'College Creek',
@@ -126,7 +121,7 @@ abbreviations_map = {
     'Abnormal': 'Abnormal Sale'
 }
 
-
+# List of columns to replace using the abbreviations map
 columns_to_replace = ['Neighborhood', 'MSZoning', 'LandContour', 'LotShape', 'LotConfig',
                       'Condition1', 'BldgType', 'RoofMatl', 'ExterQual', 'Foundation', 'ExterCond',
                       'BsmtQual', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
@@ -136,18 +131,18 @@ columns_to_replace = ['Neighborhood', 'MSZoning', 'LandContour', 'LotShape', 'Lo
                       'MoSold', 'SaleType', 'SaleCondition'
                       ]
 df_copy[columns_to_replace] = df_copy[columns_to_replace].replace(abbreviations_map)
+
+# Fill missing values with 'N/A'
 df_copy = df_copy.fillna('N/A')
 
 # Define the number of variables per page
-variables_per_page = 3  # Adjust this as needed
-
+variables_per_page = 3
 
 # Split the variable options into pages
 variable_options = df_copy.columns
 variable_pages = [variable_options[i:i + variables_per_page] for i in range(0, len(variable_options), variables_per_page)]
 
-
-# Define the neighborhood_labels in the global scope
+# Define custom labels for neighborhoods
 neighborhood_labels = {
     'NAmes': 'North Ames',
     'CollgCr': 'College Creek',
@@ -169,39 +164,30 @@ neighborhood_labels = {
     'BrDale': 'Briardale',
     'SWISU': 'Southwest of the Iowa State University (ISU) campus',
     'Blueste': 'Bluestem'
-    # Add more neighborhood labels here
 }
 
 # Define the layout for each page with specific variables
 page1_variables = [
     {'label': 'Building class', 'value': 'MSSubClass'},
     {'label': 'General zoning classification', 'value': 'MSZoning'},
-    #{'label': 'Flatness of the property', 'value': 'LandContour'},
     {'label': 'General shape of property', 'value': 'LotShape'},
     {'label': 'Lot configuration', 'value': 'LotConfig'},
     {'label': 'Linear feet of street connected to property', 'value': 'LotFrontage'}]
 
 page2_variables = [
-    #{'label': 'Proximity to main road or railroad', 'value': 'Condition1'},
     {'label': 'Type of dwelling', 'value': 'BldgType'},
     {'label': 'Overall material and finish quality', 'value': 'OverallQual'},
     {'label': 'Overall condition rating', 'value': 'OverallCond'},
     {'label': 'Original construction date', 'value': 'YearBuilt'},
     {'label': 'Remodel date', 'value': 'YearRemodAdd'},
-    #{'label': 'Type of roof', 'value': 'RoofStyle'},
-    #{'label': 'Roof material', 'value': 'RoofMatl'},
     {'label': 'Exterior material quality', 'value': 'ExterQual'},
-    #{'label': 'Present condition of the material on the exterior', 'value': 'ExterCond'},
     {'label': 'Type of foundation', 'value': 'Foundation'}
 ]
 
 page3_variables = [
     {'label': 'Basement quality', 'value': 'BsmtQual'},
-    #{'label': 'Walkout/garden level basement walls', 'value': 'BsmtExposure'},
     {'label': 'Quality of basement finished area', 'value': 'BsmtFinType1'},
-    #{'label': 'Quality of second finished area (if present)', 'value': 'BsmtFinType2'},
     {'label': 'Type 1 finished (in square feet)', 'value': 'BsmtFinSF1'},
-    #{'label': 'Type 2 finished (in square feet)', 'value': 'BsmtFinSF2'},
     {'label': 'Unfinished basement area (in square feet)', 'value': 'BsmtUnfSF'},
     {'label': 'Total basement area (in square feet)', 'value': 'TotalBsmtSF'}
 ]
@@ -212,13 +198,11 @@ page4_variables = [
     {'label': 'Second floor (in square feet)', 'value': '2ndFlrSF'},
     {'label': 'Above grade (ground) living area (in square feet)', 'value': 'GrLivArea'},
     {'label': 'Number of basement full bathrooms', 'value': 'BsmtFullBath'},
-    #{'label': 'Number of basement half bathrooms', 'value': 'BsmtHalfBath'},
     {'label': 'Number of full bathrooms above grade (ground)', 'value': 'FullBath'},
     {'label': 'Number of half baths above grade (ground)', 'value': 'HalfBath'},
     {'label': 'Kitchen quality', 'value': 'KitchenQual'},
     {'label': 'Total rooms above grade (does not include bathrooms)', 'value': 'TotRmsAbvGrd'},
     {'label': 'Number of fireplaces', 'value': 'Fireplaces'},
-    #{'label': 'Fireplace quality', 'value': 'FireplaceQu'}
 ]
 
 page5_variables = [
@@ -237,11 +221,7 @@ page6_variables = [
     {'label': 'Enclosed porch area (in square feet)', 'value': 'EnclosedPorch'},
     {'label': 'Three season porch area (in square feet)', 'value': '3SsnPorch'},
     {'label': 'Screen porch area (in square feet)', 'value': 'ScreenPorch'},
-    #{'label': 'Pool area (in square feet)', 'value': 'PoolArea'},
-    #{'label': 'Pool quality', 'value': 'PoolQC'},
     {'label': 'Fence quality', 'value': 'Fence'},
-    #{'label': 'Miscellaneous feature not covered in other categories', 'value': 'MiscFeature'},
-    #{'label': 'Value of miscellaneous feature', 'value': 'MiscVal'}
 ]
 
 page7_variables = [
@@ -252,25 +232,14 @@ page7_variables = [
 ]
 
 # Define the layout for each page
-page_variables = [
-    page1_variables,
-    page2_variables,
-    page3_variables,
-    page4_variables,
-    page5_variables,
-    page6_variables,
-    page7_variables
-]
-
+page_variables = [page1_variables, page2_variables, page3_variables, page4_variables, page5_variables, page6_variables, page7_variables]
 
 # Modify the create_page_layout function to accept the page number
 def create_page_layout(page_number):
+    # Define variables for the selected page
     variables_on_page = page_variables[page_number]
 
     # Define the neighborhood dropdown options using the custom labels
-    neighborhood_options = [{'label': neighborhood_labels.get(neighborhood, neighborhood), 'value': neighborhood}
-                            for neighborhood in df_copy['Neighborhood'].unique()]
-    
     neighborhood_options = [{'label': neighborhood_labels.get(neighborhood, neighborhood), 'value': neighborhood}
                             for neighborhood in df_copy['Neighborhood'].unique()]
 
@@ -282,7 +251,7 @@ def create_page_layout(page_number):
         style={'margin-top': '15px', 'width': '400px'}
     )]
 
-
+    # Define the layout for the page
     return html.Div(children=[
         dcc.Dropdown(
             id='neighborhood-dropdown',
@@ -296,20 +265,10 @@ def create_page_layout(page_number):
         dcc.Graph(id='sale-price-graph')
     ], style={'font-family': 'Roboto, sans-serif'})
 
-
-
-
 # Create a list of tab labels and values for the pages
-tab_labels = [
-    "Property Analysis",
-    "Building Analysis",
-    "Basement Analysis",
-    'Interior Analysis',
-    "Garage Analysis",
-    "Exterior Analysis",
-    "Sale Analysis"
-]
+tab_labels = [ "Property Analysis", "Building Analysis", "Basement Analysis", 'Interior Analysis', "Garage Analysis", "Exterior Analysis", "Sale Analysis"]
 
+# Define the main layout of the app
 app.layout = html.Div([
     html.H1(children='Ames House Price Dashboard', style={'font-family': 'Roboto, sans-serif', 'text-align': 'center'}),
     dcc.Tabs(
@@ -323,7 +282,6 @@ app.layout = html.Div([
     ),
     html.Div(id='page-content')
 ])
-
 
 # Callback to update the displayed page
 @app.callback(Output('page-content', 'children'), Input('tabs', 'value'))
@@ -340,29 +298,19 @@ def display_page(tab_value):
 neighborhood_counts = df['Neighborhood'].value_counts().reset_index()
 neighborhood_counts.columns = ['Neighborhood', 'Frequency']
 
+# Additional code for data analysis and visualization
 df_copy['MSSubClass'] = df_copy['MSSubClass'].astype(str)
 average_mssubclass = df_copy['MSSubClass'].mode().values[0]
-
 average_saleprice = df_copy['SalePrice'].mean()
-
 average_year_built = df_copy['YearBuilt'].mode().values[0]
-
 most_common_mszoning = df_copy['MSZoning'].mode()[0]
-
 most_common_neighborhood = df_copy['Neighborhood'].mode().values[0]
-
 most_common_dwelling = df_copy['BldgType'].mode()[0]
-
 average_month_sold = df_copy['MoSold'].mode()[0]
-
 average_year_sold = df_copy['YrSold'].mode()[0]
-
 average_year_remodeled = df_copy['YearRemodAdd'].mode().values[0]
-
 average_ground_living_area = df_copy['GrLivArea'].mean()
-
 average_lot_area = df_copy['LotArea'].mean()
-
 average_overall_quality = df_copy['OverallQual'].mean()
 
 data_explanation = [
@@ -379,7 +327,6 @@ data_explanation = [
     {'Building Class': 120, 'Meaning': '1-Story PUD (Planned Unit Development)'},
     {'Building Class': 190, 'Meaning': '2-Story PUD'}
 ]
-
 
 table_rows = []
 for index, row in enumerate(data_explanation):
@@ -399,7 +346,7 @@ for index, row in enumerate(data_explanation):
     )
 
 
-# Define the home layout with Google Fonts
+# Define the home layout
 def create_home_layout():
     total_rows = len(df_copy)
     last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -479,9 +426,6 @@ def create_home_layout():
                         html.Div('Average Sale Price', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
                         html.Div(f'${(average_saleprice):,.2f}', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
                     ], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '7.5px', 'margin-bottom': '7.5px', 'margin-left': '15px', 'display': 'inline-block'}),
-
-
-
         ]),
 
             html.Table(
@@ -570,16 +514,13 @@ def create_home_layout():
 
     return layout
 
-
+# Callback function for updating the bar graph
 @app.callback(
     Output('bar-graph', 'figure'),
     Input('data-table', 'data'),
     Input('y-axis-dropdown', 'value')
 )
 def update_graph(data, selected_y_axis):
-    # Create a DataFrame from the data
-    #df = pd.DataFrame(data)
-
     if selected_y_axis == 'Count':
         # Count the occurrences of each neighborhood
         neighborhood_counts = df_copy['Neighborhood'].value_counts().reset_index()
@@ -596,27 +537,17 @@ def update_graph(data, selected_y_axis):
         # Create the bar chart and add data labels
         fig = px.bar(avg_sale_prices, x='Neighborhood', y='SalePrice', title='Neighborhood Average Sale Price Bar Chart',
                     text='SalePrice')  # This line adds the data labels
-
         fig.update_traces(texttemplate='%{text:,.2f}', textposition='outside', marker_color='#0091D5')  # Formats the labels to two decimal places
-
-
 
     return fig
 
 # Define the layout for each page
 def create_page_layout(page_number):
-    # Add the neighborhood_labels dictionary here
-    neighborhood_labels = {
-        # ... (Your neighborhood labels go here)
-    }
-
     # Define tab titles
     tab_titles = ["Property Analysis", "Building Analysis", "Basement Analysis", 'Interior Analysis', 'Garage Analysis', 'Exterior Analysis', 'Sale Analysis']  # Replace with your actual tab titles
 
     # Get the title for the current tab based on page_number
     tab_title = tab_titles[page_number]
-
-
     variables_on_page = page_variables[page_number]
 
     # Define the neighborhood dropdown options using the custom labels
@@ -654,12 +585,10 @@ variable_descriptions = {
     'LotConfig': 'Lot Configuration',
     'LotFrontage': 'Linear Feet of Street Connected to Property',
 
-
     'Condition1': 'Proximity to Main Road or Railroad',
     'BldgType': 'Type of Dwelling',
     'OverallQual': 'Overall Material and Finish Quality',
     'OverallCond': 'Overall Condition Rating',
-
 
     'YearBuilt': 'Original Construction Date',
     'YearRemodAdd': 'Remodel Date',
@@ -669,7 +598,6 @@ variable_descriptions = {
     'ExterCond': 'Present Condition of the Material on the Exterior',
     'Foundation': 'Type of Foundation',
 
-
     'BsmtQual': 'Basement Quality',
     'BsmtExposure': 'Walkout/Garden Level Basement Walls',
     'BsmtFinType1': 'Quality of Basement Finished Area',
@@ -678,7 +606,6 @@ variable_descriptions = {
     'BsmtFinSF2': 'Type 2 Finished (in Square Feet)',
     'BsmtUnfSF': 'Unfinished Basement Area (in Square Feet)',
     'TotalBsmtSF': 'Total Basement Area (in Square Feet)',
-
 
     'HeatingQC': 'Heating Quality and Condition',
     '1stFlrSF': 'First Floor (in Square Feet)',
@@ -693,7 +620,6 @@ variable_descriptions = {
     'Fireplaces': 'Number of Fireplaces',
     'FireplaceQu': 'Fireplace Quality',
 
-
     'GarageType': 'Garage Location',
     'GarageYrBlt': 'Year Garage Was Built',
     'GarageFinish': 'Interior Finish of the Garage',
@@ -701,7 +627,6 @@ variable_descriptions = {
     'GarageArea': 'Size of Garage in Square Feet',
     'GarageQual': 'Garage Quality',
     'GarageCond': 'Garage Condition',
-
 
     'WoodDeckSF': 'Wood Deck Area (in Square Feet)',
     'OpenPorchSF': 'Open Porch Area (in Square Feet)',
@@ -714,36 +639,27 @@ variable_descriptions = {
     'MiscFeature': 'Miscellaneous Feature Not Covered in Other Categories',
     'MiscVal': 'Value of Miscellaneous Feature',
 
-
     'MoSold': 'Month Sold',
     'YrSold': 'Year Sold',
     'SaleType': 'Type of Sale',
     'SaleCondition': 'Condition of Sale'
 }
 
-
-
-
 custom_descriptions_df = pd.DataFrame({
     'Variable': ['Neighborhood', 'YearBuilt', 'YearRemodAdd', 'Frequency'],
     'Description': ['Neighborhood Name', 'Year Built Description', 'Year Remodel Description', 'Frequency']
 })
 
-
 neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
-
-
 custom_colors = ['#0091D5', '#EA6A47', '#A5D8DD', '#1C4E80', '#7E909A', '#202020', '#F1F1F1']
 
-
-# Define a callback for updating the graph
+# Callback for updating the graph
 @app.callback(
     Output('example-graph', 'figure'),
     Output('sale-price-graph', 'figure'),
     Input('neighborhood-dropdown', 'value'),
     Input('x-axis-variable', 'value'),
 )
-
 
 def update_graph(selected_neighborhoods, x_axis_variable):
     try:
@@ -753,24 +669,19 @@ def update_graph(selected_neighborhoods, x_axis_variable):
             sale_price_fig = go.Figure()
             return fig, sale_price_fig
 
-
         filtered_df = df_copy[df_copy['Neighborhood'].isin(selected_neighborhoods) & df_copy['SalePrice'].notnull()]
-
 
         # Define fig and sale_price_fig with default values
         fig = go.Figure()
         sale_price_fig = go.Figure()
-
 
         if x_axis_variable in variable_descriptions:
             x_variable_description = variable_descriptions[x_axis_variable]
         else:
             x_variable_description = x_axis_variable
 
-
         x_label = variable_descriptions.get(x_axis_variable, x_axis_variable)
         y_label = "Frequency"
-
 
         if x_axis_variable in ['YearBuilt', 'YearRemodAdd']:
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
@@ -778,12 +689,10 @@ def update_graph(selected_neighborhoods, x_axis_variable):
                         labels={x_axis_variable: x_label, 'Frequency': y_label, 'Neighborhood': 'Neighborhood'},
                         markers=True, title=f'Frequency of {x_label} by Neighborhood')
 
-
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
             sale_price_fig = px.line(grouped_sales, x=x_axis_variable, y='SalePrice', color='Neighborhood', color_discrete_sequence=custom_colors,
                                     labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                     markers=True, title=f'Sale Price of {x_label} by Neighborhood')
-
         
         # Update the code to apply the custom color palette
         elif x_axis_variable in ['MSZoning', 'LandContour', 'LotShape', 'LotConfig', 'Condition1', 'BldgType',
@@ -803,8 +712,6 @@ def update_graph(selected_neighborhoods, x_axis_variable):
                                     barmode='group', title=f'Sale Price of {x_label} by Neighborhood',
                                     color_discrete_sequence=custom_colors)
 
-
-
         elif x_axis_variable in ['LotFrontage', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF',
                                 '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea',
                                 'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch',
@@ -820,13 +727,11 @@ def update_graph(selected_neighborhoods, x_axis_variable):
                                         labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                         title=f'Histogram of Sale Price of {x_label} by Neighborhood')
 
-
         else:
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
             fig = px.bar(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood', barmode='stack',
                         color_discrete_sequence=custom_colors, labels={x_axis_variable: x_label, 'Frequency': 'Frequency', 'Neighborhood': 'Neighborhood'},
                         title=f'Frequency of {x_label} by Neighborhood')
-
 
             # Create the sale price graph
             grouped_sales = filtered_df.groupby([x_axis_variable, 'Neighborhood'])['SalePrice'].mean().reset_index()
@@ -834,14 +739,10 @@ def update_graph(selected_neighborhoods, x_axis_variable):
                                     color_discrete_sequence=custom_colors, labels={x_axis_variable: x_label, 'SalePrice': 'Sale Price', 'Neighborhood': 'Neighborhood'},
                                     barmode='group', title=f'Sale Price of {x_label} by Neighborhood')
 
-
         return fig, sale_price_fig
     except Exception as e:
         print(str(e))
         return go.Figure(), go.Figure()
-
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
