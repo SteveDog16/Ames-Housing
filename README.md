@@ -7,7 +7,7 @@ Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housi
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/b339af78-51c4-4b3c-a70f-007adb9d13f8)
 - Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
 
-**Key Features:**
+### Key Features:
 
 - Property Count and Last Update Time: The landing page prominently displays the total property count, allowing you to quickly gauge the scope of the dataset. Additionally, it reveals the time of the last update, ensuring you're working with the latest data.
 - Data Summaries: A concise list of summaries is available, highlighting significant findings and noteworthy trends discovered within the dataset. These summaries serve as a quick reference to important insights.
