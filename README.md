@@ -30,21 +30,29 @@ Run the ames_analytics_final_draft.py file, and you will see the dashboard in yo
 
 ### General use
 
-On the page, click on each tab. Every tab represents a unique category regarding the Ames Housing.
+**Home Page Navigation:
+To begin exploring the wealth of information on the Ames Housing, simply navigate by clicking on the different tabs. Each tab, except for the home page, is dedicated to a unique category within the Ames Housing dataset.
 
-It will display two graphs: one representing the frequency of each variable, and another representing sale price in relation to each variable.
+**Graphical Insights:
+Inside each tab, you'll find two informative graphs. The first graph depicts the frequency distribution of various variables, while the second graph illustrates the relationship between sale prices and these variables.
 
-To display different variables, click on the dropdown button, which will display different variables. Click on each variable you are interested in and it will display the visuals regarding that variable.
+**Variable Selection:
+Tailoring your analysis to specific variables is a breeze. Utilize the second dropdown menu to select the variable of interest. By selecting different variables, you can observe how they influence the graphs.
 
-It will be included with the variable that is already in the dropdown. If you want to remove that variable because you want to look at just the variable you chose or if you could not see the information of the variable you chose, remove the other variable by clicking on the X button.
+**Neighborhood Exploration:
+The first dropdown menu is dedicated to neighborhoods. Here, you can choose and compare different neighborhoods by examining their values within the frequency and sale price graphs.
 
-If you want to include several variables in one graph, click on each variable you are interested in exploring.
+**Adding and Removing Neighborhoods:
+Expanding your analysis is simple. To add neighborhoods, click the dropdown, select your desired neighborhoods, and watch the graphs adapt accordingly. Conversely, removing neighborhoods is equally straightforward; just click the 'X' button next to the neighborhood you wish to remove.
 
-Depending on the variable type, some variables are displayed as either histograms or scatter plots.
+**Graph Types:
+Depending on your variable selections, you'll encounter various graph types. These include stacked bar charts, histograms, and line graphs. The choice of graph type enhances the clarity and depth of insights.
 
-To look at the specific information of each data point/bar, hover your cursor over them and it will display the values from the x-axis and the y-axis.
+**Interactive Data Points:
+Dive deeper into the specifics of each data point or bar. Hover your cursor over them, and detailed information, such as neighborhood, x-axis, and y-axis values, will be readily displayed.
 
-To look at another category, click on any tab you are interested in and explore!
+**Exploration at Your Fingertips:
+Ready to explore another category? Simply click on the tab of your choice and embark on your journey of discovery. The wealth of information within the Ames Housing dataset is right at your fingertips!
 
 ### Explore a graph
 
