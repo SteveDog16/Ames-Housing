@@ -1,17 +1,10 @@
 # Ames-Housing
 
-Used data from Kaggle to analyze data regarding housing information in Ames, Iowa.
+Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housing data pertaining to Ames, Iowa
 
 ## Screenshots
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/1415b312-3244-484d-90e4-cc8d8f300c3c)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/b339af78-51c4-4b3c-a70f-007adb9d13f8)
-
-- Landing page indicating property count and time of update to the dashboard.
-- List of summaries regarding significant data found.
-- First table with building class values and what they mean.
-- Second table is the original dataset whose values have been cleaned to be made more understandable.
-- Bar graph with the x-axis representing neighborhoods, and a dropdown that contains two values for the y-axis: frequency (count of each value) and sale price
-
 **Dashboard Landing Page:**
 
 - Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
