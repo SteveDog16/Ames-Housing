@@ -11,11 +11,11 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 
 ### Key Features:
 
-- Property Count and Last Update Time: The landing page prominently displays the total property count, allowing you to quickly gauge the scope of the dataset. Additionally, it reveals the time of the last update, ensuring you're working with the latest data.
-- Data Summaries: A concise list of summaries is available, highlighting significant findings and noteworthy trends discovered within the dataset. These summaries serve as a quick reference to important insights.
-- Building Class Values: The first table presented on the dashboard delves into the world of building class values. It not only enumerates these values but also provides clear and concise explanations for each class, ensuring you understand the significance of each category.
-- Cleaned Original Dataset: The second table showcases the original dataset, meticulously cleaned and optimized for clarity and ease of comprehension. You can confidently explore the data with the assurance that it's been refined for your convenience.
-- Neighborhood Analysis: A dynamic bar graph enriches your understanding of the dataset. The x-axis features neighborhoods, and you have the flexibility to choose between two y-axis options: frequency (representing the count of each neighborhood value) and sale price (offering insights into the pricing trends within different neighborhoods).
+- **Property Count and Last Update Time:** The landing page prominently displays the total property count, allowing you to quickly gauge the scope of the dataset. Additionally, it reveals the time of the last update, ensuring you're working with the latest data.
+- **Data Summaries:** A concise list of summaries is available, highlighting significant findings and noteworthy trends discovered within the dataset. These summaries serve as a quick reference to important insights.
+- **Building Class Values:** The first table presented on the dashboard delves into the world of building class values. It not only enumerates these values but also provides clear and concise explanations for each class, ensuring you understand the significance of each category.
+- **Cleaned Original Dataset:** The second table showcases the original dataset, meticulously cleaned and optimized for clarity and ease of comprehension. You can confidently explore the data with the assurance that it's been refined for your convenience.
+- **Neighborhood Analysis:** A dynamic bar graph enriches your understanding of the dataset. The x-axis features neighborhoods, and you have the flexibility to choose between two y-axis options: frequency (representing the count of each neighborhood value) and sale price (offering insights into the pricing trends within different neighborhoods).
 
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/37c455f5-940c-41c0-acc4-a728d12e8126)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/c12e18a5-1cb7-4528-ad3f-8cde53800c29)
@@ -56,19 +56,29 @@ Ready to explore another category? Simply click on the tab of your choice and em
 
 ### Explore a graph
 
-If you want to zoom into a specific area of a graph, click on an starting point, hold your cursor and move it towards the ending point of the area you want to explore, then release your cursor. 
+**Zooming In:**
+For a closer look at a specific area within a graph, single-click your starting point, drag your cursor towards the desired ending point, and release.
 
-If you want to go back to the original view, double click on the graph. This applies to every feature for the exploration of any graphs.
+**Resetting the View:**
+To return to the original view, simply double-click anywhere on the graph. This user-friendly feature is consistent across all graph interactions.
 
-If you want to move the graph around, hover your cursor to the top right corner of a graph, click on an icon with 4 arrows, and hold and move your mouse to look at a specific area of the graph.
+**Moving the Graph:**
+For adjusting the position of the graph, navigate to the top right corner and click on the icon featuring four arrows. Hold the click and move your mouse to explore specific areas of interest.
 
-If you want to select a bar in a bar graph, click on a dotted square icon, hold and move your mouse on the box(es) you want to select.
+**Selecting Bars in Bar Graphs:**
+To select individual bars in a bar graph, click on the dotted square icon, and then hold and move your mouse to encompass the desired bars.
 
-If you want to select certain data points in a scatter plot, click on an oval-shaped icon, hold and move your mouse on the data points you want to select.
+**Selecting Data Points in Scatter Plots:**
+For pinpointing specific data points in a scatter plot, click on the oval-shaped icon. Hold the click and move your mouse to highlight the data points you wish to select.
 
-If you want to zoom in a graph, click on the square with a plus sign.
+**Zooming In and Out:**
+Enabling zoom functionality is a breeze. Click on the square icon with a plus sign to zoom in, or the square with a minus sign to zoom out.
 
-If you want to zoom out of a graph, click on the square with a minus sign.
+**Viewing Data Point Details:**
+To access specific value descriptions on the graph, hover over the data point of interest. A display box will appear, containing relevant information such as neighborhood, x-axis, and y-axis values.
+
+**Customizing Neighborhood Display:**
+Tailor your graph's presentation by choosing which neighborhoods to include or exclude. In the legend on the right side of the graph, simply click on the neighborhoods you wish to hide or reveal. Effortlessly refine your visualizations to meet your needs.
 
 
 ## Link to the housing dataset
