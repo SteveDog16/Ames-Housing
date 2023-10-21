@@ -30,28 +30,28 @@ Run the ames_analytics_final_draft.py file, and you will see the dashboard in yo
 
 ### General use
 
-**Home Page Navigation:
+**Home Page Navigation:**
 To begin exploring the wealth of information on the Ames Housing, simply navigate by clicking on the different tabs. Each tab, except for the home page, is dedicated to a unique category within the Ames Housing dataset.
 
-**Graphical Insights:
+**Graphical Insights:**
 Inside each tab, you'll find two informative graphs. The first graph depicts the frequency distribution of various variables, while the second graph illustrates the relationship between sale prices and these variables.
 
-**Variable Selection:
+**Variable Selection:**
 Tailoring your analysis to specific variables is a breeze. Utilize the second dropdown menu to select the variable of interest. By selecting different variables, you can observe how they influence the graphs.
 
-**Neighborhood Exploration:
+**Neighborhood Exploration:**
 The first dropdown menu is dedicated to neighborhoods. Here, you can choose and compare different neighborhoods by examining their values within the frequency and sale price graphs.
 
-**Adding and Removing Neighborhoods:
+**Adding and Removing Neighborhoods:**
 Expanding your analysis is simple. To add neighborhoods, click the dropdown, select your desired neighborhoods, and watch the graphs adapt accordingly. Conversely, removing neighborhoods is equally straightforward; just click the 'X' button next to the neighborhood you wish to remove.
 
-**Graph Types:
+**Graph Types:**
 Depending on your variable selections, you'll encounter various graph types. These include stacked bar charts, histograms, and line graphs. The choice of graph type enhances the clarity and depth of insights.
 
-**Interactive Data Points:
+**Interactive Data Points:**
 Dive deeper into the specifics of each data point or bar. Hover your cursor over them, and detailed information, such as neighborhood, x-axis, and y-axis values, will be readily displayed.
 
-**Exploration at Your Fingertips:
+**Exploration at Your Fingertips:**
 Ready to explore another category? Simply click on the tab of your choice and embark on your journey of discovery. The wealth of information within the Ames Housing dataset is right at your fingertips!
 
 ### Explore a graph
