@@ -361,11 +361,6 @@ def create_home_layout():
             # White Line
             html.Div(className="white-line"),
                 html.Div([
-                    #html.Div([
-                    #    html.Div('Property Count', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center', 'line-height': '2.35'}),
-                    #    html.Div(f'{len(df)}', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
-                    #], style={'background-color': 'lightgrey', 'padding': '10px', 'width': '200px', 'margin-top': '15px', 'margin-bottom': '10px', 'margin-left': '15px', 'display': 'inline-block'}),
-
                     html.Div([
                         html.Div('Most Common Building Class', style={'font-size': '1.2em', 'color': 'black', 'text-align': 'center'}),
                         html.Div(average_mssubclass + ' (1-Story 1946 & Newer)', style={'font-size': '1em', 'color': 'black', 'text-align': 'center'}),
