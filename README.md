@@ -1,6 +1,8 @@
-# Ames-Housing
+# Ames Housing Price Dashboard
 
 Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housing data pertaining to Ames, Iowa
+
+Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess neighborhood characteristics and make informed decisions on their choice of residence, guided by the frequency and sale prices of these characteristics within each neighborhood.
 
 ## Dashboard Landing Page
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/1415b312-3244-484d-90e4-cc8d8f300c3c)
@@ -18,12 +20,11 @@ Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housi
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/37c455f5-940c-41c0-acc4-a728d12e8126)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/c12e18a5-1cb7-4528-ad3f-8cde53800c29)
 - In the second dropdown menu, the selected variable is 'Building Class,' utilized for the x-axis. Two stacked bar charts are presented: one illustrating the frequency of each building class value, and the other displaying the sale prices associated with each building class value.
-- The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.
+- The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.Certain neighborhoods are absent from specific values within the graphs due to their absence in the dataset.
 
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/d635b0c5-ba57-4efe-8223-3423aff7ca41)
+## How to run the project
 
-- Variables BsmtFullBath (basement full bathrooms), BsmtHalfBath (basement half bathrooms), FullBath (full bathrooms above grade), and HalfBath (half baths above grade) are visualized as bar graphs in the frequency and sale price graphs. They are grouped together since they contain the same values.
-
+Run the ames_analytics_final_draft.py file, and you will see the dashboard in your locally hosted site
 
 ## How to use the Dash application
 
@@ -60,6 +61,7 @@ If you want to select certain data points in a scatter plot, click on an oval-sh
 If you want to zoom in a graph, click on the square with a plus sign.
 
 If you want to zoom out of a graph, click on the square with a minus sign.
+
 
 ## Link to the housing dataset
 
