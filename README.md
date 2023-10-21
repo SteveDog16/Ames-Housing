@@ -12,6 +12,18 @@ Used data from Kaggle to analyze data regarding housing information in Ames, Iow
 - Second table is the original dataset whose values have been cleaned to be made more understandable.
 - Bar graph with the x-axis representing neighborhoods, and a dropdown that contains two values for the y-axis: frequency (count of each value) and sale price
 
+**Dashboard Landing Page:**
+
+- Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
+
+**Key Features:**
+
+- Property Count and Last Update Time: The landing page prominently displays the total property count, allowing you to quickly gauge the scope of the dataset. Additionally, it reveals the time of the last update, ensuring you're working with the latest data.
+- Data Summaries: A concise list of summaries is available, highlighting significant findings and noteworthy trends discovered within the dataset. These summaries serve as a quick reference to important insights.
+- Building Class Values: The first table presented on the dashboard delves into the world of building class values. It not only enumerates these values but also provides clear and concise explanations for each class, ensuring you understand the significance of each category.
+- Cleaned Original Dataset: The second table showcases the original dataset, meticulously cleaned and optimized for clarity and ease of comprehension. You can confidently explore the data with the assurance that it's been refined for your convenience.
+- Neighborhood Analysis: A dynamic bar graph enriches your understanding of the dataset. The x-axis features neighborhoods, and you have the flexibility to choose between two y-axis options: frequency (representing the count of each neighborhood value) and sale price (offering insights into the pricing trends within different neighborhoods).
+
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/f5bd714f-e6bc-4b1e-b738-0f5a8070a258)
 
 - Variables 1stFlrSF (first floor square feet) and 2ndFlrSF (second floor square feet) are visualized as scatter plots in the frequency and sale price graphs. They are grouped together each other since they both have numeric values.
