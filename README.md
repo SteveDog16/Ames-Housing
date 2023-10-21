@@ -80,6 +80,8 @@ To access specific value descriptions on the graph, hover over the data point of
 **Customizing Neighborhood Display:**
 Tailor your graph's presentation by choosing which neighborhoods to include or exclude. In the legend on the right side of the graph, simply click on the neighborhoods you wish to hide or reveal. Effortlessly refine your visualizations to meet your needs.
 
+**Contributions**
+I want to express my gratitude to my fellow mentor, Charlie, for his invaluable guidance in dashboard design, chart selection, and variable choice, which greatly contributed to the quality of the project.
 
 ## Link to the housing dataset
 
