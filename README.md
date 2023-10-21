@@ -3,7 +3,7 @@
 Used data from Kaggle to analyze data regarding housing information in Ames, Iowa.
 
 ## Screenshots
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/09e35b07-45b1-48c3-8248-ac49f407e537)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/c7be1554-dbe3-4302-9a2f-c2d061f5247a)
 
 - Variables MSZoning (general zoning classification) and MSSubClass (building class) are visualized as bar graphs in the frequency and sale price graphs. They are not grouped together since they contain different values.
 
