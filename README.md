@@ -15,8 +15,8 @@ Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housi
 - Cleaned Original Dataset: The second table showcases the original dataset, meticulously cleaned and optimized for clarity and ease of comprehension. You can confidently explore the data with the assurance that it's been refined for your convenience.
 - Neighborhood Analysis: A dynamic bar graph enriches your understanding of the dataset. The x-axis features neighborhoods, and you have the flexibility to choose between two y-axis options: frequency (representing the count of each neighborhood value) and sale price (offering insights into the pricing trends within different neighborhoods).
 
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/f5bd714f-e6bc-4b1e-b738-0f5a8070a258)
-
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/37c455f5-940c-41c0-acc4-a728d12e8126)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/c12e18a5-1cb7-4528-ad3f-8cde53800c29)
 - In the second dropdown menu, the selected variable is 'Building Class,' utilized for the x-axis. Two stacked bar charts are presented: one illustrating the frequency of each building class value, and the other displaying the sale prices associated with each building class value.
 - The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.
 
