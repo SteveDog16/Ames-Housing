@@ -17,7 +17,8 @@ Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housi
 
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/f5bd714f-e6bc-4b1e-b738-0f5a8070a258)
 
-- Variables 1stFlrSF (first floor square feet) and 2ndFlrSF (second floor square feet) are visualized as scatter plots in the frequency and sale price graphs. They are grouped together each other since they both have numeric values.
+- In the second dropdown menu, the selected variable is 'Building Class,' utilized for the x-axis. Two stacked bar charts are presented: one illustrating the frequency of each building class value, and the other displaying the sale prices associated with each building class value.
+- The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.
 
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/d635b0c5-ba57-4efe-8223-3423aff7ca41)
 
