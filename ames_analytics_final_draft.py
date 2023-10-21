@@ -50,7 +50,7 @@ abbreviations_map = {
     'IR2': 'Irregular - 2nd Category',
     'IR1': 'Irregular - 1st Category',
     'Inside': 'Inside',
-    'FR2': 'Frontage 2)',
+    'FR2': 'Frontage 2',
     'CulDSac': 'Cul-de-Sac',
     'Corner': 'Corner',
     'PosN': 'Near Positive Feature',
@@ -651,7 +651,7 @@ custom_descriptions_df = pd.DataFrame({
 })
 
 neighborhood_label = neighborhood_labels.get('Neighborhood', 'Neighborhood')
-custom_colors = ['#0091D5', '#EA6A47', '#A5D8DD', '#1C4E80', '#7E909A', '#202020', '#F1F1F1']
+custom_colors = ['#0091D5', '#EA6A47', '#A5D8DD', '#1C4E80', '#7E909A', '#202020', '#C0C0C0']
 
 # Callback for updating the graph
 @app.callback(
@@ -683,7 +683,7 @@ def update_graph(selected_neighborhoods, x_axis_variable):
         x_label = variable_descriptions.get(x_axis_variable, x_axis_variable)
         y_label = "Frequency"
 
-        if x_axis_variable in ['YearBuilt', 'YearRemodAdd']:
+        if x_axis_variable in ['YearBuilt', 'YearRemodAdd', 'GarageYrBlt']:
             grouped_counts = filtered_df.groupby([x_axis_variable, 'Neighborhood']).size().reset_index(name='Frequency')
             fig = px.line(grouped_counts, x=x_axis_variable, y='Frequency', color='Neighborhood', color_discrete_sequence=custom_colors,
                         labels={x_axis_variable: x_label, 'Frequency': y_label, 'Neighborhood': 'Neighborhood'},
