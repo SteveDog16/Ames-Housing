@@ -282,17 +282,19 @@ elif selected_tab == "Property and Building Analysis":
         price_range1 = st.slider("Price Range for Property Assessment Metrics", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range1")
 
         # Slider for selecting Original Construction Date
-        original_construction_date = st.slider("Original Construction Date", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), int(df_copy['Original Construction Date'].min()))
+        original_construction_date = st.slider("Original Construction Date Range for Dwelling", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_1")
 
         # Slider for selecting Remodel Date
-        remodel_date = st.slider("Remodel Date", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), int(df_copy['Remodel Date'].min()))
+        remodel_date = st.slider("Remodel Date Range for Dwelling", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_1")
 
-        # Filter the data based on the selected criteria
+        # Filter the data based on the selected criteria for the second graph
         filtered_data1 = df_copy[
             (df_copy['SalePrice'] >= price_range1[0]) &
             (df_copy['SalePrice'] <= price_range1[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date) &
-            (df_copy['Remodel Date'] >= remodel_date)
+            (df_copy['Original Construction Date'] >= original_construction_date[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date[1]) &
+            (df_copy['Remodel Date'] >= remodel_date[0]) &
+            (df_copy['Remodel Date'] <= remodel_date[1])
         ]
 
         # Calculate the average value for "Overall Material and Finish Quality"
@@ -403,11 +405,6 @@ elif selected_tab == "Property and Building Analysis":
     # Dropdown for selecting the fourth feature and related controls
     # Dropdown for selecting the third feature in the first column of the second row
     with col3:
-
-        
-
-
-
 
         # Replace 4 with 3 in selected_feature3
         selected_feature3 = st.selectbox("Select a Room Feature", [
@@ -539,3 +536,4 @@ elif selected_tab == "Sales Analysis":
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
+
