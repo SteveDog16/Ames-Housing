@@ -255,11 +255,12 @@ if selected_tab == "Home":
     )
 
     st.plotly_chart(fig)
+    
 
 elif selected_tab == "Property and Building Analysis":
     # Content for the Building tab
     st.header("Property and Building Analysis")
-    st.write("This is the Building Analysis tab content.")
+    st.write("This is the Property and Building Analysis tab content.")
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
@@ -402,6 +403,12 @@ elif selected_tab == "Property and Building Analysis":
     # Dropdown for selecting the fourth feature and related controls
     # Dropdown for selecting the third feature in the first column of the second row
     with col3:
+
+        
+
+
+
+
         # Replace 4 with 3 in selected_feature3
         selected_feature3 = st.selectbox("Select a Room Feature", [
             'Total Finished Basement Area (in Square Feet)'
@@ -471,7 +478,6 @@ elif selected_tab == "Property and Building Analysis":
         st.plotly_chart(fig_pie)
 
 
-
     # Replace 3 with 4 in variable names in col4
     with col4:
         selected_feature4 = st.selectbox("Select a Room Feature", [
@@ -523,6 +529,9 @@ elif selected_tab == "Property and Building Analysis":
         # Display the fourth stacked bar chart
         st.plotly_chart(fig4)
 
+
+    
+
 elif selected_tab == "Sales Analysis":
     # Content for the Sales Analysis tab
     st.header("Sales Analysis Tab")
@@ -530,4 +539,3 @@ elif selected_tab == "Sales Analysis":
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
-
