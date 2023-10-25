@@ -11,7 +11,7 @@ import seaborn as sns
 import streamlit as st
 from streamlit import components
 
-st.set_page_config(page_title="Sales Dashboard", page_icon=":bar_chart:", layout="wide")
+st.set_page_config(page_title="Ames House Price Dashboard", page_icon=":bar_chart:", layout="wide")
 
 st.title('Ames House Price Dashboard')
 
@@ -268,142 +268,58 @@ elif selected_tab == "Property and Building Analysis":
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
 
-    # Create two columns with equal width to place the graphs side by side
     col1, col2 = st.columns(2)
-    
-    # Add a horizontal rule to create spacing
-    st.write("---")
 
+    # Replace 5 with 1 in variable names in col1
     with col1:
-        # Dropdown for selecting the first feature in the first column
-        st.title("Property Assessment Metrics")
-        
-        selected_feature1 = st.selectbox("Select a Property Feature", [
-            'Overall Material and Finish Quality',
-            'Overall Condition Rating',
-            'Exterior Material Quality',
-            'Present Condition of the Material on the Exterior',
-            'Basement Quality',
-            'Heating Quality and Condition',
-            'Kitchen Quality',
-            'Fireplace Quality',
-            'Garage Quality',
-            'Garage Condition'
-        ], key="feature1")
-
-        # Slider for selecting price ranges for the first feature
-        price_range1 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range1")
-
-        # Range slider for selecting Original Construction Date for the first feature
-        original_construction_date_range_1 = st.slider("Original Construction Date", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), key="original_construction_date_range_1")
-
-        # Slider for selecting Remodel Date for the first feature
-        remodel_date_range_1 = st.slider("Remodel Date", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), key="remodel_date_range_1")
-
-        # Filter the data based on the selected criteria for the first graph
-        filtered_data1 = df_copy[
-            (df_copy['SalePrice'] >= price_range1[0]) &
-            (df_copy['SalePrice'] <= price_range1[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_1) &
-            (df_copy['Remodel Date'] >= remodel_date_range_1)
+        st.title("Building Class Explanation Table")
+        data_explanation = [
+            {'Building Class': 20, 'Meaning': '1-Story 1946 & Newer'},
+            {'Building Class': 30, 'Meaning': '1-Story 1945 & Older'},
+            {'Building Class': 40, 'Meaning': 'Multi-Residence Properties'},
+            {'Building Class': 45, 'Meaning': '1-1/2 Story - Unfinished'},
+            {'Building Class': 50, 'Meaning': '1-1/2 Story Finished'},
+            {'Building Class': 60, 'Meaning': '2-Story 1946 & Newer'},
+            {'Building Class': 70, 'Meaning': '2-Story 1945 & Older'},
+            {'Building Class': 75, 'Meaning': '2-1/2 Story'},
+            {'Building Class': 80, 'Meaning': 'Split or Multi-Level'},
+            {'Building Class': 85, 'Meaning': 'Split Foyer'},
+            {'Building Class': 90, 'Meaning': 'Duplex - All Styles and Ages'},
+            {'Building Class': 120, 'Meaning': '1-Story PUD (Planned Unit Development)'},
+            {'Building Class': 160, 'Meaning': 'Two-Story Homes'},
+            {'Building Class': 180, 'Meaning': 'Three-Story Homes'},
+            {'Building Class': 190, 'Meaning': '2-Story PUD'}
         ]
+        # Display a data table based on the data_explanation list
+        st.table(data_explanation)
 
-        # Create a frequency count of the selected feature and neighborhood for the first graph
-        feature_counts1 = filtered_data1.groupby([selected_feature1, 'Neighborhood']).size().reset_index()
-        feature_counts1.columns = [selected_feature1, 'Neighborhood', 'Frequency']
+        # Calculate the distribution of Building Classes based on counts in df_copy
+        building_class_counts = df_copy['Building Class'].value_counts().reset_index()
+        building_class_counts.columns = ['Building Class', 'Count']
 
-        # Sort the data by 'Frequency' and get the top 10 neighborhoods
-        top_neighborhoods = feature_counts1.groupby('Neighborhood')['Frequency'].sum().nlargest(10).index
+        # Create a pie chart based on the distribution of Building Class counts
+        fig_pie = px.pie(building_class_counts, names='Building Class', values='Count', title='Distribution of Building Classes')
 
-        # Filter data to include only the top 10 neighborhoods
-        filtered_feature_counts = feature_counts1[feature_counts1['Neighborhood'].isin(top_neighborhoods)]
+        fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
 
-        # Calculate the average value for "Overall Material and Finish Quality"
-        average_quality = filtered_data1['Overall Material and Finish Quality'].mean()
+        # Display the pie chart
+        st.plotly_chart(fig_pie)
 
-        # Calculate the average value for "Overall Condition Rating"
-        average_condition = filtered_data1['Overall Condition Rating'].mean()
-
-        # Create a stacked bar chart using Plotly Express for the top 10 neighborhoods
-        fig_stacked_bar = px.bar(
-            filtered_feature_counts,
-            x=selected_feature1,
-            y='Frequency',
-            color='Neighborhood',
-            barmode='stack',
-            labels={'x': selected_feature1, 'Frequency': 'Frequency'},
-            title=f"Stacked Bar Charts of Top 10 Neighborhoods, {selected_feature1}, and Frequency",
-        )
-
-        # Display the stacked bar chart using st.plotly_chart
-        st.plotly_chart(fig_stacked_bar)
-
-        # Create the gauge chart based on the selected feature
-
-        average_value = 0
-        title_text = "Average Value"  # Set a default title text
-        
-        if selected_feature1 == 'Overall Material and Finish Quality':
-            average_value = average_quality
-            title_text = "Average Overall Quality"
-        elif selected_feature1 == 'Overall Condition Rating':
-            average_value = average_condition
-            title_text = "Average Overall Condition"
-        elif selected_feature1 == 'Fireplace Quality':
-            fireplace_quality_counts = filtered_data1['Fireplace Quality'].value_counts().reset_index()
-            fireplace_quality_counts.columns = ['Fireplace Quality', 'Number of Fireplaces']
-
-            # Create a donut chart based on "Fireplace Quality" and display the number of fireplaces
-            fig_donut_chart = px.pie(fireplace_quality_counts, names='Fireplace Quality', values='Number of Fireplaces', hole=0.4, labels={'Number of Fireplaces': 'Number of Fireplaces'})
-
-            fig_donut_chart.update_layout(
-                height=300,  # Adjust the height
-                width=300,    # Adjust the width
-                title="Distribution of Fireplace Quality"
-            )
-
-            st.plotly_chart(fig_donut_chart)
-        else:
-            average_value = 0
-            title_text = "Average Value"
-
-        
-        # Create a smaller gauge chart
-        fig_quality = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=average_value,
-            title={"text": title_text},
-            gauge={
-                "axis": {"range": [0, 10]},
-                "steps": [
-                    {"range": [0, 4], "color": "lightgray"},
-                    {"range": [4, 7], "color": "lightgreen"},
-                    {"range": [7, 10], "color": "lightblue"},
-                ],
-            },
-        ))
-
-        fig_quality.update_layout(height=250, width=250)  # Adjust the size
-
-        # Display the gauge chart
-        st.plotly_chart(fig_quality)
-
-    # Dropdown for selecting the second feature in the second column
+    # Replace 6 with 2 in variable names in col2
     with col2:
-        st.title("Dwelling")
-        selected_feature2 = st.selectbox("Select a Dwelling Feature", [
-            'Type of Dwelling',
-            'Style of Dwelling'
+        st.title("Building Class")
+        selected_feature2 = st.selectbox("Select a Building Class Feature", [
+            'Building Class'
         ], key="feature2")
 
-        # Slider for selecting price ranges for the second feature
+        # Replace 6 with 2 in variable names
         price_range2 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range2")
 
-        # Range slider for selecting Original Construction Date for the second feature
-        original_construction_date_range_2 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_2")
+        # Replace 6 with 2 in variable names
+        original_construction_date_range_2 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range2")
 
-        # Range slider for selecting Remodel Date for the second feature
-        remodel_date_range_2 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_2")
+        # Replace 6 with 2 in variable names
+        remodel_date_range_2 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range2")
 
         # Filter the data based on the selected criteria for the second graph
         filtered_data2 = df_copy[
@@ -414,6 +330,7 @@ elif selected_tab == "Property and Building Analysis":
             (df_copy['Remodel Date'] >= remodel_date_range_2[0]) &
             (df_copy['Remodel Date'] <= remodel_date_range_2[1])
         ]
+
         # Create a frequency count of the selected feature and neighborhood for the second graph
         feature_counts2 = filtered_data2.groupby([selected_feature2, 'Neighborhood']).size().reset_index()
         feature_counts2.columns = [selected_feature2, 'Neighborhood', 'Frequency']
@@ -438,69 +355,373 @@ elif selected_tab == "Property and Building Analysis":
         # Display the second stacked bar chart
         st.plotly_chart(fig2)
 
+    st.write("---")
+
+
+    # Create two columns with equal width to place the graphs side by side
+    col3, col4 = st.columns(2)
+
+    # Add a horizontal rule to create spacing
+    st.write("---")
+
+    with col3:
+        # Dropdown for selecting the first feature in the first column
+        st.title("Property Assessment Metrics")
+
+        selected_feature3 = st.selectbox("Select a Property Feature", [
+            'Overall Material and Finish Quality',
+            'Overall Condition Rating',
+            'Exterior Material Quality',
+            'Present Condition of the Material on the Exterior',
+            'Basement Quality',
+            'Heating Quality and Condition',
+            'Kitchen Quality',
+            'Fireplace Quality',
+            'Garage Quality',
+            'Garage Condition'
+        ], key="feature3")
+
+        # Slider for selecting price ranges for the first feature
+        price_range3 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range3")
+
+        # Range slider for selecting Original Construction Date for the first feature
+        original_construction_date_range_3 = st.slider("Original Construction Date", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), key="original_construction_date_range_3")
+
+        # Slider for selecting Remodel Date for the first feature
+        remodel_date_range_3 = st.slider("Remodel Date", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), key="remodel_date_range_3")
+
+        # Filter the data based on the selected criteria for the first graph
+        filtered_data3 = df_copy[
+            (df_copy['SalePrice'] >= price_range3[0]) &
+            (df_copy['SalePrice'] <= price_range3[1]) &
+            (df_copy['Original Construction Date'] >= original_construction_date_range_3) &
+            (df_copy['Remodel Date'] >= remodel_date_range_3)
+        ]
+
+        # Create a frequency count of the selected feature and neighborhood for the first graph
+        feature_counts3 = filtered_data3.groupby([selected_feature3, 'Neighborhood']).size().reset_index()
+        feature_counts3.columns = [selected_feature3, 'Neighborhood', 'Frequency']
+
+        # Sort the data by 'Frequency' and get the top 10 neighborhoods
+        top_neighborhoods3 = feature_counts3.groupby('Neighborhood')['Frequency'].sum().nlargest(10).index
+
+        # Filter data to include only the top 10 neighborhoods
+        filtered_feature_counts3 = feature_counts3[feature_counts3['Neighborhood'].isin(top_neighborhoods3)]
+
+        # Calculate the average value for "Overall Material and Finish Quality"
+        average_quality3 = filtered_data3['Overall Material and Finish Quality'].mean()
+
+        # Calculate the average value for "Overall Condition Rating"
+        average_condition3 = filtered_data3['Overall Condition Rating'].mean()
+
+        # Create a stacked bar chart using Plotly Express for the top 10 neighborhoods
+        fig_stacked_bar3 = px.bar(
+            filtered_feature_counts3,
+            x=selected_feature3,
+            y='Frequency',
+            color='Neighborhood',
+            barmode='stack',
+            labels={'x': selected_feature3, 'Frequency': 'Frequency'},
+            title=f"Stacked Bar Charts of Top 10 Neighborhoods, {selected_feature3}, and Frequency",
+        )
+
+        # Display the stacked bar chart using st.plotly_chart
+        st.plotly_chart(fig_stacked_bar3)
+
+        # Create the gauge chart based on the selected feature
+
+        average_value3 = 0
+        title_text3 = "Average Value"  # Set a default title text
+
+        if selected_feature3 == 'Overall Material and Finish Quality':
+            average_value3 = average_quality3
+            title_text3 = "Average Overall Quality"
+        elif selected_feature3 == 'Overall Condition Rating':
+            average_value3 = average_condition3
+            title_text3 = "Average Overall Condition"
+        elif selected_feature3 == 'Fireplace Quality':
+            fireplace_quality_counts3 = filtered_data3['Fireplace Quality'].value_counts().reset_index()
+            fireplace_quality_counts3.columns = ['Fireplace Quality', 'Number of Fireplaces']
+
+            # Create a donut chart based on "Fireplace Quality" and display the number of fireplaces
+            fig_donut_chart3 = px.pie(fireplace_quality_counts3, names='Fireplace Quality', values='Number of Fireplaces', hole=0.4, labels={'Number of Fireplaces': 'Number of Fireplaces'})
+
+            fig_donut_chart3.update_layout(
+                height=300,  # Adjust the height
+                width=300,    # Adjust the width
+                title="Distribution of Fireplace Quality"
+            )
+
+            st.plotly_chart(fig_donut_chart3)
+        else:
+            average_value3 = 0
+            title_text3 = "Average Value"
+
+
+        # Create a smaller gauge chart
+        fig_quality3 = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=average_value3,
+            title={"text": title_text3},
+            gauge={
+                "axis": {"range": [0, 10]},
+                "steps": [
+                    {"range": [0, 4], "color": "lightgray"},
+                    {"range": [4, 7], "color": "lightgreen"},
+                    {"range": [7, 10], "color": "lightblue"},
+                ],
+            },
+        ))
+
+        fig_quality3.update_layout(height=250, width=250)  # Adjust the size
+
+        # Display the gauge chart
+        st.plotly_chart(fig_quality3)
+    # Dropdown for selecting the second feature in the second column
+    with col4:
+        st.title("Dwelling")
+        selected_feature4 = st.selectbox("Select a Dwelling Feature", [
+            'Type of Dwelling',
+            'Style of Dwelling'
+        ], key="feature4")
+
+        # Slider for selecting price ranges for the first feature
+        price_range4 = st.slider("Price Range", 
+            min_value=int(df_copy['SalePrice'].min()), 
+            max_value=int(df_copy['SalePrice'].max()), 
+            step=1000, 
+            value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), 
+            key="price_range4"
+        )
+
+        # Slider for selecting Original Construction Date for the first feature
+        original_construction_date_range_4 = st.slider("Original Construction Date",
+            min_value=int(df_copy['Original Construction Date'].min()),
+            max_value=int(df_copy['Original Construction Date'].max()),
+            value=(int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())),
+            key="original_construction_date_range_4",
+            step=None  # Ensure only one dragger
+        )
+
+        # Slider for selecting Remodel Date for the first feature
+        remodel_date_range_4 = st.slider("Remodel Date",
+            min_value=int(df_copy['Remodel Date'].min()),
+            max_value=int(df_copy['Remodel Date'].max()),
+            value=(int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())),
+            key="remodel_date_range_4",
+            step=None  # Ensure only one dragger
+        )
+
+        # Filter the data based on the selected criteria for the first graph
+        filtered_data4 = df_copy[
+            (df_copy['SalePrice'] >= price_range4[0]) &
+            (df_copy['SalePrice'] <= price_range4[1]) &
+            (df_copy['Original Construction Date'] >= original_construction_date_range_4[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date_range_4[1]) &
+            (df_copy['Remodel Date'] >= remodel_date_range_4[0]) &
+            (df_copy['Remodel Date'] <= remodel_date_range_4[1])
+        ]
+
+        # Create a frequency count of the selected feature and neighborhood for the second graph
+        feature_counts4 = filtered_data4.groupby([selected_feature4, 'Neighborhood']).size().reset_index()
+        feature_counts4.columns = [selected_feature4, 'Neighborhood', 'Frequency']
+
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the second graph
+        top_neighborhoods4 = feature_counts4.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the second graph
+        filtered_feature_counts4 = feature_counts4[(feature_counts4['Neighborhood'].isin(top_neighborhoods4)) & (feature_counts4[selected_feature4] != 'N/A')]
+
+        # Create a stacked bar chart using Plotly Express for the second feature
+        fig4 = px.bar(
+            filtered_feature_counts4,
+            x=selected_feature4,
+            y='Frequency',
+            color='Neighborhood',  # Color by neighborhood
+            barmode='stack',  # Create a stacked bar chart
+            labels={'x': selected_feature4, 'Frequency': 'Frequency'},
+            title=f"Top Neighborhoods for {selected_feature4}",
+        )
+
+        # Display the second stacked bar chart
+        st.plotly_chart(fig4)
+
+
+
     # Create a new row for the third graph
     #st.write("---")  # Horizontal line to separate rows
 
     # Create two columns for the third graph
-    col3, col4 = st.columns(2)
-    
-    # Dropdown for selecting the third feature in the first column of the second row
-    with col3:
+    col5, col6 = st.columns(2)
+
+    # Replace 4 with 5 in variable names in col5
+    with col5:
+        st.title("Rooms")
+        selected_feature5 = st.selectbox("Select a Room Feature", [
+            'Total Number of Full Bathrooms',
+            'Total Number of Half Bathrooms',
+            'Total Rooms Above Grade (Does Not Include Bathrooms)'
+        ], key="feature5")
+
+        # Replace 4 with 5 in variable names
+        price_range5 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range5")
+
+        # Replace 4 with 5 in variable names
+        original_construction_date_range_5 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range5")
+
+        # Replace 4 with 5 in variable names
+        remodel_date_range_5 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range5")
+
+        # Filter the data based on the selected criteria for the fifth graph
+        filtered_data5 = df_copy[
+            (df_copy['SalePrice'] >= price_range5[0]) &
+            (df_copy['SalePrice'] <= price_range5[1]) &
+            (df_copy['Original Construction Date'] >= original_construction_date_range_5[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date_range_5[1]) &
+            (df_copy['Remodel Date'] >= remodel_date_range_5[0]) &
+            (df_copy['Remodel Date'] <= remodel_date_range_5[1])
+        ]
+
+        # Create a frequency count of the selected feature and neighborhood for the fifth graph
+        feature_counts5 = filtered_data5.groupby([selected_feature5, 'Neighborhood']).size().reset_index()
+        feature_counts5.columns = [selected_feature5, 'Neighborhood', 'Frequency']
+
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the fifth graph
+        top_neighborhoods5 = feature_counts5.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the fifth graph
+        filtered_feature_counts5 = feature_counts5[(feature_counts5['Neighborhood'].isin(top_neighborhoods5)) & (feature_counts5[selected_feature5] != 'N/A')]
+
+        # Create a stacked bar chart using Plotly Express for the fifth feature
+        fig5 = px.bar(
+            filtered_feature_counts5,
+            x=selected_feature5,
+            y='Frequency',
+            color='Neighborhood',  # Color by neighborhood
+            barmode='stack',  # Create a stacked bar chart
+            labels={'x': selected_feature5, 'Frequency': 'Frequency'},
+            title=f"Top Neighborhoods for {selected_feature5}",
+        )
+
+        # Display the fifth stacked bar chart
+        st.plotly_chart(fig5)
+
+
+    # Replace 7 with 6 in variable names in col7
+    with col6:
+        st.title("Unique Features")
+        selected_feature6 = st.selectbox("Select a Unique Feature", [
+            'Pool Quality',
+            'Fence Quality',
+            'Flatness of the Property',
+            'Miscellaneous Feature',
+            'General Shape of Property'
+        ], key="feature6")
+
+        # Replace 7 with 6 in variable names
+        price_range6 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range6")
+
+        # Replace 7 with 6 in variable names
+        original_construction_date_range_6 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_6")
+
+        # Replace 7 with 6 in variable names
+        remodel_date_range_6 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_6")
+
+        # Filter the data based on the selected criteria for the seventh graph
+        filtered_data6 = df_copy[
+            (df_copy['SalePrice'] >= price_range6[0]) &
+            (df_copy['SalePrice'] <= price_range6[1]) &
+            (df_copy['Original Construction Date'] >= original_construction_date_range_6[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date_range_6[1]) &
+            (df_copy['Remodel Date'] >= remodel_date_range_6[0]) &
+            (df_copy['Remodel Date'] <= remodel_date_range_6[1])
+        ]
+
+        # Create a frequency count of the selected feature and neighborhood for the sixth graph
+        feature_counts6 = filtered_data6.groupby([selected_feature6, 'Neighborhood']).size().reset_index()
+        feature_counts6.columns = [selected_feature6, 'Neighborhood', 'Frequency']
+
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the sixth graph
+        top_neighborhoods6 = feature_counts6.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the sixth graph
+        filtered_feature_counts6 = feature_counts6[(feature_counts6['Neighborhood'].isin(top_neighborhoods6)) & (feature_counts6[selected_feature6] != 'N/A')]
+
+        # Create a stacked bar chart using Plotly Express for the sixth feature
+        fig6 = px.bar(
+            filtered_feature_counts6,
+            x=selected_feature6,
+            y='Frequency',
+            color='Neighborhood',  # Color by neighborhood
+            barmode='stack',  # Create a stacked bar chart
+            labels={'x': selected_feature6, 'Frequency': 'Frequency'},
+            title=f"Top Neighborhoods for {selected_feature6}",
+        )
+
+        # Display the sixth stacked bar chart
+        st.plotly_chart(fig6)
+
+
+    st.write("---")
+
+    col7, col8 = st.columns(2)
+
+    # Dropdown for selecting the seventh feature in the first column of the second row
+    with col7:
         st.title("Indoor Size")
-        # Replace 4 with 3 in selected_feature3
-        selected_feature3 = st.selectbox("Select an Indoor Size Feature", [
+        # Replace 3 with 7 in selected_feature3
+        selected_feature7 = st.selectbox("Select an Indoor Size Feature", [
             'Total Finished Basement Area (in Square Feet)',
             'Unfinished Basement Area (in Square Feet)',
             'Total Basement Area (in Square Feet)',
             'Above Grade (Ground) Living Area (in Square Feet)'
-        ], key="feature3")
+        ], key="feature7")
 
-        # Replace 4 with 3 in price_range3
-        price_range3 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range3")
+        # Replace 3 with 7 in price_range3
+        price_range7 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range7")
 
-        # Replace 4 with 3 in original_construction_date_range_3
-        original_construction_date_range_3 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_3")
+        # Replace 3 with 7 in original_construction_date_range_3
+        original_construction_date_range_7 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_7")
 
-        # Replace 4 with 3 in remodel_date_range_3
-        remodel_date_range_3 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_3")
+        # Replace 3 with 7 in remodel_date_range_3
+        remodel_date_range_7 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_7")
 
-        # Filter the data based on the selected criteria for the third graph
-        filtered_data3 = df_copy[
-            (df_copy['SalePrice'] >= price_range3[0]) &
-            (df_copy['SalePrice'] <= price_range3[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_3[0]) &
-            (df_copy['Original Construction Date'] <= original_construction_date_range_3[1]) &
-            (df_copy['Remodel Date'] >= remodel_date_range_3[0]) &
-            (df_copy['Remodel Date'] <= remodel_date_range_3[1])
+        # Filter the data based on the selected criteria for the seventh graph
+        filtered_data7 = df_copy[
+            (df_copy['SalePrice'] >= price_range7[0]) &
+            (df_copy['SalePrice'] <= price_range7[1]) &
+            (df_copy['Original Construction Date'] >= original_construction_date_range_7[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date_range_7[1]) &
+            (df_copy['Remodel Date'] >= remodel_date_range_7[0]) &
+            (df_copy['Remodel Date'] <= remodel_date_range_7[1])
         ]
 
-        # Create a frequency count of the selected feature and neighborhood for the third graph
-        feature_counts3 = filtered_data3.groupby([selected_feature3, 'Neighborhood']).size().reset_index()
-        feature_counts3.columns = [selected_feature3, 'Neighborhood', 'Frequency']
+        # Create a frequency count of the selected feature and neighborhood for the seventh graph
+        feature_counts7 = filtered_data7.groupby([selected_feature7, 'Neighborhood']).size().reset_index()
+        feature_counts7.columns = [selected_feature7, 'Neighborhood', 'Frequency']
 
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the third graph
-        top_neighborhoods3 = feature_counts3.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the seventh graph
+        top_neighborhoods7 = feature_counts7.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
 
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the third graph
-        filtered_feature_counts3 = feature_counts3[(feature_counts3['Neighborhood'].isin(top_neighborhoods3)) & (feature_counts3[selected_feature3] != 'N/A')]
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the seventh graph
+        filtered_feature_counts7 = feature_counts7[(feature_counts7['Neighborhood'].isin(top_neighborhoods7)) & (feature_counts7[selected_feature7] != 'N/A')]
 
-        fig3 = px.histogram(
-            filtered_feature_counts3,
-            x=selected_feature3,
+        fig7 = px.histogram(
+            filtered_feature_counts7,
+            x=selected_feature7,
             color='Neighborhood',  # Color by neighborhood
-            labels={'x': selected_feature3, 'Frequency': 'Frequency'},
-            title=f"Top Neighborhoods for {selected_feature3}",
+            labels={'x': selected_feature7, 'Frequency': 'Frequency'},
+            title=f"Top Neighborhoods for {selected_feature7}",
         )
 
         # Update the axis labels
-        fig3.update_xaxes(title_text=selected_feature3)
-        fig3.update_yaxes(title_text='Frequency')
+        fig7.update_xaxes(title_text=selected_feature7)
+        fig7.update_yaxes(title_text='Frequency')
 
+        # Display the seventh stacked bar chart
+        st.plotly_chart(fig7)
 
-        # Display the third stacked bar chart
-        st.plotly_chart(fig3)
-
-        # Calculate the sum of Type 1 Finished and Type 2 Finished square feet
+                # Calculate the sum of Type 1 Finished and Type 2 Finished square feet
         total_type_finished = df['BsmtFinSF1'] + df['BsmtFinSF2']
 
         # Calculate the ratio of the sum of Type 1 and Type 2 Finished to Total Basement Area
@@ -547,230 +768,9 @@ elif selected_tab == "Property and Building Analysis":
         fig_pie.update_layout(width=350, height=350)  # Adjust the size
 
         # Display the donut chart
-        #st.plotly_chart(fig_pie)
-
-    # Replace 3 with 4 in variable names in col4
-    with col4:
-        st.title("Rooms")
-        selected_feature4 = st.selectbox("Select a Room Feature", [
-            'Total Number of Full Bathrooms',
-            'Total Number of Half Bathrooms',
-            'Total Rooms Above Grade (Does Not Include Bathrooms)'
-        ], key="feature4")
-
-        # Replace 3 with 4 in variable names
-        price_range4 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range4")
-
-        # Replace 3 with 4 in variable names
-        original_construction_date_range_4 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_4")
-
-        # Replace 3 with 4 in variable names
-        remodel_date_range_4 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_4")
-
-        # Filter the data based on the selected criteria for the fourth graph
-        filtered_data4 = df_copy[
-            (df_copy['SalePrice'] >= price_range4[0]) &
-            (df_copy['SalePrice'] <= price_range4[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_4[0]) &
-            (df_copy['Original Construction Date'] <= original_construction_date_range_4[1]) &
-            (df_copy['Remodel Date'] >= remodel_date_range_4[0]) &
-            (df_copy['Remodel Date'] <= remodel_date_range_4[1])
-        ]
-
-        # Create a frequency count of the selected feature and neighborhood for the fourth graph
-        feature_counts4 = filtered_data4.groupby([selected_feature4, 'Neighborhood']).size().reset_index()
-        feature_counts4.columns = [selected_feature4, 'Neighborhood', 'Frequency']
-
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the fourth graph
-        top_neighborhoods4 = feature_counts4.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
-
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the fourth graph
-        filtered_feature_counts4 = feature_counts4[(feature_counts4['Neighborhood'].isin(top_neighborhoods4)) & (feature_counts4[selected_feature4] != 'N/A')]
-
-        # Create a stacked bar chart using Plotly Express for the fourth feature
-        fig4 = px.bar(
-            filtered_feature_counts4,
-            x=selected_feature4,
-            y='Frequency',
-            color='Neighborhood',  # Color by neighborhood
-            barmode='stack',  # Create a stacked bar chart
-            labels={'x': selected_feature4, 'Frequency': 'Frequency'},
-            title=f"Top Neighborhoods for {selected_feature4}",
-        )
-
-        # Display the fourth stacked bar chart
-        st.plotly_chart(fig4)
-
-        # Calculate the sum of 1stFlrSF, 2ndFlrSF, and LowQualFinSF
-        total_sf = df['1stFlrSF'] + df['2ndFlrSF'] + df['LowQualFinSF']
-
-        # Create a DataFrame with the calculated values
-        data = {'Category': ['First Floor (in Square Feet)', 'Second Floor (in Square Feet)', 'Low-Quality Finished Area (in Square Feet)'],
-                'Total Square Feet': [df_copy['First Floor (in Square Feet)'].sum(), df_copy['Second Floor (in Square Feet)'].sum(), df_copy['Low-Quality Finished Area (in Square Feet)'].sum()]}
-
-        df_pie = pd.DataFrame(data)
-
-        # Create a pie chart using Plotly Express
-        fig_pie = px.pie(df_pie, names='Category', values='Total Square Feet', title='Percentage of Above Ground Living Area')
-
-        # Turn the pie chart into a donut chart by setting the hole parameter
-        fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
-
-        # Adjust the size of the pie chart
-        fig_pie.update_layout(width=430, height=430)  # Adjust the size
-
-        fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
-
-        # Display the donut chart
         st.plotly_chart(fig_pie)
 
-    st.write("---")
-    
-    col5, col6 = st.columns(2)
 
-    # Replace 6 with 5 in variable names in col5
-    with col5:
-        st.title("Building Class Explanation Table")
-        data_explanation = [
-            {'Building Class': 20, 'Meaning': '1-Story 1946 & Newer'},
-            {'Building Class': 30, 'Meaning': '1-Story 1945 & Older'},
-            {'Building Class': 40, 'Meaning': 'Multi-Residence Properties'},
-            {'Building Class': 45, 'Meaning': '1-1/2 Story - Unfinished'},
-            {'Building Class': 50, 'Meaning': '1-1/2 Story Finished'},
-            {'Building Class': 60, 'Meaning': '2-Story 1946 & Newer'},
-            {'Building Class': 70, 'Meaning': '2-Story 1945 & Older'},
-            {'Building Class': 75, 'Meaning': '2-1/2 Story'},
-            {'Building Class': 80, 'Meaning': 'Split or Multi-Level'},
-            {'Building Class': 85, 'Meaning': 'Split Foyer'},
-            {'Building Class': 90, 'Meaning': 'Duplex - All Styles and Ages'},
-            {'Building Class': 120, 'Meaning': '1-Story PUD (Planned Unit Development)'},
-            {'Building Class': 160, 'Meaning': 'Two-Story Homes'},
-            {'Building Class': 180, 'Meaning': 'Three-Story Homes'},
-            {'Building Class': 190, 'Meaning': '2-Story PUD'}
-        ]
-        # Display a data table based on the data_explanation list
-        st.table(data_explanation)
-
-        # Calculate the distribution of Building Classes based on counts in df_copy
-        building_class_counts = df_copy['Building Class'].value_counts().reset_index()
-        building_class_counts.columns = ['Building Class', 'Count']
-
-        # Create a pie chart based on the distribution of Building Class counts
-        fig_pie = px.pie(building_class_counts, names='Building Class', values='Count', title='Distribution of Building Classes')
-
-        fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
-
-        # Display the pie chart
-        st.plotly_chart(fig_pie)
-
-   # Replace 6 with 4 in variable names in col6
-    with col6:
-        st.title("Building Class")
-        selected_feature6 = st.selectbox("Select a Building Class Feature", [
-            'Building Class'
-        ], key="feature6")
-
-        # Replace 6 with 4 in variable names
-        price_range6 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range6")
-
-        # Replace 6 with 4 in variable names
-        original_construction_date_range_6 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_6")
-
-        # Replace 6 with 4 in variable names
-        remodel_date_range_6 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_6")
-
-        # Filter the data based on the selected criteria for the sixth graph
-        filtered_data6 = df_copy[
-            (df_copy['SalePrice'] >= price_range6[0]) &
-            (df_copy['SalePrice'] <= price_range6[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_6[0]) &
-            (df_copy['Original Construction Date'] <= original_construction_date_range_6[1]) &
-            (df_copy['Remodel Date'] >= remodel_date_range_6[0]) &
-            (df_copy['Remodel Date'] <= remodel_date_range_6[1])
-        ]
-
-        # Create a frequency count of the selected feature and neighborhood for the sixth graph
-        feature_counts6 = filtered_data6.groupby([selected_feature6, 'Neighborhood']).size().reset_index()
-        feature_counts6.columns = [selected_feature6, 'Neighborhood', 'Frequency']
-
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the sixth graph
-        top_neighborhoods6 = feature_counts6.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
-
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the sixth graph
-        filtered_feature_counts6 = feature_counts6[(feature_counts6['Neighborhood'].isin(top_neighborhoods6)) & (feature_counts6[selected_feature6] != 'N/A')]
-
-        # Create a stacked bar chart using Plotly Express for the sixth feature
-        fig6 = px.bar(
-            filtered_feature_counts6,
-            x=selected_feature6,
-            y='Frequency',
-            color='Neighborhood',  # Color by neighborhood
-            barmode='stack',  # Create a stacked bar chart
-            labels={'x': selected_feature6, 'Frequency': 'Frequency'},
-            title=f"Top Neighborhoods for {selected_feature6}",
-        )
-
-        # Display the sixth stacked bar chart
-        st.plotly_chart(fig6)
-
-    st.write("---")
-
-    col7, col8 = st.columns(2)
-
-    with col7:
-        st.title("Unique Features")
-        selected_feature7 = st.selectbox("Select a Unique Feature", [
-            'Pool Quality',
-            'Fence Quality',
-            'Flatness of the Property',
-            'Miscellaneous Feature',
-            'General Shape of Property'
-            #'Number of Fireplaces',
-            #'Fireplace Quality'
-        ], key="feature7")
-
-        # Replace 6 with 4 in variable names
-        price_range7 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range7")
-
-        # Replace 6 with 4 in variable names
-        original_construction_date_range_7 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_7")
-
-        # Replace 6 with 4 in variable names
-        remodel_date_range_7 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_7")
-
-        # Filter the data based on the selected criteria for the seventh graph
-        filtered_data7 = df_copy[
-            (df_copy['SalePrice'] >= price_range7[0]) &
-            (df_copy['SalePrice'] <= price_range7[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_7[0]) &
-            (df_copy['Original Construction Date'] <= original_construction_date_range_7[1]) &
-            (df_copy['Remodel Date'] >= remodel_date_range_7[0]) &
-            (df_copy['Remodel Date'] <= remodel_date_range_7[1])
-        ]
-
-        # Create a frequency count of the selected feature and neighborhood for the seventh graph
-        feature_counts7 = filtered_data7.groupby([selected_feature7, 'Neighborhood']).size().reset_index()
-        feature_counts7.columns = [selected_feature7, 'Neighborhood', 'Frequency']
-
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the seventh graph
-        top_neighborhoods7 = feature_counts7.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
-
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the seventh graph
-        filtered_feature_counts7 = feature_counts7[(feature_counts7['Neighborhood'].isin(top_neighborhoods7)) & (feature_counts7[selected_feature7] != 'N/A')]
-
-        # Create a stacked bar chart using Plotly Express for the seventh feature
-        fig7 = px.bar(
-            filtered_feature_counts7,
-            x=selected_feature7,
-            y='Frequency',
-            color='Neighborhood',  # Color by neighborhood
-            barmode='stack',  # Create a stacked bar chart
-            labels={'x': selected_feature7, 'Frequency': 'Frequency'},
-            title=f"Top Neighborhoods for {selected_feature7}",
-        )
-
-        # Display the seventh stacked bar chart
-        st.plotly_chart(fig7)
     
     with col8:
         st.title("Outdoor Size")
@@ -864,6 +864,22 @@ elif selected_tab == "Sales Analysis":
     # Content for the Sales Analysis tab
     st.header("Sales Analysis Tab")
     st.write("This is the Sales Analysis tab content.")
+
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
+
+    # Create a slider for selecting a price range with two draggers
+    price_range = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), step=1000)
+
+    # Create a line graph for Original Construction Date vs. Frequency
+    st.subheader("Original Construction Date vs. Frequency")
+    original_construction_counts = df_copy[(df_copy['SalePrice'] >= price_range[0]) & (df_copy['SalePrice'] <= price_range[1])].groupby('Original Construction Date').size().reset_index()
+    original_construction_counts.columns = ['Original Construction Date', 'Frequency']
+    st.line_chart(original_construction_counts.set_index('Original Construction Date'))
+
+    # Create a line graph for Remodel Date vs. Frequency
+    st.subheader("Remodel Date vs. Frequency")
+    remodel_date_counts = df_copy[(df_copy['SalePrice'] >= price_range[0]) & (df_copy['SalePrice'] <= price_range[1])].groupby('Remodel Date').size().reset_index()
+    remodel_date_counts.columns = ['Remodel Date', 'Frequency']
+    st.line_chart(remodel_date_counts.set_index('Remodel Date'))
