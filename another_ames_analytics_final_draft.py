@@ -232,10 +232,12 @@ new_column_names = {
     'SaleType': 'Type of Sale',
     'SaleCondition': 'Condition of Sale'
 }
+
 # Convert 'LotFrontage' column to float, replacing 'N/A' with NaN
 df_copy['LotFrontage'] = pd.to_numeric(df_copy['LotFrontage'], errors='coerce')
 df_copy['MasVnrArea'] = pd.to_numeric(df_copy['MasVnrArea'], errors='coerce')
 df_copy['GarageYrBlt'] = pd.to_numeric(df_copy['GarageYrBlt'], errors='coerce')
+
 df_copy = df_copy.rename(columns=new_column_names)
 
 # Depending on the selected tab, display different content
@@ -381,21 +383,23 @@ elif selected_tab == "Property and Building Analysis":
             'Garage Condition'
         ], key="feature3")
 
-        # Slider for selecting price ranges for the first feature
+        # Replace 4 with 5 in variable names
         price_range3 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range3")
 
-        # Range slider for selecting Original Construction Date for the first feature
-        original_construction_date_range_3 = st.slider("Original Construction Date", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), key="original_construction_date_range_3")
+        # Replace 4 with 5 in variable names
+        original_construction_date_range_3 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range3")
 
-        # Slider for selecting Remodel Date for the first feature
-        remodel_date_range_3 = st.slider("Remodel Date", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), key="remodel_date_range_3")
+        # Replace 4 with 5 in variable names
+        remodel_date_range_3 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range3")
 
-        # Filter the data based on the selected criteria for the first graph
+        # Filter the data based on the selected criteria for the fifth graph
         filtered_data3 = df_copy[
             (df_copy['SalePrice'] >= price_range3[0]) &
             (df_copy['SalePrice'] <= price_range3[1]) &
-            (df_copy['Original Construction Date'] >= original_construction_date_range_3) &
-            (df_copy['Remodel Date'] >= remodel_date_range_3)
+            (df_copy['Original Construction Date'] >= original_construction_date_range_3[0]) &
+            (df_copy['Original Construction Date'] <= original_construction_date_range_3[1]) &
+            (df_copy['Remodel Date'] >= remodel_date_range_3[0]) &
+            (df_copy['Remodel Date'] <= remodel_date_range_3[1])
         ]
 
         # Create a frequency count of the selected feature and neighborhood for the first graph
