@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 import seaborn as sns
 import streamlit as st
 from streamlit import components
+import calendar
 
 st.set_page_config(page_title="Ames House Price Dashboard", page_icon=":bar_chart:", layout="wide")
 
@@ -261,6 +262,7 @@ if selected_tab == "Home":
     )
 
     st.plotly_chart(fig)
+    
 
 elif selected_tab == "Property and Building Analysis":
     # Content for the Building tab
@@ -611,7 +613,7 @@ elif selected_tab == "Property and Building Analysis":
         st.plotly_chart(fig5)
 
 
-    # Replace 7 with 6 in variable names in col7
+    # Replace 7 with 6 in variable names in col6
     with col6:
         st.title("Unique Features")
         selected_feature6 = st.selectbox("Select a Unique Feature", [
@@ -645,21 +647,15 @@ elif selected_tab == "Property and Building Analysis":
         feature_counts6 = filtered_data6.groupby([selected_feature6, 'Neighborhood']).size().reset_index()
         feature_counts6.columns = [selected_feature6, 'Neighborhood', 'Frequency']
 
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the sixth graph
-        top_neighborhoods6 = feature_counts6.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
-
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the sixth graph
-        filtered_feature_counts6 = feature_counts6[(feature_counts6['Neighborhood'].isin(top_neighborhoods6)) & (feature_counts6[selected_feature6] != 'N/A')]
-
         # Create a stacked bar chart using Plotly Express for the sixth feature
         fig6 = px.bar(
-            filtered_feature_counts6,
+            feature_counts6,
             x=selected_feature6,
             y='Frequency',
             color='Neighborhood',  # Color by neighborhood
             barmode='stack',  # Create a stacked bar chart
             labels={'x': selected_feature6, 'Frequency': 'Frequency'},
-            title=f"Top Neighborhoods for {selected_feature6}",
+            title=f"Neighborhoods for {selected_feature6}",
         )
 
         # Display the sixth stacked bar chart
@@ -673,21 +669,20 @@ elif selected_tab == "Property and Building Analysis":
     # Dropdown for selecting the seventh feature in the first column of the second row
     with col7:
         st.title("Indoor Size")
-        # Replace 3 with 7 in selected_feature3
         selected_feature7 = st.selectbox("Select an Indoor Size Feature", [
             'Total Finished Basement Area (in Square Feet)',
             'Unfinished Basement Area (in Square Feet)',
             'Total Basement Area (in Square Feet)',
-            'Above Grade (Ground) Living Area (in Square Feet)'
+            'Above Grade (Ground) Living Area (in Square Feet)',
         ], key="feature7")
 
-        # Replace 3 with 7 in price_range3
+        # Replace 4 with 7 in variable names
         price_range7 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range7")
 
-        # Replace 3 with 7 in original_construction_date_range_3
+        # Replace 4 with 7 in variable names
         original_construction_date_range_7 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_7")
 
-        # Replace 3 with 7 in remodel_date_range_3
+        # Replace 4 with 7 in variable names
         remodel_date_range_7 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_7")
 
         # Filter the data based on the selected criteria for the seventh graph
@@ -705,11 +700,12 @@ elif selected_tab == "Property and Building Analysis":
         feature_counts7.columns = [selected_feature7, 'Neighborhood', 'Frequency']
 
         # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the seventh graph
-        top_neighborhoods7 = feature_counts7.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+        top_neighborhoods7 = feature_counts7.groupby('Neighborhood').sum().nlargest  (10, 'Frequency').index
 
         # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the seventh graph
         filtered_feature_counts7 = feature_counts7[(feature_counts7['Neighborhood'].isin(top_neighborhoods7)) & (feature_counts7[selected_feature7] != 'N/A')]
 
+        # Create a histogram using Plotly Express for the seventh feature
         fig7 = px.histogram(
             filtered_feature_counts7,
             x=selected_feature7,
@@ -722,59 +718,64 @@ elif selected_tab == "Property and Building Analysis":
         fig7.update_xaxes(title_text=selected_feature7)
         fig7.update_yaxes(title_text='Frequency')
 
+        fig7.update_layout(width=600, height=450)  # Adjust the width and height as needed
+
         # Display the seventh stacked bar chart
         st.plotly_chart(fig7)
 
-                # Calculate the sum of Type 1 Finished and Type 2 Finished square feet
-        total_type_finished = df['BsmtFinSF1'] + df['BsmtFinSF2']
+        # Calculate the sum of 1stFlrSF, 2ndFlrSF, and LowQualFinSF
+        total_type_finished = filtered_data7['Type 1 Finished (in Square Feet)'] + filtered_data7['Type 2 Finished (in Square Feet)']
 
         # Calculate the ratio of the sum of Type 1 and Type 2 Finished to Total Basement Area
         basement_ratio = (total_type_finished / df['TotalBsmtSF']).mean() * 100
         basement_ratio = round(basement_ratio, 2)
 
-        data = {'Category': ['Finished', 'Unfinished'],
-                'Values': [basement_ratio, 100 - basement_ratio]}
-
-        # Create a DataFrame
-        df_pie = pd.DataFrame(data)
+        data_pie_chart = {'Variable': ['Finished Basement Area', 'Unfinished Basement Area'],
+                'Count': [basement_ratio, 100 - basement_ratio]}
 
         # Create a pie chart using Plotly Express
-        fig_pie = px.pie(df_pie, names='Category', values='Values', title='Percentage of Finished/Unfinished Basement Area')
-
-        fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
-
-        # Adjust the size of the pie chart
-        fig_pie.update_layout(width=350, height=350)  # Adjust the size
-
-        fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
-
-        # Display the pie chart
-        st.plotly_chart(fig_pie)
-
-        # Calculate the sum of 1stFlrSF, 2ndFlrSF, and LowQualFinSF
-        total_sf = df['1stFlrSF'] + df['2ndFlrSF'] + df['LowQualFinSF']
-
-        # Create a DataFrame with the calculated values
-        data = {'Category': ['1stFlrSF', '2ndFlrSF', 'LowQualFinSF'],
-                'Total Square Feet': [df['1stFlrSF'].sum(), df['2ndFlrSF'].sum(), df['LowQualFinSF'].sum()]}
-
-        df_pie = pd.DataFrame(data)
-
-        # Create a pie chart using Plotly Express
-        fig_pie = px.pie(df_pie, names='Category', values='Total Square Feet', title='Percentage of Above Ground Living Area')
+        fig_pie = px.pie(data_pie_chart, names='Variable', values='Count', title='Pecentage of Finished/Unfinished Basement Area')
 
         # Turn the pie chart into a donut chart by setting the hole parameter
         fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
 
-        fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
-
         # Adjust the size of the pie chart
         fig_pie.update_layout(width=350, height=350)  # Adjust the size
+
+        fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
+
+        # Display the donut chart
 
         # Display the donut chart
         st.plotly_chart(fig_pie)
 
 
+        # Calculate the count of each variable for the filtered data
+        first_floor = (filtered_data7['First Floor (in Square Feet)'] != 0).sum()
+        second_floor = (filtered_data7['Second Floor (in Square Feet)'] != 0).sum()
+        finished_area = (filtered_data7['Low-Quality Finished Area (in Square Feet)'] != 0).sum()
+
+        # Create a DataFrame for the pie chart data
+        data_pie_chart = {
+            'Variable': ['First Floor', 'Second Floor', 'Low-Quality Finished Floor'],
+            'Count': [first_floor, second_floor, finished_area]
+        }
+
+        # Create a pie chart using Plotly Express
+        fig_pie = px.pie(data_pie_chart, names='Variable', values='Count', title='Distribution of Ground Floors')
+
+        # Turn the pie chart into a donut chart by setting the hole parameter
+        fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
+
+        # Adjust the size of the pie chart
+        fig_pie.update_layout(width=350, height=350)  # Adjust the size
+
+        fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
+
+        # Display the donut chart
+
+        # Display the donut chart
+        st.plotly_chart(fig_pie)
     
     with col8:
         st.title("Outdoor Size")
@@ -849,7 +850,7 @@ elif selected_tab == "Property and Building Analysis":
         }
 
         # Create a pie chart using Plotly Express
-        fig_pie = px.pie(data_pie_chart, names='Variable', values='Count', title='Distribution of Porch Areas')
+        fig_pie = px.pie(data_pie_chart, names='Variable', values='Count', title='Distribution of Porch Counts')
 
         # Turn the pie chart into a donut chart by setting the hole parameter
         fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
@@ -864,26 +865,413 @@ elif selected_tab == "Property and Building Analysis":
         # Display the donut chart
         st.plotly_chart(fig_pie)
 
-elif selected_tab == "Sales Analysis":
+
+df_copy_yearstring = df.copy()
+
+# Define a mapping of abbreviations for data cleaning
+abbreviations_map = {
+    'NAmes': 'North Ames',
+    'CollgCr': 'College Creek',
+    'Crawfor': 'Crawford',
+    'NoRidge': "Northridge Heights",
+    'Mitchel': 'Mitchell',
+    'Somerst': 'Somerset',
+    'NWAmes': 'Northwest Ames',
+    'OldTown': 'Old Town',
+    'BrkSide': 'Brookside',
+    'SawyerW': 'Sawyer West',
+    'NridgHt': 'Northridge Heights',
+    'IDOTRR': 'IDOTRR',
+    'MeadowV': 'Meadow Village',
+    'StoneBr': 'Stone Brooke',
+    'ClearCr': 'Clear Creek',
+    'NPkVill': 'Northpark Village',
+    'Blmngtn': 'Bloomington Heights',
+    'BrDale': 'Briardale',
+    'SWISU': 'Southwest of the ISU campus',
+    'Blueste': 'Bluestem',
+    'RM': 'Residential Medium Density',
+    'RL': 'Residential Low Density',
+    'RH': 'Residential High Density',
+    'Lvl': 'Level',
+    'Low': 'Lowland/Low Slope',
+    'HLS': 'Hillside',
+    'Bnk': 'Banked',
+    'Reg': 'Regular',
+    'IR3': 'Irregular - 3rd Category',
+    'IR2': 'Irregular - 2nd Category',
+    'IR1': 'Irregular - 1st Category',
+    'Inside': 'Inside',
+    'FR2': 'Frontage 2',
+    'CulDSac': 'Cul-de-Sac',
+    'Corner': 'Corner',
+    'PosN': 'Near Positive Feature',
+    'PosA': 'Adjacent to Positive Feature',
+    'Norm': 'Normal Proximity',
+    'Feedr': 'Adjacent to Feeder Street or Railroad',
+    'Duplex': 'Duplex',
+    '2fmCon': 'Two-Family Conversion',
+    'TwnhsE': 'Townhouse End Unit',
+    '1Fam': 'Single-Family',
+    'WhShngl': 'Wood Shingle',
+    'CompShg': 'Composition Shingle',
+    'TA': 'Average',
+    'Gd': 'Good',
+    'Ex': 'Excellent',
+    'Fa': 'Fair',
+    'Stone': 'Stone Foundation',
+    'PConc': 'Poured Concrete Foundation',
+    'CBlock': 'Concrete Block Foundation',
+    'BrkTil': 'Brick and Tile Foundation',
+    'No': 'No Exposure',
+    'Mn': 'Minimum Exposure',
+    'Av': 'Average Exposure',
+    'Unf': 'Unfinished',
+    'Rec': 'Average Living Quarters',
+    'LwQ': 'Low Quality',
+    'GLQ': 'Good Living Quarters',
+    'BLQ': 'Below Average Living Quarters',
+    'ALQ': 'Average Living Quarters',
+    'Po': 'Poor',
+    'Detchd': 'Detached from House',
+    'BuiltIn': 'Built-In Garage',
+    'Basement': 'Basement Garage',
+    'Attchd': 'Attached to House',
+    '2Types': 'More than one type of Garage',
+    'RFn': 'Rough Finished',
+    'Fin': 'Finished',
+    'MnPrv': 'Minimum Privacy',
+    'GdWo': 'Good Wood',
+    'GdPrv': 'Good Privacy',
+    'TenC': 'Tennis Court',
+    'Othr': 'Other',
+    'Shed': 'Shed',
+    'Gar2': 'Second Garage',
+    'ConLw': 'Conventional with low down payment',
+    'ConLD': 'Conventional with low down payment',
+    'Con': 'Conventional',
+    'WD': 'Warranty Deed - Conventional',
+    'New': 'Home just constructed and sold',
+    'CWD': 'Warranty Deed - Cash Conventional',
+    'COD': 'Court Officer Deed/Estate',
+    'Family': 'Family Sale',
+    'Alloca': 'Allocation',
+    'Partial': 'Partial',
+    'Normal': 'Normal Sale',
+    'Abnormal': 'Abnormal Sale',
+    '1.5Fin': '1.5-Story House with Finished Area',
+    '1.5Unf': '1.5-Story House with Unfinished Area',
+    '1Story': 'One-Story House',
+    '2.5Unf': '2.5-Story House with Unfinished Area',
+    '2Story': 'Two-Story House',
+    '2.5Fin': '2.5-Story House with Finished Area',
+    'SFoyer': 'Split Foyer',
+    'SLvl': 'Split Level'
+}
+
+# List of columns to replace using the abbreviations map
+columns_to_replace = ['Neighborhood', 'MSZoning', 'LandContour', 'LotShape', 'LotConfig',
+                      'Condition1', 'BldgType', 'HouseStyle', 'RoofMatl', 'ExterQual', 'Foundation', 'ExterCond',
+                      'BsmtQual', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
+                      'HeatingQC', 'KitchenQual', 'FireplaceQu',
+                      'GarageType', 'GarageFinish', 'GarageQual', 'GarageCond',
+                      'Fence', 'MiscFeature',
+                      'SaleType', 'SaleCondition',
+                      'PoolQC'
+                      ]
+df_copy_yearstring[columns_to_replace] = df_copy_yearstring[columns_to_replace].replace(abbreviations_map)
+
+# Fill missing values with 'N/A'
+df_copy_yearstring = df_copy_yearstring.fillna('N/A')
+
+
+new_column_names = {
+    'MSSubClass': 'Building Class',
+    'MSZoning': 'General Zoning Classification',
+    'LandContour': 'Flatness of the Property',
+    'LotShape': 'General Shape of Property',
+    'LotConfig': 'Lot Configuration',
+    'LotFrontage': 'Linear Feet of Street Connected to Property',
+    'LotArea': 'Lot Size (in Square Feet)',
+
+    'Condition1': 'Proximity to Main Road or Railroad',
+    'BldgType': 'Type of Dwelling',
+    'HouseStyle': 'Style of Dwelling',
+    'OverallQual': 'Overall Material and Finish Quality',
+    'OverallCond': 'Overall Condition Rating',
+
+    'YearBuilt': 'Original Construction Date',
+    'YearRemodAdd': 'Remodel Date',
+    'RoofStyle': 'Type of Roof',
+    'RoofMatl': 'Roof Material',
+    'ExterQual': 'Exterior Material Quality',
+    'ExterCond': 'Present Condition of the Material on the Exterior',
+    'Foundation': 'Type of Foundation',
+
+    'BsmtQual': 'Basement Quality',
+    'BsmtExposure': 'Walkout/Garden Level Basement Walls',
+    'BsmtFinType1': 'Quality of Basement Finished Area',
+    'BsmtFinType2': 'Quality of Second Finished Area (If Present)',
+    'BsmtFinSF1': 'Type 1 Finished (in Square Feet)',
+    'BsmtFinSF2': 'Type 2 Finished (in Square Feet)',
+    'Total Finished Basement Area (in Square Feet)': 'Total Finished Basement Area (in Square Feet)',
+    'BsmtUnfSF': 'Unfinished Basement Area (in Square Feet)',
+    'TotalBsmtSF': 'Total Basement Area (in Square Feet)',
+
+    'HeatingQC': 'Heating Quality and Condition',
+    '1stFlrSF': 'First Floor (in Square Feet)',
+    '2ndFlrSF': 'Second Floor (in Square Feet)',
+    'LowQualFinSF': 'Low-Quality Finished Area (in Square Feet)',
+    'GrLivArea': 'Above Grade (Ground) Living Area (in Square Feet)',
+    'BsmtFullBath': 'Number of Basement Full Bathrooms',
+    'BsmtHalfBath': 'Number of Basement Half Bathrooms',
+    'TotalFullBath': 'Total Number of Full Bathrooms',
+    'FullBath': 'Number of Full Bathrooms Above Grade (Ground)',
+    'HalfBath': 'Number of Half Baths Above Grade (Ground)',
+    'TotalHalfBath': 'Total Number of Half Bathrooms',
+    'TotRmsAbvGrd': 'Total Rooms Above Grade (Does Not Include Bathrooms)',
+    'KitchenQual': 'Kitchen Quality',
+    'TotRmsAbvGrd': 'Total Rooms Above Grade (Does Not Include Bathrooms)',
+    'Fireplaces': 'Number of Fireplaces',
+    'FireplaceQu': 'Fireplace Quality',
+
+    'GarageType': 'Garage Location',
+    'GarageYrBlt': 'Year Garage Was Built',
+    'GarageFinish': 'Interior Finish of the Garage',
+    'GarageCars': 'Size of Garage in Car Capacity',
+    'GarageArea': 'Size of Garage in Square Feet',
+    'GarageQual': 'Garage Quality',
+    'GarageCond': 'Garage Condition',
+
+    'WoodDeckSF': 'Wood Deck Area (in Square Feet)',
+    'OpenPorchSF': 'Open Porch Area (in Square Feet)',
+    'EnclosedPorch': 'Enclosed Porch Area (in Square Feet)',
+    '3SsnPorch': 'Three Season Porch Area (in Square Feet)',
+    'ScreenPorch': 'Screen Porch Area (in Square Feet)',
+    'PoolArea': 'Pool Area (in Square Feet)',
+    'PoolQC': 'Pool Quality',
+    'Fence': 'Fence Quality',
+    'MiscFeature': 'Miscellaneous Feature',
+    'MiscVal': 'Value of Miscellaneous Feature',
+
+    'MoSold': 'Month Sold',
+    'YrSold': 'Year Sold',
+    'SaleType': 'Type of Sale',
+    'SaleCondition': 'Condition of Sale'
+}
+
+# Convert 'LotFrontage' column to float, replacing 'N/A' with NaN
+#df_copy['LotFrontage'] = pd.to_numeric(df_copy['LotFrontage'], errors='coerce')
+#df_copy['MasVnrArea'] = pd.to_numeric(df_copy['MasVnrArea'], errors='coerce')
+#df_copy['GarageYrBlt'] = pd.to_numeric(df_copy['GarageYrBlt'], errors='coerce')
+
+df_copy_yearstring = df_copy_yearstring.rename(columns=new_column_names)
+
+# Remove commas from the 'Original Construction Date' and 'Remodel Date' columns
+df_copy_yearstring['Original Construction Date'] = df_copy_yearstring['Original Construction Date'].apply(lambda x: str(x).replace(',', ''))
+df_copy_yearstring['Remodel Date'] = df_copy_yearstring['Remodel Date'].apply(lambda x: str(x).replace(',', ''))
+
+# Convert the columns back to integers if needed
+# df_copy_yearstring['Original Construction Date'] = df_copy_yearstring['Original Construction Date'].astype(int)
+# df_copy_yearstring['Remodel Date'] = df_copy_yearstring['Remodel Date'].astype(int)
+
+if selected_tab == "Sales Analysis":
     # Content for the Sales Analysis tab
     st.header("Sales Analysis Tab")
     st.write("This is the Sales Analysis tab content.")
 
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
-        st.dataframe(df_copy)
+        st.dataframe(df_copy_yearstring)
 
     # Create a slider for selecting a price range with two draggers
-    price_range = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), step=1000)
+    price_range = st.slider("Price Range", min_value=int(df_copy_yearstring['SalePrice'].min()), max_value=int(df_copy_yearstring['SalePrice'].max()), value=(int(df_copy_yearstring['SalePrice'].min()), int(df_copy_yearstring['SalePrice'].max())), step=1000)
 
-    # Create a line graph for Original Construction Date vs. Frequency
-    st.subheader("Original Construction Date vs. Frequency")
-    original_construction_counts = df_copy[(df_copy['SalePrice'] >= price_range[0]) & (df_copy['SalePrice'] <= price_range[1])].groupby('Original Construction Date').size().reset_index()
-    original_construction_counts.columns = ['Original Construction Date', 'Frequency']
-    st.line_chart(original_construction_counts.set_index('Original Construction Date'))
+    col1, col2 = st.columns(2)
 
-    # Create a line graph for Remodel Date vs. Frequency
-    st.subheader("Remodel Date vs. Frequency")
-    remodel_date_counts = df_copy[(df_copy['SalePrice'] >= price_range[0]) & (df_copy['SalePrice'] <= price_range[1])].groupby('Remodel Date').size().reset_index()
-    remodel_date_counts.columns = ['Remodel Date', 'Frequency']
-    st.line_chart(remodel_date_counts.set_index('Remodel Date'))
+    with col1:
+        st.subheader("Original Construction Date vs. Frequency")
+        original_construction_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Original Construction Date').size().reset_index()
+        original_construction_counts.columns = ['Original Construction Date', 'Frequency']
+
+        # Create a line chart using Plotly Express
+        fig_original_construction = px.line(original_construction_counts, x='Original Construction Date', y='Frequency', labels={'Original Construction Date': 'Year', 'Frequency': 'Frequency'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_original_construction.update_layout(
+            xaxis_tickangle=45,
+            xaxis_dtick=10,  # Show every 5th year
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Add data points
+        fig_original_construction.add_trace(px.scatter(original_construction_counts, x='Original Construction Date', y='Frequency').data[0])
+
+        st.plotly_chart(fig_original_construction)
+
+    with col2:
+        st.subheader("Remodel Date vs. Frequency")
+        remodel_date_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Remodel Date').size().reset_index()
+        remodel_date_counts.columns = ['Remodel Date', 'Frequency']
+
+        # Create a line chart using Plotly Express
+        fig_remodel_date = px.line(remodel_date_counts, x='Remodel Date', y='Frequency', labels={'Remodel Date': 'Year', 'Frequency': 'Frequency'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_remodel_date.update_layout(
+            xaxis_tickangle=45,
+            xaxis_dtick=5,  # Show every 5th year
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Add data points
+        fig_remodel_date.add_trace(px.scatter(remodel_date_counts, x='Remodel Date', y='Frequency').data[0])
+
+        st.plotly_chart(fig_remodel_date)
+
+    st.write("---")
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("Original Construction Date vs. Average Sale Price")
+        selected_neighborhood_orig = st.selectbox("Select Neighborhood for Original Construction Date", df_copy_yearstring['Neighborhood'].unique())
+        original_construction_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_orig)]
+        original_construction_price = original_construction_price.groupby('Original Construction Date')['SalePrice'].mean().reset_index()
+        fig_original_construction_price = px.line(original_construction_price, x='Original Construction Date', y='SalePrice', labels={'Original Construction Date': 'Year', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_original_construction_price.add_trace(px.scatter(original_construction_price, x='Original Construction Date', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_original_construction_price)
+
+    with col4:
+        st.subheader("Remodel Date vs. Average Sale Price")
+        selected_neighborhood_remodel = st.selectbox("Select Neighborhood for Remodel Date", df_copy_yearstring['Neighborhood'].unique())
+        remodel_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_remodel)]
+        remodel_price = remodel_price.groupby('Remodel Date')['SalePrice'].mean().reset_index()
+        fig_remodel_price = px.line(remodel_price, x='Remodel Date', y='SalePrice', labels={'Remodel Date': 'Year', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_remodel_price.add_trace(px.scatter(remodel_price, x='Remodel Date', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_remodel_price)
+
+
+    st.write("---")    
+
+
+    # Create a slider to control the price range for all graphs
+    price_range = st.slider(
+        "Price Range",
+        min_value=int(df_copy_yearstring['SalePrice'].min()),
+        max_value=int(df_copy_yearstring['SalePrice'].max()),
+        value=(int(df_copy_yearstring['SalePrice'].min()), int(df_copy_yearstring['SalePrice'].max()))
+    )
+
+    # Create a single row container for all graphs
+    col5, col6 = st.columns(2)
+
+    # Graph 1: Month Sold vs. Frequency
+    with col5:
+        st.subheader("Month Sold vs. Frequency")
+        month_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Month Sold').size().reset_index()
+        month_sold_counts.columns = ['Month Sold', 'Frequency']
+
+        # Create a line chart using Plotly Express
+        fig_month_sold = px.line(month_sold_counts, x='Month Sold', y='Frequency', labels={'Month Sold': 'Month', 'Frequency': 'Frequency'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_month_sold.update_layout(
+            xaxis_tickangle=-45,  # No rotation
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Convert integer month values to month names
+        month_names = [calendar.month_name[i] for i in range(1, 13)]
+
+        # Set custom tickvals and ticktext for the x-axis
+        fig_month_sold.update_xaxes(
+            tickvals=list(range(1, 13)),  # Integer values for months
+            ticktext=month_names,  # Corresponding month names
+        )
+
+        # Add data points
+        fig_month_sold.add_trace(px.scatter(month_sold_counts, x='Month Sold', y='Frequency').data[0])
+
+        st.plotly_chart(fig_month_sold)
+
+    # Graph 2: Year Sold vs. Frequency
+    with col6:
+        st.subheader("Year Sold vs. Frequency")
+        year_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Year Sold').size().reset_index()
+        year_sold_counts.columns = ['Year Sold', 'Frequency']
+
+        # Create a line chart using Plotly Express
+        fig_year_sold = px.line(year_sold_counts, x='Year Sold', y='Frequency', labels={'Year Sold': 'Year', 'Frequency': 'Frequency'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_year_sold.update_layout(
+            xaxis_tickangle=0,
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Set custom category order for the x-axis
+        custom_order = list(range(2006, 2011))
+        fig_year_sold.update_xaxes(categoryarray=custom_order)
+
+        # Add data points
+        fig_year_sold.add_trace(px.scatter(year_sold_counts, x='Year Sold', y='Frequency').data[0])
+
+        st.plotly_chart(fig_year_sold)
+
+
+    col7, col8 = st.columns(2)
+
+    # Graph 3: Month Sold vs. Average Sale Price
+    with col7:
+        st.subheader("Month Sold vs. Average Sale Price")
+        selected_neighborhood_month = st.selectbox("Select Neighborhood for Month Sold", df_copy_yearstring['Neighborhood'].unique())
+        month_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_month)]
+        month_sold_price = month_sold_price.groupby('Month Sold')['SalePrice'].mean().reset_index()
+        fig_month_sold_price = px.line(month_sold_price, x='Month Sold', y='SalePrice', labels={'Month Sold': 'Month', 'SalePrice': 'Average Sale Price'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_month_sold_price.update_layout(
+            xaxis_tickangle=-45,  # Rotate the x-axis labels by 45 degrees
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Convert integer month values to month names
+        month_names = [calendar.month_name[i] for i in range(1, 13)]
+
+        # Set custom tickvals and ticktext for the x-axis
+        fig_month_sold_price.update_xaxes(
+            tickvals=list(range(1, 13)),  # Integer values for months
+            ticktext=month_names,  # Corresponding month names
+        )
+
+        # Add data points as a scatter plot
+        fig_month_sold_price.add_trace(px.scatter(month_sold_price, x='Month Sold', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_month_sold_price)
+
+    # Graph 4: Year Sold vs. Average Sale Price
+    with col8:
+        st.subheader("Year Sold vs. Average Sale Price")
+        selected_neighborhood_year = st.selectbox("Select Neighborhood for Year Sold", df_copy_yearstring['Neighborhood'].unique())
+        year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_year)]
+        year_sold_price = year_sold_price.groupby('Year Sold')['SalePrice'].mean().reset_index()
+        fig_year_sold_price = px.line(year_sold_price, x='Year Sold', y='SalePrice', labels={'Year Sold': 'Year', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_year_sold_price.add_trace(px.scatter(year_sold_price, x='Year Sold', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_year_sold_price)
+
+    st.write("---")
