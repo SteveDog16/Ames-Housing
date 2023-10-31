@@ -11,6 +11,7 @@ import seaborn as sns
 import streamlit as st
 from streamlit import components
 import calendar
+import folium
 
 st.set_page_config(page_title="Ames House Price Dashboard", page_icon=":bar_chart:", layout="wide")
 
@@ -24,6 +25,7 @@ df_copy = df.copy()
 
 df_copy['TotalFullBath'] = df_copy['FullBath'] + df_copy['BsmtFullBath']
 df_copy['TotalHalfBath'] = df_copy['HalfBath'] + df_copy['BsmtHalfBath']
+
 
 # Add tabs to the Streamlit sidebar
 with st.sidebar:
@@ -250,19 +252,216 @@ if selected_tab == "Home":
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
 
-    # Create a frequency count of each neighborhood
-    neighborhood_counts = df_copy['Neighborhood'].value_counts()
-    
-    # Create a bar chart using Plotly Express
-    fig = px.bar(
-        x=neighborhood_counts.index,
-        y=neighborhood_counts.values,
-        labels={'x': 'Neighborhood', 'y': 'Frequency'},
-        title="Neighborhood Frequency Analysis",
-    )
 
-    st.plotly_chart(fig)
+    average_sale_price = df['SalePrice'].mean()
+    median_sale_price = df['SalePrice'].median()
+    number_of_properties = len(df)
+    price_change_over_time = df['SalePrice'].sum
     
+
+    min_sale_price = df['SalePrice'].min()
+    max_sale_price = df['SalePrice'].max()
+
+    # Calculate the range
+    price_range = max_sale_price - min_sale_price
+
+    # Calculate the price per square foot for each row
+    df_copy['PricePerSqFtGround'] = df['SalePrice'] / df['GrLivArea']
+
+    # Calculate the average price per square foot
+    average_price_per_sqft_ground = df_copy['PricePerSqFtGround'].mean()
+
+    # Calculate the median price per square foot
+    median_price_per_sqft_ground = df_copy['PricePerSqFtGround'].median()
+
+    # Calculate the price per square foot for each row
+    df_copy['PricePerSqFtBasement'] = df['SalePrice'] / df['TotalBsmtSF']
+
+    df_copy = df_copy[~np.isinf(df_copy['PricePerSqFtBasement'])]
+
+    # Calculate the average price per square foot
+    average_price_per_sqft_basement = df_copy['PricePerSqFtBasement'].mean()
+
+    # Calculate the median price per square foot
+    median_price_per_sqft_basement = df_copy['PricePerSqFtBasement'].median()
+
+
+
+    # Streamlit app
+
+    # Create a summary card for Average Sale Price and Median Sale Price in the same row
+
+    # Create a layout with two rows of 5 columns each
+    row1 = st.columns(5)
+    row2 = st.columns(4)
+
+    # Average Sale Price card
+    with row1[0]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Sale Price</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_sale_price:,.2f}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Median Sale Price card
+    with row1[1]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Sale Price</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_sale_price:,.2f}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Total Sales card
+    with row1[2]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Total Sales</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">{number_of_properties}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Minimum Sale Price card
+    with row1[3]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Minimum Sale Price</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${min_sale_price:,.2f}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Maximum Sale Price card
+    with row1[4]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Maximum Sale Price</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${max_sale_price:,.2f}</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Average Price of Ground Floor Per Square Foot card
+    with row2[0]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Ground Floor Per Square Foot</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_ground:,.2f}/ft²</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Median Price of Ground Floor Per Square Foot card
+    with row2[1]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Ground Floor Per Square Foot</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_ground:,.2f}/ft²</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Average Price of Basement Floor Per Square Foot card
+    with row2[2]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Basement Floor Per Square Foot</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_basement:,.2f}/ft²</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Median Price of Basement Floor Per Square Foot card
+    with row2[3]:
+        st.markdown(
+            f"""
+            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px; margin-bottom: 50px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Basement Floor Per Square Foot</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_basement:,.2f}/ft²</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+
+
+
+    # Calculate neighborhood frequency
+    neighborhood_counts = df_copy['Neighborhood'].value_counts()
+
+    # Calculate average SalePrice per neighborhood
+    neighborhood_saleprice = df_copy.groupby('Neighborhood')['SalePrice'].mean().reset_index()
+    neighborhood_saleprice = neighborhood_saleprice.sort_values(by='SalePrice', ascending=False)
+
+    # Create two columns for layout
+    col1, col2 = st.columns(2)
+
+    # Display the first bar chart in the first column
+    with col1:
+        st.subheader("Neighborhood Frequency Analysis")
+        fig1 = px.bar(
+            x=neighborhood_counts.index,
+            y=neighborhood_counts.values,
+            labels={'x': 'Neighborhood', 'y': 'Frequency'},
+            width=600,
+            height=500,
+            title="Neighborhood Frequency Analysis",
+        )
+        st.plotly_chart(fig1)
+
+    # Display the second bar chart in the second column
+    with col2:
+        st.subheader("Neighborhood Average Sale Price Analysis")
+        fig2 = px.bar(
+            neighborhood_saleprice,
+            x='Neighborhood',
+            y='SalePrice',
+            labels={'x': 'Neighborhood', 'SalePrice': 'Average Sale Price'},
+            title="Neighborhood Average Sale Price Analysis",
+        )
+        fig2.update_layout(
+            xaxis_title="Neighborhood",
+            yaxis_title="Average Sale Price",
+            width=600,
+            height=500,
+        )
+        st.plotly_chart(fig2)
+
+        # Sort the DataFrame by Sale Price in descending order
+        df_copy_sorted = df_copy.sort_values(by='SalePrice', ascending=False)
+
+        # Format the 'SalePrice' column to include commas
+        df_copy_sorted['SalePrice'] = df_copy_sorted['SalePrice'].apply(lambda x: f"${x:,}")
+
+        # Streamlit app
+        st.subheader("Top 10 Neighborhoods by Average Sale Price")
+
+        # Display the table with custom headers to prevent key errors and without displaying the index
+        st.table(df_copy_sorted[['Neighborhood', 'SalePrice']].head(10).rename(columns={'Neighborhood': 'Neighborhood', 'SalePrice': 'Average Sale Price'}).reset_index(drop=True))
+
+            
+        
 
 elif selected_tab == "Property and Building Analysis":
     # Content for the Building tab
@@ -1145,7 +1344,13 @@ if selected_tab == "Sales Analysis":
         # Add data points as a scatter plot
         fig_original_construction_price.add_trace(px.scatter(original_construction_price, x='Original Construction Date', y='SalePrice').data[0])
 
+        # Customize x-axis tick values to show every 5th year
+        fig_original_construction_price.update_xaxes(
+            dtick=5  # Show every 5th year
+        )
+
         st.plotly_chart(fig_original_construction_price)
+
 
     with col4:
         st.subheader("Remodel Date vs. Average Sale Price")
@@ -1156,6 +1361,11 @@ if selected_tab == "Sales Analysis":
 
         # Add data points as a scatter plot
         fig_remodel_price.add_trace(px.scatter(remodel_price, x='Remodel Date', y='SalePrice').data[0])
+
+        # Customize x-axis tick values to show every 5th year
+        fig_remodel_price.update_xaxes(
+            dtick=5  # Show every 5th year
+        )
 
         st.plotly_chart(fig_remodel_price)
 
@@ -1275,3 +1485,4 @@ if selected_tab == "Sales Analysis":
         st.plotly_chart(fig_year_sold_price)
 
     st.write("---")
+
