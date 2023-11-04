@@ -236,7 +236,7 @@ new_column_names = {
     'SaleCondition': 'Condition of Sale'
 }
 
-# Convert 'LotFrontage' column to float, replacing 'N/A' with NaN
+# Convert these columns to float, replacing 'N/A' with NaN
 df_copy['LotFrontage'] = pd.to_numeric(df_copy['LotFrontage'], errors='coerce')
 df_copy['MasVnrArea'] = pd.to_numeric(df_copy['MasVnrArea'], errors='coerce')
 df_copy['GarageYrBlt'] = pd.to_numeric(df_copy['GarageYrBlt'], errors='coerce')
@@ -247,50 +247,370 @@ df_copy = df_copy.rename(columns=new_column_names)
 if selected_tab == "Home":
     # Content for the Property tab
     st.header("Home")
-    st.write("This is the Home tab content.")
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
 
+    st.subheader("About Ames")
+
+    # https://en.wikipedia.org/wiki/Ames,_Iowa
+    st.markdown("<p style='font-size: 20px;'>Ames is a city in Story County, Iowa, United States, located approximately 30 miles north of Des Moines in central Iowa. It is best known as the home of Iowa State University (ISU).</p>", unsafe_allow_html=True)
+
+    st.subheader("Geographical and Home Value Summary")
+
+
+    # Create a layout with two rows of 5 columns each
+    row1 = st.columns(4)
+    row2 = st.columns(2)
+
+    with row1[0]:
+        st.markdown(
+            f"""
+            <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding: 1px;">Population (in 2010)</h3>
+                <h2 style="font-size: 30px; padding-top: 0px; padding: 1px;">59,103</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # https://medium.com/@ying.geng5/house-price-analysis-of-ames-iowa-2006-2010-266e307f836f#:~:text=The%20median%20sale%20price%20for,cheaper%20than%20the%20national%20average.
+    with row1[1]:
+        st.markdown(
+            f"""
+            <div style="background-color: #84659C; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding: 1px;">Median Home Value (in 2006-2010)</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">$163,000</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Google Maps
+
+    # Define the data
+        city_distances = {
+            "Des Moines": 37,
+            "Iowa City": 129,
+            "Cedar Rapids": 110,
+        }
+    with row1[2]:
+        
+
+        # Create a dropdown for selecting a city
+        selected_city = st.selectbox("Select a City", list(city_distances.keys()))
+
+    with row1[3]:
+        # Display the selected city's distance in the same Markdown block
+        st.write(
+            f"""
+            <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Distance from Ames to {selected_city}</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">{city_distances[selected_city]} miles</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # https://www.census.gov/quickfacts/fact/table/amescityiowa#
+    
+    with row2[0]:
+        # Define the data
+
+
+        # Display the selected city's distance in the same Markdown block
+        st.write(
+            f"""
+            <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with row2[1]:
+        # Define the data
+
+
+        # Display the selected city's distance in the same Markdown block
+        st.write(
+            f"""
+            <div style="background-color: #84659C; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435</h2>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.subheader("Crime Rate Summary")
+
+    row3 = st.columns(4)
+    row4 = st.columns(4)
+
+    # https://www.bestplaces.net/crime/city/iowa/ames
+    
+    # Define the crimes data
+    crimes = {
+        "Murder": 1.7,
+        "Rape": 41.5,
+        "Robbery": 17.3,
+        "Assault": 245.6,
+        'Property Crime': 2691.2,
+        'Burglary': 499.9,
+        'Larceny': 2104.9,
+        'Auto Theft': 86.5,
+    }
+    
+
+    with row3[0]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Murder'],  # Default value
+            title={
+                "text": f"Murder Rate per 100,000 People (in 2010)",
+                "font": {"size": 14}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 8], "dtick": 2},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 2], "color": "green"},
+                    {"range": [2, 4], "color": "yellow"},
+                    {"range": [4, 6], "color": "orange"},
+                    {"range": [6, 8], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=280, height=280)
+
+        # Adjust the figure size
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+        
+
+    with row3[1]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Rape'],  # Default value
+            title={
+                "text": f"Rape Rate per 100,000 People (in 2010)",
+                "font": {"size": 14}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 80], "dtick": 20},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 20], "color": "green"},
+                    {"range": [20, 40], "color": "yellow"},
+                    {"range": [40, 60], "color": "orange"},
+                    {"range": [60, 80], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=280, height=280)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+    with row3[2]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Robbery'],  # Default value
+            title={
+                "text": f"Robbery Rate per 100,000 People (in 2010)",
+                "font": {"size": 14}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 200], "dtick": 50},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 50], "color": "green"},
+                    {"range": [50, 100], "color": "yellow"},
+                    {"range": [100, 150], "color": "orange"},
+                    {"range": [150, 200], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=280, height=280)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+    with row3[3]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Assault'],  # Default value
+            title={
+                "text": f"Assault Rate per 100,000 People (in 2010)",
+                "font": {"size": 14}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 600], "dtick": 100},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 100], "color": "purple"},
+                    {"range": [100, 200], "color": "blue"},
+                    {"range": [200, 300], "color": "green"},
+                    {"range": [300, 400], "color": "yellow"},
+                    {"range": [400, 500], "color": "orange"},
+                    {"range": [500, 600], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=280, height=280)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+
+
+    with row4[0]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Property Crime'],  # Default value
+            title={
+                "text": f"Property Crime Rate per 100,000 People (in 2010)",
+                "font": {"size": 12}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [1500, 4000], "dtick": 500},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [1500, 2000], "color": "blue"},
+                    {"range": [2000, 2500], "color": "green"},
+                    {"range": [2500, 3000], "color": "yellow"},
+                    {"range": [3000, 3500], "color": "orange"},
+                    {"range": [3500, 4000], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=260, height=260)
+
+        # Adjust the figure size
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+        
+
+    with row4[1]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Burglary'],  # Default value
+            title={
+                "text": f"Burglary Rate per 100,000 People (in 2010)",
+                "font": {"size": 12}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 1250], "dtick": 250},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 250], "color": "blue"},
+                    {"range": [250, 500], "color": "green"},
+                    {"range": [500, 750], "color": "yellow"},
+                    {"range": [750, 1000], "color": "orange"},
+                    {"range": [1000, 1250], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=260, height=260)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+    with row4[2]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Larceny'],  # Default value
+            title={
+                "text": f"Larceny Rate per 100,000 People (in 2010)",
+                "font": {"size": 12}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [1000, 3500], "dtick": 500},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [1000, 1500], "color": "blue"},
+                    {"range": [1500, 2000], "color": "green"},
+                    {"range": [2000, 2500], "color": "yellow"},
+                    {"range": [2500, 3000], "color": "orange"},
+                    {"range": [3000, 3500], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=260, height=260)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+    with row4[3]:
+        # Create a smaller gauge chart
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=crimes['Auto Theft'],  # Default value
+            title={
+                "text": f"Auto Theft Rate per 100,000 People (in 2010)",
+                "font": {"size": 12}  # Adjust the font size here
+            },
+            gauge={
+                "axis": {"range": [0, 500], "dtick": 100},
+                "bar": {"color": "#84659C"},
+                "steps": [
+                    {"range": [0, 100], "color": "blue"},
+                    {"range": [100, 200], "color": "green"},
+                    {"range": [200, 300], "color": "yellow"},
+                    {"range": [300, 400], "color": "orange"},
+                    {"range": [400, 500], "color": "red"},
+                ]
+            }
+        ))
+
+        fig.update_layout(width=260, height=260)
+
+        # Display the smaller gauge chart
+        st.plotly_chart(fig)
+
+
+    st.subheader("Price and Sale Summary")
 
     average_sale_price = df['SalePrice'].mean()
     median_sale_price = df['SalePrice'].median()
     number_of_properties = len(df)
     price_change_over_time = df['SalePrice'].sum
-    
-
     min_sale_price = df['SalePrice'].min()
     max_sale_price = df['SalePrice'].max()
-
-    # Calculate the range
     price_range = max_sale_price - min_sale_price
-
     # Calculate the price per square foot for each row
     df_copy['PricePerSqFtGround'] = df['SalePrice'] / df['GrLivArea']
-
     # Calculate the average price per square foot
     average_price_per_sqft_ground = df_copy['PricePerSqFtGround'].mean()
-
     # Calculate the median price per square foot
     median_price_per_sqft_ground = df_copy['PricePerSqFtGround'].median()
-
     # Calculate the price per square foot for each row
     df_copy['PricePerSqFtBasement'] = df['SalePrice'] / df['TotalBsmtSF']
-
     df_copy = df_copy[~np.isinf(df_copy['PricePerSqFtBasement'])]
-
     # Calculate the average price per square foot
     average_price_per_sqft_basement = df_copy['PricePerSqFtBasement'].mean()
-
     # Calculate the median price per square foot
     median_price_per_sqft_basement = df_copy['PricePerSqFtBasement'].median()
 
-
-
-    # Streamlit app
-
     # Create a summary card for Average Sale Price and Median Sale Price in the same row
-
     # Create a layout with two rows of 5 columns each
     row1 = st.columns(5)
     row2 = st.columns(4)
@@ -299,7 +619,7 @@ if selected_tab == "Home":
     with row1[0]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px; margin-bottom: 20px;">
+            <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Sale Price</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_sale_price:,.2f}</h2>
             </div>
@@ -311,7 +631,7 @@ if selected_tab == "Home":
     with row1[1]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+            <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Sale Price</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_sale_price:,.2f}</h2>
             </div>
@@ -323,7 +643,7 @@ if selected_tab == "Home":
     with row1[2]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+            <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Total Sales</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">{number_of_properties}</h2>
             </div>
@@ -335,7 +655,7 @@ if selected_tab == "Home":
     with row1[3]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+            <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Minimum Sale Price</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${min_sale_price:,.2f}</h2>
             </div>
@@ -347,7 +667,7 @@ if selected_tab == "Home":
     with row1[4]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 250px;">
+            <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Maximum Sale Price</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${max_sale_price:,.2f}</h2>
             </div>
@@ -359,8 +679,8 @@ if selected_tab == "Home":
     with row2[0]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Ground Floor Per Square Foot</h3>
+            <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Ground Floor (per sq ft)</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_ground:,.2f}/ft²</h2>
             </div>
             """,
@@ -371,8 +691,8 @@ if selected_tab == "Home":
     with row2[1]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Ground Floor Per Square Foot</h3>
+            <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Ground Floor (per sq ft) </h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_ground:,.2f}/ft²</h2>
             </div>
             """,
@@ -383,8 +703,8 @@ if selected_tab == "Home":
     with row2[2]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Basement Floor Per Square Foot</h3>
+            <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Basement Floor (per sq ft)</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_basement:,.2f}/ft²</h2>
             </div>
             """,
@@ -395,17 +715,14 @@ if selected_tab == "Home":
     with row2[3]:
         st.markdown(
             f"""
-            <div style="background-color: #3B4F5B; border-radius: 5px; padding: 5px; text-align: center; width: 300px; margin-bottom: 50px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Basement Floor Per Square Foot</h3>
+            <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 50px;">
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Basement Floor (per sq ft)</h3>
                 <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_basement:,.2f}/ft²</h2>
             </div>
             """,
             unsafe_allow_html=True,
         )
-
-
-
-
+        
 
     # Calculate neighborhood frequency
     neighborhood_counts = df_copy['Neighborhood'].value_counts()
@@ -460,23 +777,14 @@ if selected_tab == "Home":
         # Display the table with custom headers to prevent key errors and without displaying the index
         st.table(df_copy_sorted[['Neighborhood', 'SalePrice']].head(10).rename(columns={'Neighborhood': 'Neighborhood', 'SalePrice': 'Average Sale Price'}).reset_index(drop=True))
 
-            
-        
-
 elif selected_tab == "Property and Building Analysis":
     # Content for the Building tab
     st.header("Property and Building Analysis")
-    st.write("This is the Property and Building Analysis tab content.")
     # Display the loaded data in an expander for data preview
     with st.expander("Data Preview"):
         st.dataframe(df_copy)
 
-    col1, col2 = st.columns(2)
-
-    # Replace 5 with 1 in variable names in col1
-    with col1:
-        st.title("Building Class Explanation Table")
-        data_explanation = [
+    data_explanation = [
             {'Building Class': 20, 'Meaning': '1-Story 1946 & Newer'},
             {'Building Class': 30, 'Meaning': '1-Story 1945 & Older'},
             {'Building Class': 40, 'Meaning': 'Multi-Residence Properties'},
@@ -493,6 +801,14 @@ elif selected_tab == "Property and Building Analysis":
             {'Building Class': 180, 'Meaning': 'Three-Story Homes'},
             {'Building Class': 190, 'Meaning': '2-Story PUD'}
         ]
+    
+    building_class_counts = pd.DataFrame(columns=['Building Class', 'Count'])
+
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Building Class Explanation Table")
         # Display a data table based on the data_explanation list
         st.table(data_explanation)
 
@@ -502,26 +818,19 @@ elif selected_tab == "Property and Building Analysis":
 
         # Create a pie chart based on the distribution of Building Class counts
         fig_pie = px.pie(building_class_counts, names='Building Class', values='Count', title='Distribution of Building Classes')
-
         fig_pie.update_traces(hole=0.4)  # Adjust the hole size (0.4 makes it a donut)
 
         # Display the pie chart
         st.plotly_chart(fig_pie)
 
-    # Replace 6 with 2 in variable names in col2
     with col2:
-        st.title("Building Class")
+        st.subheader("Building Class")
         selected_feature2 = st.selectbox("Select a Building Class Feature", [
             'Building Class'
         ], key="feature2")
 
-        # Replace 6 with 2 in variable names
         price_range2 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range2")
-
-        # Replace 6 with 2 in variable names
         original_construction_date_range_2 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range2")
-
-        # Replace 6 with 2 in variable names
         remodel_date_range_2 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range2")
 
         # Filter the data based on the selected criteria for the second graph
@@ -560,7 +869,6 @@ elif selected_tab == "Property and Building Analysis":
 
     st.write("---")
 
-
     # Create two columns with equal width to place the graphs side by side
     col3, col4 = st.columns(2)
 
@@ -569,7 +877,7 @@ elif selected_tab == "Property and Building Analysis":
 
     with col3:
         # Dropdown for selecting the first feature in the first column
-        st.title("Property Assessment Metrics")
+        st.subheader("Property Assessment Metrics")
 
         selected_feature3 = st.selectbox("Select a Property Feature", [
             'Overall Material and Finish Quality',
@@ -584,13 +892,8 @@ elif selected_tab == "Property and Building Analysis":
             'Garage Condition'
         ], key="feature3")
 
-        # Replace 4 with 5 in variable names
         price_range3 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range3")
-
-        # Replace 4 with 5 in variable names
         original_construction_date_range_3 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range3")
-
-        # Replace 4 with 5 in variable names
         remodel_date_range_3 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range3")
 
         # Filter the data based on the selected criteria for the fifth graph
@@ -603,7 +906,7 @@ elif selected_tab == "Property and Building Analysis":
             (df_copy['Remodel Date'] <= remodel_date_range_3[1])
         ]
 
-        # Create a frequency count of the selected feature and neighborhood for the first graph
+        # Create a frequency count of the selected feature and neighborhood
         feature_counts3 = filtered_data3.groupby([selected_feature3, 'Neighborhood']).size().reset_index()
         feature_counts3.columns = [selected_feature3, 'Neighborhood', 'Frequency']
 
@@ -615,7 +918,6 @@ elif selected_tab == "Property and Building Analysis":
 
         # Calculate the average value for "Overall Material and Finish Quality"
         average_quality3 = filtered_data3['Overall Material and Finish Quality'].mean()
-
         # Calculate the average value for "Overall Condition Rating"
         average_condition3 = filtered_data3['Overall Condition Rating'].mean()
 
@@ -634,7 +936,6 @@ elif selected_tab == "Property and Building Analysis":
         st.plotly_chart(fig_stacked_bar3)
 
         # Create the gauge chart based on the selected feature
-
         average_value3 = 0
         title_text3 = "Average Value"  # Set a default title text
 
@@ -650,18 +951,15 @@ elif selected_tab == "Property and Building Analysis":
 
             # Create a donut chart based on "Fireplace Quality" and display the number of fireplaces
             fig_donut_chart3 = px.pie(fireplace_quality_counts3, names='Fireplace Quality', values='Number of Fireplaces', hole=0.4, labels={'Number of Fireplaces': 'Number of Fireplaces'})
-
             fig_donut_chart3.update_layout(
                 height=300,  # Adjust the height
                 width=300,    # Adjust the width
                 title="Distribution of Fireplace Quality"
             )
-
             st.plotly_chart(fig_donut_chart3)
         else:
             average_value3 = 0
             title_text3 = "Average Value"
-
 
         # Create a smaller gauge chart
         fig_quality3 = go.Figure(go.Indicator(
@@ -682,9 +980,9 @@ elif selected_tab == "Property and Building Analysis":
 
         # Display the gauge chart
         st.plotly_chart(fig_quality3)
-    # Dropdown for selecting the second feature in the second column
+
     with col4:
-        st.title("Dwelling")
+        st.subheader("Dwelling")
         selected_feature4 = st.selectbox("Select a Dwelling Feature", [
             'Type of Dwelling',
             'Style of Dwelling'
@@ -698,7 +996,6 @@ elif selected_tab == "Property and Building Analysis":
             value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), 
             key="price_range4"
         )
-
         # Slider for selecting Original Construction Date for the first feature
         original_construction_date_range_4 = st.slider("Original Construction Date",
             min_value=int(df_copy['Original Construction Date'].min()),
@@ -707,7 +1004,6 @@ elif selected_tab == "Property and Building Analysis":
             key="original_construction_date_range_4",
             step=None  # Ensure only one dragger
         )
-
         # Slider for selecting Remodel Date for the first feature
         remodel_date_range_4 = st.slider("Remodel Date",
             min_value=int(df_copy['Remodel Date'].min()),
@@ -717,7 +1013,7 @@ elif selected_tab == "Property and Building Analysis":
             step=None  # Ensure only one dragger
         )
 
-        # Filter the data based on the selected criteria for the first graph
+        # Filter the data based on the selected criteria
         filtered_data4 = df_copy[
             (df_copy['SalePrice'] >= price_range4[0]) &
             (df_copy['SalePrice'] <= price_range4[1]) &
@@ -727,17 +1023,17 @@ elif selected_tab == "Property and Building Analysis":
             (df_copy['Remodel Date'] <= remodel_date_range_4[1])
         ]
 
-        # Create a frequency count of the selected feature and neighborhood for the second graph
+        # Create a frequency count of the selected feature and neighborhood
         feature_counts4 = filtered_data4.groupby([selected_feature4, 'Neighborhood']).size().reset_index()
         feature_counts4.columns = [selected_feature4, 'Neighborhood', 'Frequency']
 
-        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the second graph
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range
         top_neighborhoods4 = feature_counts4.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
 
-        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the second graph
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range
         filtered_feature_counts4 = feature_counts4[(feature_counts4['Neighborhood'].isin(top_neighborhoods4)) & (feature_counts4[selected_feature4] != 'N/A')]
 
-        # Create a stacked bar chart using Plotly Express for the second feature
+        # Create a stacked bar chart using Plotly Express
         fig4 = px.bar(
             filtered_feature_counts4,
             x=selected_feature4,
@@ -748,33 +1044,22 @@ elif selected_tab == "Property and Building Analysis":
             title=f"Top Neighborhoods for {selected_feature4}",
         )
 
-        # Display the second stacked bar chart
+        # Display the stacked bar chart
         st.plotly_chart(fig4)
 
-
-
-    # Create a new row for the third graph
-    #st.write("---")  # Horizontal line to separate rows
-
-    # Create two columns for the third graph
+    # Create two columns with equal width to place the graphs side by side
     col5, col6 = st.columns(2)
 
-    # Replace 4 with 5 in variable names in col5
     with col5:
-        st.title("Rooms")
+        st.subheader("Rooms")
         selected_feature5 = st.selectbox("Select a Room Feature", [
             'Total Number of Full Bathrooms',
             'Total Number of Half Bathrooms',
             'Total Rooms Above Grade (Does Not Include Bathrooms)'
         ], key="feature5")
 
-        # Replace 4 with 5 in variable names
         price_range5 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range5")
-
-        # Replace 4 with 5 in variable names
         original_construction_date_range_5 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range5")
-
-        # Replace 4 with 5 in variable names
         remodel_date_range_5 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range5")
 
         # Filter the data based on the selected criteria for the fifth graph
@@ -811,10 +1096,8 @@ elif selected_tab == "Property and Building Analysis":
         # Display the fifth stacked bar chart
         st.plotly_chart(fig5)
 
-
-    # Replace 7 with 6 in variable names in col6
     with col6:
-        st.title("Unique Features")
+        st.subheader("Unique Features")
         selected_feature6 = st.selectbox("Select a Unique Feature", [
             'Pool Quality',
             'Fence Quality',
@@ -823,16 +1106,11 @@ elif selected_tab == "Property and Building Analysis":
             'General Shape of Property'
         ], key="feature6")
 
-        # Replace 7 with 6 in variable names
         price_range6 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range6")
-
-        # Replace 7 with 6 in variable names
         original_construction_date_range_6 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_6")
-
-        # Replace 7 with 6 in variable names
         remodel_date_range_6 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_6")
 
-        # Filter the data based on the selected criteria for the seventh graph
+        # Filter the data based on the selected criteria for the sixth graph
         filtered_data6 = df_copy[
             (df_copy['SalePrice'] >= price_range6[0]) &
             (df_copy['SalePrice'] <= price_range6[1]) &
@@ -865,9 +1143,8 @@ elif selected_tab == "Property and Building Analysis":
 
     col7, col8 = st.columns(2)
 
-    # Dropdown for selecting the seventh feature in the first column of the second row
     with col7:
-        st.title("Indoor Size")
+        st.subheader("Indoor Size")
         selected_feature7 = st.selectbox("Select an Indoor Size Feature", [
             'Total Finished Basement Area (in Square Feet)',
             'Unfinished Basement Area (in Square Feet)',
@@ -875,13 +1152,8 @@ elif selected_tab == "Property and Building Analysis":
             'Above Grade (Ground) Living Area (in Square Feet)',
         ], key="feature7")
 
-        # Replace 4 with 7 in variable names
         price_range7 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range7")
-
-        # Replace 4 with 7 in variable names
         original_construction_date_range_7 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_7")
-
-        # Replace 4 with 7 in variable names
         remodel_date_range_7 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_7")
 
         # Filter the data based on the selected criteria for the seventh graph
@@ -916,7 +1188,6 @@ elif selected_tab == "Property and Building Analysis":
         # Update the axis labels
         fig7.update_xaxes(title_text=selected_feature7)
         fig7.update_yaxes(title_text='Frequency')
-
         fig7.update_layout(width=600, height=450)  # Adjust the width and height as needed
 
         # Display the seventh stacked bar chart
@@ -940,14 +1211,12 @@ elif selected_tab == "Property and Building Analysis":
 
         # Adjust the size of the pie chart
         fig_pie.update_layout(width=350, height=350)  # Adjust the size
-
         fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
 
         # Display the donut chart
 
         # Display the donut chart
         st.plotly_chart(fig_pie)
-
 
         # Calculate the count of each variable for the filtered data
         first_floor = (filtered_data7['First Floor (in Square Feet)'] != 0).sum()
@@ -968,16 +1237,13 @@ elif selected_tab == "Property and Building Analysis":
 
         # Adjust the size of the pie chart
         fig_pie.update_layout(width=350, height=350)  # Adjust the size
-
         fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
-
-        # Display the donut chart
 
         # Display the donut chart
         st.plotly_chart(fig_pie)
     
     with col8:
-        st.title("Outdoor Size")
+        st.subheader("Outdoor Size")
         selected_feature8 = st.selectbox("Select an Outdoor Size Feature", [
             'Lot Size (in Square Feet)',
             'Wood Deck Area (in Square Feet)',
@@ -988,13 +1254,8 @@ elif selected_tab == "Property and Building Analysis":
             'Pool Area (in Square Feet)',
         ], key="feature8")
 
-        # Replace 4 with 8 in variable names
         price_range8 = st.slider("Price Range", min_value=int(df_copy['SalePrice'].min()), max_value=int(df_copy['SalePrice'].max()), step=1000, value=(int(df_copy['SalePrice'].min()), int(df_copy['SalePrice'].max())), key="price_range8")
-
-        # Replace 4 with 8 in variable names
         original_construction_date_range_8 = st.slider("Original Construction Date Range", int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max()), (int(df_copy['Original Construction Date'].min()), int(df_copy['Original Construction Date'].max())), key="original_construction_date_range_8")
-
-        # Replace 4 with 8 in variable names
         remodel_date_range_8 = st.slider("Remodel Date Range", int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max()), (int(df_copy['Remodel Date'].min()), int(df_copy['Remodel Date'].max())), key="remodel_date_range_8")
 
         # Filter the data based on the selected criteria for the eighth graph
@@ -1029,7 +1290,6 @@ elif selected_tab == "Property and Building Analysis":
         # Update the axis labels
         fig8.update_xaxes(title_text=selected_feature8)
         fig8.update_yaxes(title_text='Frequency')
-
         fig8.update_layout(width=600, height=450)  # Adjust the width and height as needed
 
         # Display the eighth stacked bar chart
@@ -1060,113 +1320,9 @@ elif selected_tab == "Property and Building Analysis":
         fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
 
         # Display the donut chart
-
-        # Display the donut chart
         st.plotly_chart(fig_pie)
 
-
 df_copy_yearstring = df.copy()
-
-# Define a mapping of abbreviations for data cleaning
-abbreviations_map = {
-    'NAmes': 'North Ames',
-    'CollgCr': 'College Creek',
-    'Crawfor': 'Crawford',
-    'NoRidge': "Northridge Heights",
-    'Mitchel': 'Mitchell',
-    'Somerst': 'Somerset',
-    'NWAmes': 'Northwest Ames',
-    'OldTown': 'Old Town',
-    'BrkSide': 'Brookside',
-    'SawyerW': 'Sawyer West',
-    'NridgHt': 'Northridge Heights',
-    'IDOTRR': 'IDOTRR',
-    'MeadowV': 'Meadow Village',
-    'StoneBr': 'Stone Brooke',
-    'ClearCr': 'Clear Creek',
-    'NPkVill': 'Northpark Village',
-    'Blmngtn': 'Bloomington Heights',
-    'BrDale': 'Briardale',
-    'SWISU': 'Southwest of the ISU campus',
-    'Blueste': 'Bluestem',
-    'RM': 'Residential Medium Density',
-    'RL': 'Residential Low Density',
-    'RH': 'Residential High Density',
-    'Lvl': 'Level',
-    'Low': 'Lowland/Low Slope',
-    'HLS': 'Hillside',
-    'Bnk': 'Banked',
-    'Reg': 'Regular',
-    'IR3': 'Irregular - 3rd Category',
-    'IR2': 'Irregular - 2nd Category',
-    'IR1': 'Irregular - 1st Category',
-    'Inside': 'Inside',
-    'FR2': 'Frontage 2',
-    'CulDSac': 'Cul-de-Sac',
-    'Corner': 'Corner',
-    'PosN': 'Near Positive Feature',
-    'PosA': 'Adjacent to Positive Feature',
-    'Norm': 'Normal Proximity',
-    'Feedr': 'Adjacent to Feeder Street or Railroad',
-    'Duplex': 'Duplex',
-    '2fmCon': 'Two-Family Conversion',
-    'TwnhsE': 'Townhouse End Unit',
-    '1Fam': 'Single-Family',
-    'WhShngl': 'Wood Shingle',
-    'CompShg': 'Composition Shingle',
-    'TA': 'Average',
-    'Gd': 'Good',
-    'Ex': 'Excellent',
-    'Fa': 'Fair',
-    'Stone': 'Stone Foundation',
-    'PConc': 'Poured Concrete Foundation',
-    'CBlock': 'Concrete Block Foundation',
-    'BrkTil': 'Brick and Tile Foundation',
-    'No': 'No Exposure',
-    'Mn': 'Minimum Exposure',
-    'Av': 'Average Exposure',
-    'Unf': 'Unfinished',
-    'Rec': 'Average Living Quarters',
-    'LwQ': 'Low Quality',
-    'GLQ': 'Good Living Quarters',
-    'BLQ': 'Below Average Living Quarters',
-    'ALQ': 'Average Living Quarters',
-    'Po': 'Poor',
-    'Detchd': 'Detached from House',
-    'BuiltIn': 'Built-In Garage',
-    'Basement': 'Basement Garage',
-    'Attchd': 'Attached to House',
-    '2Types': 'More than one type of Garage',
-    'RFn': 'Rough Finished',
-    'Fin': 'Finished',
-    'MnPrv': 'Minimum Privacy',
-    'GdWo': 'Good Wood',
-    'GdPrv': 'Good Privacy',
-    'TenC': 'Tennis Court',
-    'Othr': 'Other',
-    'Shed': 'Shed',
-    'Gar2': 'Second Garage',
-    'ConLw': 'Conventional with low down payment',
-    'ConLD': 'Conventional with low down payment',
-    'Con': 'Conventional',
-    'WD': 'Warranty Deed - Conventional',
-    'New': 'Home just constructed and sold',
-    'CWD': 'Warranty Deed - Cash Conventional',
-    'COD': 'Court Officer Deed/Estate',
-    'Family': 'Family Sale',
-    'Alloca': 'Allocation',
-    'Partial': 'Partial',
-    'Normal': 'Normal Sale',
-    'Abnormal': 'Abnormal Sale',
-    '1.5Fin': '1.5-Story House with Finished Area',
-    '1.5Unf': '1.5-Story House with Unfinished Area',
-    '1Story': 'One-Story House',
-    '2.5Unf': '2.5-Story House with Unfinished Area',
-    '2Story': 'Two-Story House',
-    '2.5Fin': '2.5-Story House with Finished Area',
-    'SFoyer': 'Split Foyer',
-    'SLvl': 'Split Level'
-}
 
 # List of columns to replace using the abbreviations map
 columns_to_replace = ['Neighborhood', 'MSZoning', 'LandContour', 'LotShape', 'LotConfig',
@@ -1182,97 +1338,11 @@ df_copy_yearstring[columns_to_replace] = df_copy_yearstring[columns_to_replace].
 
 # Fill missing values with 'N/A'
 df_copy_yearstring = df_copy_yearstring.fillna('N/A')
-
-
-new_column_names = {
-    'MSSubClass': 'Building Class',
-    'MSZoning': 'General Zoning Classification',
-    'LandContour': 'Flatness of the Property',
-    'LotShape': 'General Shape of Property',
-    'LotConfig': 'Lot Configuration',
-    'LotFrontage': 'Linear Feet of Street Connected to Property',
-    'LotArea': 'Lot Size (in Square Feet)',
-
-    'Condition1': 'Proximity to Main Road or Railroad',
-    'BldgType': 'Type of Dwelling',
-    'HouseStyle': 'Style of Dwelling',
-    'OverallQual': 'Overall Material and Finish Quality',
-    'OverallCond': 'Overall Condition Rating',
-
-    'YearBuilt': 'Original Construction Date',
-    'YearRemodAdd': 'Remodel Date',
-    'RoofStyle': 'Type of Roof',
-    'RoofMatl': 'Roof Material',
-    'ExterQual': 'Exterior Material Quality',
-    'ExterCond': 'Present Condition of the Material on the Exterior',
-    'Foundation': 'Type of Foundation',
-
-    'BsmtQual': 'Basement Quality',
-    'BsmtExposure': 'Walkout/Garden Level Basement Walls',
-    'BsmtFinType1': 'Quality of Basement Finished Area',
-    'BsmtFinType2': 'Quality of Second Finished Area (If Present)',
-    'BsmtFinSF1': 'Type 1 Finished (in Square Feet)',
-    'BsmtFinSF2': 'Type 2 Finished (in Square Feet)',
-    'Total Finished Basement Area (in Square Feet)': 'Total Finished Basement Area (in Square Feet)',
-    'BsmtUnfSF': 'Unfinished Basement Area (in Square Feet)',
-    'TotalBsmtSF': 'Total Basement Area (in Square Feet)',
-
-    'HeatingQC': 'Heating Quality and Condition',
-    '1stFlrSF': 'First Floor (in Square Feet)',
-    '2ndFlrSF': 'Second Floor (in Square Feet)',
-    'LowQualFinSF': 'Low-Quality Finished Area (in Square Feet)',
-    'GrLivArea': 'Above Grade (Ground) Living Area (in Square Feet)',
-    'BsmtFullBath': 'Number of Basement Full Bathrooms',
-    'BsmtHalfBath': 'Number of Basement Half Bathrooms',
-    'TotalFullBath': 'Total Number of Full Bathrooms',
-    'FullBath': 'Number of Full Bathrooms Above Grade (Ground)',
-    'HalfBath': 'Number of Half Baths Above Grade (Ground)',
-    'TotalHalfBath': 'Total Number of Half Bathrooms',
-    'TotRmsAbvGrd': 'Total Rooms Above Grade (Does Not Include Bathrooms)',
-    'KitchenQual': 'Kitchen Quality',
-    'TotRmsAbvGrd': 'Total Rooms Above Grade (Does Not Include Bathrooms)',
-    'Fireplaces': 'Number of Fireplaces',
-    'FireplaceQu': 'Fireplace Quality',
-
-    'GarageType': 'Garage Location',
-    'GarageYrBlt': 'Year Garage Was Built',
-    'GarageFinish': 'Interior Finish of the Garage',
-    'GarageCars': 'Size of Garage in Car Capacity',
-    'GarageArea': 'Size of Garage in Square Feet',
-    'GarageQual': 'Garage Quality',
-    'GarageCond': 'Garage Condition',
-
-    'WoodDeckSF': 'Wood Deck Area (in Square Feet)',
-    'OpenPorchSF': 'Open Porch Area (in Square Feet)',
-    'EnclosedPorch': 'Enclosed Porch Area (in Square Feet)',
-    '3SsnPorch': 'Three Season Porch Area (in Square Feet)',
-    'ScreenPorch': 'Screen Porch Area (in Square Feet)',
-    'PoolArea': 'Pool Area (in Square Feet)',
-    'PoolQC': 'Pool Quality',
-    'Fence': 'Fence Quality',
-    'MiscFeature': 'Miscellaneous Feature',
-    'MiscVal': 'Value of Miscellaneous Feature',
-
-    'MoSold': 'Month Sold',
-    'YrSold': 'Year Sold',
-    'SaleType': 'Type of Sale',
-    'SaleCondition': 'Condition of Sale'
-}
-
-# Convert 'LotFrontage' column to float, replacing 'N/A' with NaN
-#df_copy['LotFrontage'] = pd.to_numeric(df_copy['LotFrontage'], errors='coerce')
-#df_copy['MasVnrArea'] = pd.to_numeric(df_copy['MasVnrArea'], errors='coerce')
-#df_copy['GarageYrBlt'] = pd.to_numeric(df_copy['GarageYrBlt'], errors='coerce')
-
 df_copy_yearstring = df_copy_yearstring.rename(columns=new_column_names)
 
 # Remove commas from the 'Original Construction Date' and 'Remodel Date' columns
 df_copy_yearstring['Original Construction Date'] = df_copy_yearstring['Original Construction Date'].apply(lambda x: str(x).replace(',', ''))
 df_copy_yearstring['Remodel Date'] = df_copy_yearstring['Remodel Date'].apply(lambda x: str(x).replace(',', ''))
-
-# Convert the columns back to integers if needed
-# df_copy_yearstring['Original Construction Date'] = df_copy_yearstring['Original Construction Date'].astype(int)
-# df_copy_yearstring['Remodel Date'] = df_copy_yearstring['Remodel Date'].astype(int)
 
 if selected_tab == "Sales Analysis":
     # Content for the Sales Analysis tab
@@ -1295,7 +1365,6 @@ if selected_tab == "Sales Analysis":
 
         # Create a line chart using Plotly Express
         fig_original_construction = px.line(original_construction_counts, x='Original Construction Date', y='Frequency', labels={'Original Construction Date': 'Year', 'Frequency': 'Frequency'})
-
         # Customize x-axis rotation, tick values, and graph size
         fig_original_construction.update_layout(
             xaxis_tickangle=45,
@@ -1316,7 +1385,6 @@ if selected_tab == "Sales Analysis":
 
         # Create a line chart using Plotly Express
         fig_remodel_date = px.line(remodel_date_counts, x='Remodel Date', y='Frequency', labels={'Remodel Date': 'Year', 'Frequency': 'Frequency'})
-
         # Customize x-axis rotation, tick values, and graph size
         fig_remodel_date.update_layout(
             xaxis_tickangle=45,
@@ -1351,7 +1419,6 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_original_construction_price)
 
-
     with col4:
         st.subheader("Remodel Date vs. Average Sale Price")
         selected_neighborhood_remodel = st.selectbox("Select Neighborhood for Remodel Date", df_copy_yearstring['Neighborhood'].unique())
@@ -1369,9 +1436,7 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_remodel_price)
 
-
     st.write("---")    
-
 
     # Create a slider to control the price range for all graphs
     price_range = st.slider(
@@ -1384,7 +1449,6 @@ if selected_tab == "Sales Analysis":
     # Create a single row container for all graphs
     col5, col6 = st.columns(2)
 
-    # Graph 1: Month Sold vs. Frequency
     with col5:
         st.subheader("Month Sold vs. Frequency")
         month_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Month Sold').size().reset_index()
@@ -1414,7 +1478,6 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_month_sold)
 
-    # Graph 2: Year Sold vs. Frequency
     with col6:
         st.subheader("Year Sold vs. Frequency")
         year_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Year Sold').size().reset_index()
@@ -1439,10 +1502,8 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_year_sold)
 
-
     col7, col8 = st.columns(2)
 
-    # Graph 3: Month Sold vs. Average Sale Price
     with col7:
         st.subheader("Month Sold vs. Average Sale Price")
         selected_neighborhood_month = st.selectbox("Select Neighborhood for Month Sold", df_copy_yearstring['Neighborhood'].unique())
@@ -1471,7 +1532,6 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_month_sold_price)
 
-    # Graph 4: Year Sold vs. Average Sale Price
     with col8:
         st.subheader("Year Sold vs. Average Sale Price")
         selected_neighborhood_year = st.selectbox("Select Neighborhood for Year Sold", df_copy_yearstring['Neighborhood'].unique())
@@ -1485,4 +1545,3 @@ if selected_tab == "Sales Analysis":
         st.plotly_chart(fig_year_sold_price)
 
     st.write("---")
-
