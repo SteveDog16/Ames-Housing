@@ -266,7 +266,7 @@ if selected_tab == "Home":
     with row1[0]:
         st.markdown(
             f"""
-            <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
+            <div style="background-color: #5B3B5A; border-radius: 5px; height: 75px; padding: 5px; text-align: center; margin-bottom: 20px;">
                 <h3 style="font-size: 15px; padding: 1px;">Population (in 2010)</h3>
                 <h2 style="font-size: 30px; padding-top: 0px; padding: 1px;">59,103</h2>
             </div>
@@ -323,7 +323,7 @@ if selected_tab == "Home":
             f"""
             <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
                 <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435</h2>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435.2</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -337,8 +337,8 @@ if selected_tab == "Home":
         st.write(
             f"""
             <div style="background-color: #84659C; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435</h2>
+                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Land area in square miles (in 2010)</h3>
+                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">24.21</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -736,7 +736,7 @@ if selected_tab == "Home":
 
     # Display the first bar chart in the first column
     with col1:
-        st.subheader("Neighborhood Frequency Analysis")
+        st.subheader("Neighborhood Frequency")
         fig1 = px.bar(
             x=neighborhood_counts.index,
             y=neighborhood_counts.values,
@@ -749,7 +749,7 @@ if selected_tab == "Home":
 
     # Display the second bar chart in the second column
     with col2:
-        st.subheader("Neighborhood Average Sale Price Analysis")
+        st.subheader("Neighborhood Average Sale Price")
         fig2 = px.bar(
             neighborhood_saleprice,
             x='Neighborhood',
@@ -1359,7 +1359,7 @@ if selected_tab == "Sales Analysis":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Original Construction Date vs. Frequency")
+        st.subheader("Original Construction Date Frequency")
         original_construction_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Original Construction Date').size().reset_index()
         original_construction_counts.columns = ['Original Construction Date', 'Frequency']
 
@@ -1379,7 +1379,7 @@ if selected_tab == "Sales Analysis":
         st.plotly_chart(fig_original_construction)
 
     with col2:
-        st.subheader("Remodel Date vs. Frequency")
+        st.subheader("Remodel Date Frequency")
         remodel_date_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Remodel Date').size().reset_index()
         remodel_date_counts.columns = ['Remodel Date', 'Frequency']
 
@@ -1403,7 +1403,33 @@ if selected_tab == "Sales Analysis":
     col3, col4 = st.columns(2)
 
     with col3:
-        st.subheader("Original Construction Date vs. Average Sale Price")
+        st.subheader("Original Construction Date Average Sale Price")
+        year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])]
+        year_sold_price = year_sold_price.groupby('Original Construction Date')['SalePrice'].mean().reset_index()
+        fig_year_sold_price = px.line(year_sold_price, x='Original Construction Date', y='SalePrice', labels={'Original Construction Date': 'Original Construction Date', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_year_sold_price.add_trace(px.scatter(year_sold_price, x='Original Construction Date', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_year_sold_price)
+
+    with col4:
+        st.subheader("Remodel Date Average Sale Price")
+        year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])]
+        year_sold_price = year_sold_price.groupby('Remodel Date')['SalePrice'].mean().reset_index()
+        fig_year_sold_price = px.line(year_sold_price, x='Remodel Date', y='SalePrice', labels={'Remodel Date': 'Remodel Date', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_year_sold_price.add_trace(px.scatter(year_sold_price, x='Remodel Date', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_year_sold_price)
+
+    st.write("---")
+
+    col5, col6 = st.columns(2)
+
+    with col5:
+        st.subheader("Original Construction Date Average Sale Price by Neighborhood")
         selected_neighborhood_orig = st.selectbox("Select Neighborhood for Original Construction Date", df_copy_yearstring['Neighborhood'].unique())
         original_construction_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_orig)]
         original_construction_price = original_construction_price.groupby('Original Construction Date')['SalePrice'].mean().reset_index()
@@ -1419,8 +1445,8 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_original_construction_price)
 
-    with col4:
-        st.subheader("Remodel Date vs. Average Sale Price")
+    with col6:
+        st.subheader("Remodel Date Average Sale Price by Neighborhood")
         selected_neighborhood_remodel = st.selectbox("Select Neighborhood for Remodel Date", df_copy_yearstring['Neighborhood'].unique())
         remodel_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_remodel)]
         remodel_price = remodel_price.groupby('Remodel Date')['SalePrice'].mean().reset_index()
@@ -1447,10 +1473,10 @@ if selected_tab == "Sales Analysis":
     )
 
     # Create a single row container for all graphs
-    col5, col6 = st.columns(2)
+    col7, col8 = st.columns(2)
 
-    with col5:
-        st.subheader("Month Sold vs. Frequency")
+    with col7:
+        st.subheader("Month Sold Frequency")
         month_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Month Sold').size().reset_index()
         month_sold_counts.columns = ['Month Sold', 'Frequency']
 
@@ -1478,8 +1504,8 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_month_sold)
 
-    with col6:
-        st.subheader("Year Sold vs. Frequency")
+    with col8:
+        st.subheader("Year Sold Frequency")
         year_sold_counts = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])].groupby('Year Sold').size().reset_index()
         year_sold_counts.columns = ['Year Sold', 'Frequency']
 
@@ -1502,10 +1528,56 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_year_sold)
 
-    col7, col8 = st.columns(2)
+    col9, col10 = st.columns(2)
 
-    with col7:
-        st.subheader("Month Sold vs. Average Sale Price")
+    with col9:
+        st.subheader("Month Sold Average Sale Price")
+        year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])]
+        year_sold_price = year_sold_price.groupby('Month Sold')['SalePrice'].mean().reset_index()
+        fig_year_sold_price = px.line(year_sold_price, x='Month Sold', y='SalePrice', labels={'Month Sold': 'Month Sold', 'SalePrice': 'Average Sale Price'})
+
+        # Convert integer month values to mont
+        # Create a line chart using Plotly Express
+        #fig_month_sold = px.line(month_sold_counts, x='Month Sold', y='SalePrice', labels={'Month Sold': 'Month', 'SalePrice': 'SalePrice'})
+
+        # Customize x-axis rotation, tick values, and graph size
+        fig_year_sold_price.update_layout(
+            xaxis_tickangle=-45,  # No rotation
+            width=600,  # Adjust the width
+            height=400  # Adjust the height
+        )
+
+        # Convert integer month values to month names
+        month_names = [calendar.month_name[i] for i in range(1, 13)]
+
+        # Set custom tickvals and ticktext for the x-axis
+        fig_year_sold_price.update_xaxes(
+            tickvals=list(range(1, 13)),  # Integer values for months
+            ticktext=month_names,  # Corresponding month names
+        )
+
+        # Add data points
+        fig_year_sold_price.add_trace(px.scatter(year_sold_price, x='Month Sold', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_year_sold_price)
+
+    with col10:
+        st.subheader("Year Sold Average Sale Price")
+        year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])]
+        year_sold_price = year_sold_price.groupby('Year Sold')['SalePrice'].mean().reset_index()
+        fig_year_sold_price = px.line(year_sold_price, x='Year Sold', y='SalePrice', labels={'Year Sold': 'Year Sold', 'SalePrice': 'Average Sale Price'})
+
+        # Add data points as a scatter plot
+        fig_year_sold_price.add_trace(px.scatter(year_sold_price, x='Year Sold', y='SalePrice').data[0])
+
+        st.plotly_chart(fig_year_sold_price)
+
+    st.write("---")
+
+    col11, col12 = st.columns(2)
+
+    with col11:
+        st.subheader("Month Sold Average Sale Price by Neighborhood")
         selected_neighborhood_month = st.selectbox("Select Neighborhood for Month Sold", df_copy_yearstring['Neighborhood'].unique())
         month_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_month)]
         month_sold_price = month_sold_price.groupby('Month Sold')['SalePrice'].mean().reset_index()
@@ -1532,8 +1604,8 @@ if selected_tab == "Sales Analysis":
 
         st.plotly_chart(fig_month_sold_price)
 
-    with col8:
-        st.subheader("Year Sold vs. Average Sale Price")
+    with col12:
+        st.subheader("Year Sold Average Sale Price by Neighborhood")
         selected_neighborhood_year = st.selectbox("Select Neighborhood for Year Sold", df_copy_yearstring['Neighborhood'].unique())
         year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1]) & (df_copy_yearstring['Neighborhood'] == selected_neighborhood_year)]
         year_sold_price = year_sold_price.groupby('Year Sold')['SalePrice'].mean().reset_index()
