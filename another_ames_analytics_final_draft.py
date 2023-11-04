@@ -1,17 +1,9 @@
-import random
-import duckdb
-import math
 import pandas as pd
 import plotly.express as px
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import plotly.graph_objects as go
-import seaborn as sns
 import streamlit as st
-from streamlit import components
 import calendar
-import folium
 
 st.set_page_config(page_title="Ames House Price Dashboard", page_icon=":bar_chart:", layout="wide")
 
@@ -25,7 +17,6 @@ df_copy = df.copy()
 
 df_copy['TotalFullBath'] = df_copy['FullBath'] + df_copy['BsmtFullBath']
 df_copy['TotalHalfBath'] = df_copy['HalfBath'] + df_copy['BsmtHalfBath']
-
 
 # Add tabs to the Streamlit sidebar
 with st.sidebar:
@@ -255,9 +246,7 @@ if selected_tab == "Home":
 
     # https://en.wikipedia.org/wiki/Ames,_Iowa
     st.markdown("<p style='font-size: 20px;'>Ames is a city in Story County, Iowa, United States, located approximately 30 miles north of Des Moines in central Iowa. It is best known as the home of Iowa State University (ISU).</p>", unsafe_allow_html=True)
-
     st.subheader("Geographical and Home Value Summary")
-
 
     # Create a layout with two rows of 5 columns each
     row1 = st.columns(4)
@@ -286,8 +275,6 @@ if selected_tab == "Home":
             unsafe_allow_html=True,
         )
 
-    # Google Maps
-
     # Define the data
         city_distances = {
             "Des Moines": 37,
@@ -295,8 +282,6 @@ if selected_tab == "Home":
             "Cedar Rapids": 110,
         }
     with row1[2]:
-        
-
         # Create a dropdown for selecting a city
         selected_city = st.selectbox("Select a City", list(city_distances.keys()))
 
@@ -315,9 +300,6 @@ if selected_tab == "Home":
     # https://www.census.gov/quickfacts/fact/table/amescityiowa#
     
     with row2[0]:
-        # Define the data
-
-
         # Display the selected city's distance in the same Markdown block
         st.write(
             f"""
@@ -330,9 +312,6 @@ if selected_tab == "Home":
         )
 
     with row2[1]:
-        # Define the data
-
-
         # Display the selected city's distance in the same Markdown block
         st.write(
             f"""
@@ -350,7 +329,6 @@ if selected_tab == "Home":
     row4 = st.columns(4)
 
     # https://www.bestplaces.net/crime/city/iowa/ames
-    
     # Define the crimes data
     crimes = {
         "Murder": 1.7,
@@ -363,7 +341,6 @@ if selected_tab == "Home":
         'Auto Theft': 86.5,
     }
     
-
     with row3[0]:
         # Create a smaller gauge chart
         fig = go.Figure(go.Indicator(
@@ -387,11 +364,8 @@ if selected_tab == "Home":
 
         fig.update_layout(width=280, height=280)
 
-        # Adjust the figure size
-
         # Display the smaller gauge chart
         st.plotly_chart(fig)
-        
 
     with row3[1]:
         # Create a smaller gauge chart
@@ -473,8 +447,6 @@ if selected_tab == "Home":
         # Display the smaller gauge chart
         st.plotly_chart(fig)
 
-
-
     with row4[0]:
         # Create a smaller gauge chart
         fig = go.Figure(go.Indicator(
@@ -499,11 +471,8 @@ if selected_tab == "Home":
 
         fig.update_layout(width=260, height=260)
 
-        # Adjust the figure size
-
         # Display the smaller gauge chart
         st.plotly_chart(fig)
-        
 
     with row4[1]:
         # Create a smaller gauge chart
@@ -586,7 +555,6 @@ if selected_tab == "Home":
         # Display the smaller gauge chart
         st.plotly_chart(fig)
 
-
     st.subheader("Price and Sale Summary")
 
     average_sale_price = df['SalePrice'].mean()
@@ -610,7 +578,6 @@ if selected_tab == "Home":
     # Calculate the median price per square foot
     median_price_per_sqft_basement = df_copy['PricePerSqFtBasement'].median()
 
-    # Create a summary card for Average Sale Price and Median Sale Price in the same row
     # Create a layout with two rows of 5 columns each
     row1 = st.columns(5)
     row2 = st.columns(4)
@@ -722,7 +689,6 @@ if selected_tab == "Home":
             """,
             unsafe_allow_html=True,
         )
-        
 
     # Calculate neighborhood frequency
     neighborhood_counts = df_copy['Neighborhood'].value_counts()
@@ -803,7 +769,6 @@ elif selected_tab == "Property and Building Analysis":
         ]
     
     building_class_counts = pd.DataFrame(columns=['Building Class', 'Count'])
-
 
     col1, col2 = st.columns(2)
 
@@ -1138,7 +1103,6 @@ elif selected_tab == "Property and Building Analysis":
         # Display the sixth stacked bar chart
         st.plotly_chart(fig6)
 
-
     st.write("---")
 
     col7, col8 = st.columns(2)
@@ -1212,8 +1176,6 @@ elif selected_tab == "Property and Building Analysis":
         # Adjust the size of the pie chart
         fig_pie.update_layout(width=350, height=350)  # Adjust the size
         fig_pie.update_layout(title_font=dict(size=15))  # Adjust the title text size
-
-        # Display the donut chart
 
         # Display the donut chart
         st.plotly_chart(fig_pie)
@@ -1535,10 +1497,6 @@ if selected_tab == "Sales Analysis":
         year_sold_price = df_copy_yearstring[(df_copy_yearstring['SalePrice'] >= price_range[0]) & (df_copy_yearstring['SalePrice'] <= price_range[1])]
         year_sold_price = year_sold_price.groupby('Month Sold')['SalePrice'].mean().reset_index()
         fig_year_sold_price = px.line(year_sold_price, x='Month Sold', y='SalePrice', labels={'Month Sold': 'Month Sold', 'SalePrice': 'Average Sale Price'})
-
-        # Convert integer month values to mont
-        # Create a line chart using Plotly Express
-        #fig_month_sold = px.line(month_sold_counts, x='Month Sold', y='SalePrice', labels={'Month Sold': 'Month', 'SalePrice': 'SalePrice'})
 
         # Customize x-axis rotation, tick values, and graph size
         fig_year_sold_price.update_layout(
