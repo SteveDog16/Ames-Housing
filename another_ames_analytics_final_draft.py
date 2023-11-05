@@ -1089,9 +1089,16 @@ elif selected_tab == "Property and Building Analysis":
         feature_counts6 = filtered_data6.groupby([selected_feature6, 'Neighborhood']).size().reset_index()
         feature_counts6.columns = [selected_feature6, 'Neighborhood', 'Frequency']
 
+        # Get the top 10 neighborhoods based on frequency for the selected feature and price range for the fifth graph
+        top_neighborhoods6 = feature_counts6.groupby('Neighborhood').sum().nlargest(10, 'Frequency').index
+
+        # Filter data to include only the top 10 neighborhoods for the selected feature and price range for the fifth graph
+        filtered_feature_counts6 = feature_counts6[(feature_counts6['Neighborhood'].isin(top_neighborhoods6)) & (feature_counts6[selected_feature6] != 'N/A')]
+
+
         # Create a stacked bar chart using Plotly Express for the sixth feature
         fig6 = px.bar(
-            feature_counts6,
+            filtered_feature_counts6,
             x=selected_feature6,
             y='Frequency',
             color='Neighborhood',  # Color by neighborhood
