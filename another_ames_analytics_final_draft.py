@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import streamlit as st
 import calendar
 
+
 st.set_page_config(page_title="Ames House Price Dashboard", page_icon=":bar_chart:", layout="wide")
 
 st.title('Ames House Price Dashboard')
@@ -256,8 +257,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #5B3B5A; border-radius: 5px; height: 75px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding: 1px;">Population (in 2010)</h3>
-                <h2 style="font-size: 30px; padding-top: 0px; padding: 1px;">59,103</h2>
+                <h3 style="font-size: 15px; color: white; padding: 1px;">Population (in 2010)</h3>
+                <h2 style="font-size: 30px; color: white; padding-top: 0px; padding: 1px;">59,103</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -268,8 +269,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #84659C; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding: 1px;">Median Home Value (in 2006-2010)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">$163,000</h2>
+                <h3 style="font-size: 15px; color: white; padding: 1px;">Median Home Value (in 2006-2010)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">$163,000</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -290,8 +291,8 @@ if selected_tab == "Home":
         st.write(
             f"""
             <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Distance from Ames to {selected_city}</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">{city_distances[selected_city]} miles</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Distance from Ames to {selected_city}</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">{city_distances[selected_city]} miles</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -304,8 +305,8 @@ if selected_tab == "Home":
         st.write(
             f"""
             <div style="background-color: #5B3B5A; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">2,435.2</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Population per square mile (in 2010)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">2,435.2</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -316,8 +317,8 @@ if selected_tab == "Home":
         st.write(
             f"""
             <div style="background-color: #84659C; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Land area in square miles (in 2010)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">24.21</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Land area in square miles (in 2010)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">24.21</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -352,7 +353,7 @@ if selected_tab == "Home":
             },
             gauge={
                 "axis": {"range": [0, 8], "dtick": 2},
-                "bar": {"color": "#84659C"},
+                "bar": {"color": "blue"},
                 "steps": [
                     {"range": [0, 2], "color": "green"},
                     {"range": [2, 4], "color": "yellow"},
@@ -378,7 +379,7 @@ if selected_tab == "Home":
             },
             gauge={
                 "axis": {"range": [0, 80], "dtick": 20},
-                "bar": {"color": "#84659C"},
+                "bar": {"color": "blue"},
                 "steps": [
                     {"range": [0, 20], "color": "green"},
                     {"range": [20, 40], "color": "yellow"},
@@ -404,7 +405,7 @@ if selected_tab == "Home":
             },
             gauge={
                 "axis": {"range": [0, 200], "dtick": 50},
-                "bar": {"color": "#84659C"},
+                "bar": {"color": "blue"},
                 "steps": [
                     {"range": [0, 50], "color": "green"},
                     {"range": [50, 100], "color": "yellow"},
@@ -429,15 +430,13 @@ if selected_tab == "Home":
                 "font": {"size": 14}  # Adjust the font size here
             },
             gauge={
-                "axis": {"range": [0, 600], "dtick": 100},
-                "bar": {"color": "#84659C"},
+                "axis": {"range": [0, 600], "dtick": 150},
+                "bar": {"color": "blue"},
                 "steps": [
-                    {"range": [0, 100], "color": "purple"},
-                    {"range": [100, 200], "color": "blue"},
-                    {"range": [200, 300], "color": "green"},
-                    {"range": [300, 400], "color": "yellow"},
-                    {"range": [400, 500], "color": "orange"},
-                    {"range": [500, 600], "color": "red"},
+                    {"range": [0, 150], "color": "green"},
+                    {"range": [150, 300], "color": "yellow"},
+                    {"range": [300, 450], "color": "orange"},
+                    {"range": [450, 600], "color": "red"},
                 ]
             }
         ))
@@ -457,14 +456,13 @@ if selected_tab == "Home":
                 "font": {"size": 12}  # Adjust the font size here
             },
             gauge={
-                "axis": {"range": [1500, 4000], "dtick": 500},
-                "bar": {"color": "#84659C"},
+                "axis": {"range": [1500, 4000], "dtick": 625},
+                "bar": {"color": "blue"},
                 "steps": [
-                    {"range": [1500, 2000], "color": "blue"},
-                    {"range": [2000, 2500], "color": "green"},
-                    {"range": [2500, 3000], "color": "yellow"},
-                    {"range": [3000, 3500], "color": "orange"},
-                    {"range": [3500, 4000], "color": "red"},
+                    {"range": [1500, 2125], "color": "green"},
+                    {"range": [2125, 2750], "color": "yellow"},
+                    {"range": [2750, 3375], "color": "orange"},
+                    {"range": [3375, 4000], "color": "red"},
                 ]
             }
         ))
@@ -484,14 +482,13 @@ if selected_tab == "Home":
                 "font": {"size": 12}  # Adjust the font size here
             },
             gauge={
-                "axis": {"range": [0, 1250], "dtick": 250},
-                "bar": {"color": "#84659C"},
+                "axis": {"range": [0, 1250], "dtick": 312.5},
+                "bar": {"color": "blue"},
                 "steps": [
-                    {"range": [0, 250], "color": "blue"},
-                    {"range": [250, 500], "color": "green"},
-                    {"range": [500, 750], "color": "yellow"},
-                    {"range": [750, 1000], "color": "orange"},
-                    {"range": [1000, 1250], "color": "red"},
+                    {"range": [0, 312.5], "color": "green"},
+                    {"range": [312.5, 625], "color": "yellow"},
+                    {"range": [625, 937.5], "color": "orange"},
+                    {"range": [937.5, 1250], "color": "red"},
                 ]
             }
         ))
@@ -511,14 +508,13 @@ if selected_tab == "Home":
                 "font": {"size": 12}  # Adjust the font size here
             },
             gauge={
-                "axis": {"range": [1000, 3500], "dtick": 500},
-                "bar": {"color": "#84659C"},
+                "axis": {"range": [1000, 3500], "dtick": 625},
+                "bar": {"color": "blue"},
                 "steps": [
-                    {"range": [1000, 1500], "color": "blue"},
-                    {"range": [1500, 2000], "color": "green"},
-                    {"range": [2000, 2500], "color": "yellow"},
-                    {"range": [2500, 3000], "color": "orange"},
-                    {"range": [3000, 3500], "color": "red"},
+                    {"range": [1000, 1625], "color": "green"},
+                    {"range": [1625, 2250], "color": "yellow"},
+                    {"range": [2250, 2875], "color": "orange"},
+                    {"range": [2875, 3500], "color": "red"},
                 ]
             }
         ))
@@ -538,14 +534,13 @@ if selected_tab == "Home":
                 "font": {"size": 12}  # Adjust the font size here
             },
             gauge={
-                "axis": {"range": [0, 500], "dtick": 100},
-                "bar": {"color": "#84659C"},
+                "axis": {"range": [0, 500], "dtick": 125},
+                "bar": {"color": "blue"},
                 "steps": [
-                    {"range": [0, 100], "color": "blue"},
-                    {"range": [100, 200], "color": "green"},
-                    {"range": [200, 300], "color": "yellow"},
-                    {"range": [300, 400], "color": "orange"},
-                    {"range": [400, 500], "color": "red"},
+                    {"range": [0, 125], "color": "green"},
+                    {"range": [125, 250], "color": "yellow"},
+                    {"range": [250, 375], "color": "orange"},
+                    {"range": [375, 500], "color": "red"},
                 ]
             }
         ))
@@ -587,8 +582,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 20px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Sale Price</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_sale_price:,.2f}</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Average Sale Price</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${average_sale_price:,.2f}</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -599,8 +594,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Sale Price</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_sale_price:,.2f}</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Median Sale Price</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${median_sale_price:,.2f}</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -611,8 +606,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Total Sales</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">{number_of_properties}</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Total Sales</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">{number_of_properties}</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -623,8 +618,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Minimum Sale Price</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${min_sale_price:,.2f}</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Minimum Sale Price</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${min_sale_price:,.2f}</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -635,8 +630,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Maximum Sale Price</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${max_sale_price:,.2f}</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Maximum Sale Price</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${max_sale_price:,.2f}</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -647,8 +642,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Ground Floor (per sq ft)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_ground:,.2f}/ft²</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Average Price of Ground Floor (per sq ft)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_ground:,.2f}/ft²</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -659,8 +654,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Ground Floor (per sq ft) </h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_ground:,.2f}/ft²</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Median Price of Ground Floor (per sq ft) </h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_ground:,.2f}/ft²</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -671,8 +666,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #61A7B4; border-radius: 5px; padding: 5px; text-align: center;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Average Price of Basement Floor (per sq ft)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_basement:,.2f}/ft²</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Average Price of Basement Floor (per sq ft)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${average_price_per_sqft_basement:,.2f}/ft²</h2>
             </div>
             """,
             unsafe_allow_html=True,
@@ -683,8 +678,8 @@ if selected_tab == "Home":
         st.markdown(
             f"""
             <div style="background-color: #2E727D; border-radius: 5px; padding: 5px; text-align: center; margin-bottom: 50px;">
-                <h3 style="font-size: 15px; padding-top: 25px; padding: 1px;">Median Price of Basement Floor (per sq ft)</h3>
-                <h2 style="font-size: 30px; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_basement:,.2f}/ft²</h2>
+                <h3 style="font-size: 15px; color: white; padding-top: 25px; padding: 1px;">Median Price of Basement Floor (per sq ft)</h3>
+                <h2 style="font-size: 30px; color: white; padding-bottom: 25px; padding: 1px;">${median_price_per_sqft_basement:,.2f}/ft²</h2>
             </div>
             """,
             unsafe_allow_html=True,
