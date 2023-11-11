@@ -96,21 +96,12 @@ Ready to explore another category? Simply click on the tab of your choice and em
 
 ### Explore a graph
 
-**Zooming In:**
-For a closer look at a specific area within a graph, single-click your starting point, drag your cursor towards the desired ending point, and release.
-
-**Resetting the View:**
-To return to the original view, simply double-click anywhere on the graph. This user-friendly feature is consistent across all graph interactions.
-
 **Moving the Graph:**
 For adjusting the position of the graph, navigate to the top right corner and click on the icon featuring four arrows. Hold the click and move your mouse to explore specific areas of interest.
-
-**Selecting Bars in Bar Graphs:**
-To select individual bars in a bar graph, click on the dotted square icon, and then hold and move your mouse to encompass the desired bars.
-
-**Selecting Data Points in Scatter Plots:**
-For pinpointing specific data points in a scatter plot, click on the oval-shaped icon. Hold the click and move your mouse to highlight the data points you wish to select.
-
+**Selecting Bars in Bar/Histogram Graphs:**
+To select certain bars in a bar/histogram graph, click on the dotted square icon, and then hold and move your mouse to encompass the desired bars. To go back to original view, double click on the graph.
+**Selecting Specific Legend Entry in Bar/Histogram Graphs:**
+To select a specific legend entry to look at the information for that entry in a bar/histogram graph, double click on an entry you want to explore, which will show you only the data of that entry. To go back to original view, double click on the legend.
 **Zooming In and Out:**
 Enabling zoom functionality is a breeze. Click on the square icon with a plus sign to zoom in, or the square with a minus sign to zoom out.
 
