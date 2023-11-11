@@ -21,8 +21,17 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 - **Price and Sale Summary:** The Price and Sale Summary delivers a snapshot of the real estate landscape in Ames. It encompasses essential indicators such as the average and median sale prices, total sales count, as well as the minimum and maximum sale prices, offering a comprehensive overview of the market's dynamics. Additionally, insights into the average price per square foot for both ground and basement areas provide a nuanced perspective on pricing trends, empowering users to make informed decisions in the real estate domain.
 - **Neighborhood Analysis:** The Neighborhood Analysis section illuminates key aspects of Ames' various neighborhoods. Through dynamic visualizations, users can discern the frequency of different neighborhoods and gain insights into their popularity. Furthermore, the analysis extends to average sale prices across neighborhoods, aiding in the identification of areas with distinct market characteristics. The presentation of the top 10 neighborhoods by average sale price offers a quick reference to areas where property values may exhibit unique trends, facilitating a deeper understanding of the local real estate landscape.
 
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/37c455f5-940c-41c0-acc4-a728d12e8126)
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/c12e18a5-1cb7-4528-ad3f-8cde53800c29)
+### Key Features:
+
+(at 50% zoom view)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/7206fac5-5c9f-4006-9a0d-4a829e24881f)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/9b12b2ff-aa1f-48cd-a371-2c0d68e6189b)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/df424f08-9989-4025-9684-97112f86ce12)
+(at 33% zoom view)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/57eb5455-58f6-4f40-9dcc-1ce4a838ad27)
+
+
+
 - In the second dropdown menu, the selected variable is 'Building Class,' utilized for the x-axis. Two stacked bar charts are presented: one illustrating the frequency of each building class value, and the other displaying the sale prices associated with each building class value.
 - The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.Certain neighborhoods are absent from specific values within the graphs due to their absence in the dataset.
 
