@@ -16,6 +16,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 
 ### Key Features
 
+- **Data Preview:** An expandable section displays a preview of the loaded dataset, allowing users to quickly assess its structure.
 - **About Ames:** The About Ames section provides a succinct overview of the city's background. Nestled in Story County, Iowa, Ames is recognized for its central location, situated approximately 30 miles north of Des Moines. Notably, it serves as the home of Iowa State University, a key hub of education and innovation. The summary offers a glimpse into Ames' significance, emphasizing its role as a vibrant community with cultural and academic richness.
 - **Geographical and Home Value Summary:** The Geographical and Home Value Summary offers a concise overview of Ames, Iowa. It is a city situated in Story County, centrally located in Iowa and recognized as the home of Iowa State University. The summary touches upon general population trends, the median home value during a specific timeframe, and provides a glimpse into the geographical aspects of Ames, allowing for a quick understanding of its character and significance.
 - **Crime Rate Summary:** The Crime Rate Summary provides a quick understanding of the safety landscape in Ames, Iowa. It presents key crime rates per 100,000 people in 2010, including metrics for murder, rape, robbery, assault, property crime, burglary, larceny, and auto theft. This succinct summary serves as an essential reference, allowing users to assess and compare crime trends within the community at a glance.
@@ -30,11 +31,16 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/df424f08-9989-4025-9684-97112f86ce12)
 (at 33% zoom view)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/57eb5455-58f6-4f40-9dcc-1ce4a838ad27)
-
-
-
-- In the second dropdown menu, the selected variable is 'Building Class,' utilized for the x-axis. Two stacked bar charts are presented: one illustrating the frequency of each building class value, and the other displaying the sale prices associated with each building class value.
-- The first dropdown menu provides a selection of neighborhoods, enabling users to pick specific neighborhoods for their analysis. These neighborhoods are conveniently labeled on the right side of each graph, with distinct colors corresponding to each one. On the graphs, they are clearly presented beneath each value in the stacked bar charts.Certain neighborhoods are absent from specific values within the graphs due to their absence in the dataset.
+The "Property and Building Analysis" section provides a comprehensive exploration of the dataset, offering valuable insights into property features and building classifications. Key components include:
+- **Building Class Explanation Table:** A table enumerates various building classes with clear explanations, aiding users in understanding the significance of each class.
+- **Distribution of Building Classes:** A dynamic pie chart illustrates the distribution of building classes based on their counts, providing an overview of the dataset's composition.
+- **Sliders:** Users can look at, filter, and explore each graph and their characteristics through a dropdown containing specific variables and interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
+- **Building Class Filtering:** Users can select specific building classes and explore their characteristics through interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
+- **Neighborhood Analysis:** Stacked bar charts highlight the top neighborhoods based on selected building features, offering insights into how these features are distributed across different areas.
+**Property Assessment Metrics:** Users can assess property features like material quality, condition ratings, and fireplace quality. Stacked bar charts showcase the frequency of these features in the top neighborhoods, providing a nuanced understanding.
+**Dwelling and Unique Features:** Analysis extends to dwelling types and unique features such as pool quality and fence quality. Stacked bar charts reveal feature distribution in the top neighborhoods within specified price and date ranges.
+**Gauge Charts:** Gauge charts offer a visual representation of average quality and condition ratings, enhancing the overall understanding of property assessments.
+This section empowers users to delve into the dataset, explore building classes, assess property features, and gain neighborhood-specific insights for informed decision-making in real estate analysis.
 
 ## How to run the project
 
