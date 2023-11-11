@@ -13,7 +13,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 
 - Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
 
-### Key Features:
+### Key Features
 
 - **About Ames:** The About Ames section provides a succinct overview of the city's background. Nestled in Story County, Iowa, Ames is recognized for its central location, situated approximately 30 miles north of Des Moines. Notably, it serves as the home of Iowa State University, a key hub of education and innovation. The summary offers a glimpse into Ames' significance, emphasizing its role as a vibrant community with cultural and academic richness.
 - **Geographical and Home Value Summary:** The Geographical and Home Value Summary offers a concise overview of Ames, Iowa. It is a city situated in Story County, centrally located in Iowa and recognized as the home of Iowa State University. The summary touches upon general population trends, the median home value during a specific timeframe, and provides a glimpse into the geographical aspects of Ames, allowing for a quick understanding of its character and significance.
@@ -21,7 +21,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 - **Price and Sale Summary:** The Price and Sale Summary delivers a snapshot of the real estate landscape in Ames. It encompasses essential indicators such as the average and median sale prices, total sales count, as well as the minimum and maximum sale prices, offering a comprehensive overview of the market's dynamics. Additionally, insights into the average price per square foot for both ground and basement areas provide a nuanced perspective on pricing trends, empowering users to make informed decisions in the real estate domain.
 - **Neighborhood Analysis:** The Neighborhood Analysis section illuminates key aspects of Ames' various neighborhoods. Through dynamic visualizations, users can discern the frequency of different neighborhoods and gain insights into their popularity. Furthermore, the analysis extends to average sale prices across neighborhoods, aiding in the identification of areas with distinct market characteristics. The presentation of the top 10 neighborhoods by average sale price offers a quick reference to areas where property values may exhibit unique trends, facilitating a deeper understanding of the local real estate landscape.
 
-### Key Features:
+### Property and Building Analysis Page
 
 (at 50% zoom view)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/7206fac5-5c9f-4006-9a0d-4a829e24881f)
