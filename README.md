@@ -34,7 +34,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 The Property and Building Analysis section provides a comprehensive exploration of the dataset, offering valuable insights into property features and building classifications. Key components include:
 - **Building Class Explanation Table:** A table enumerates various building classes with clear explanations, aiding users in understanding the significance of each class.
 - **Distribution of Building Classes:** A dynamic pie chart illustrates the distribution of building classes based on their counts, providing an overview of the dataset's composition.
-- **Sliders:** Users can look at, filter, and explore each graph and their characteristics through a dropdown containing specific variables and interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
+- **Dropdown and Sliders:** Users can look at, filter, and explore each graph and their characteristics through a dropdown containing specific variables and interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
 - **Building Class Filtering:** Users can select specific building classes and explore their characteristics through interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
 - **Neighborhood Analysis:** Stacked bar charts highlight the top neighborhoods based on selected building features, offering insights into how these features are distributed across different areas.
 - **Property Assessment Metrics:** Users can assess property features like material quality, condition ratings, and fireplace quality. Stacked bar charts showcase the frequency of these features in the top neighborhoods, providing a nuanced understanding.
@@ -70,45 +70,36 @@ Run the ames_house_price_dashboard.py file, and you will see the dashboard in yo
 
 ### General use
 
-**Home Page Navigation:**
-To begin exploring the wealth of information on the Ames Housing, simply navigate by clicking on the different tabs. Each tab, except for the home page, is dedicated to a unique category within the Ames Housing dataset.
-
-**Graphical Insights:**
-Inside each tab, you'll find two informative graphs. The first graph depicts the frequency distribution of various variables, while the second graph illustrates the relationship between sale prices and these variables.
-
-**Variable Selection:**
-Tailoring your analysis to specific variables is a breeze. Utilize the second dropdown menu to select the variable of interest. By selecting different variables, you can observe how they influence the graphs.
-
-**Neighborhood Exploration:**
-The first dropdown menu is dedicated to neighborhoods. Here, you can choose and compare different neighborhoods by examining their values within the frequency and sale price graphs.
-
-**Adding and Removing Neighborhoods:**
-Expanding your analysis is simple. To add neighborhoods, click the dropdown, select your desired neighborhoods, and watch the graphs adapt accordingly. Conversely, removing neighborhoods is equally straightforward; just click the 'X' button next to the neighborhood you wish to remove.
-
-**Graph Types:**
-Depending on your variable selections, you'll encounter various graph types. These include stacked bar charts, histograms, and line graphs. The choice of graph type enhances the clarity and depth of insights.
-
-**Interactive Data Points:**
+- **Home Page Navigation:**
+To begin exploring different information on the Ames House Price Dashboard, simply click on the arrow button on the top left hand corner and go through each tab.
+- **Data Preview**
+Every page has a data preview section where you can click on it to see a table containing the data from the dataset used for the dashboard.
+- **Graphical Insights:**
+Inside each tab, you'll find sections with different graphs. 
+- **Variable Selection:**
+Tailoring your analysis to specific variables is a breeze. In each section of each page, utilize the dropdown menu to select the variable of interest. By selecting different variables, you can observe how they influence the graphs.
+- **Sliders:**
+You can look at, filter, and explore each graph and their characteristics through the three interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
+- **Graph Types:**
+Depending on the section and variables, you'll encounter various graph types. These include stacked bar charts, histograms, and line graphs. The choice of graph type enhances the clarity and depth of insights.
+- **Interactive Data Points:**
 Dive deeper into the specifics of each data point or bar. Hover your cursor over them, and detailed information, such as neighborhood, x-axis, and y-axis values, will be readily displayed.
-
-**Exploration at Your Fingertips:**
+- **Exploration at Your Fingertips:**
 Ready to explore another category? Simply click on the tab of your choice and embark on your journey of discovery. The wealth of information within the Ames Housing dataset is right at your fingertips!
 
 ### Explore a graph
 
-**Moving the Graph:**
+- **Moving the Graph:**
 For adjusting the position of the graph, navigate to the top right corner and click on the icon featuring four arrows. Hold the click and move your mouse to explore specific areas of interest.
-**Selecting Bars in Bar/Histogram Graphs:**
+- **Selecting Bars in Bar/Histogram Graphs:**
 To select certain bars in a bar/histogram graph, click on the dotted square icon, and then hold and move your mouse to encompass the desired bars. To go back to original view, double click on the graph.
-**Selecting Specific Legend Entry in Bar/Histogram Graphs:**
+- **Selecting Specific Legend Entry in Bar/Histogram Graphs:**
 To select a specific legend entry to look at the information for that entry in a bar/histogram graph, double click on an entry you want to explore, which will show you only the data of that entry. To go back to original view, double click on the legend.
-**Zooming In and Out:**
+- **Zooming In and Out:**
 Enabling zoom functionality is a breeze. Click on the square icon with a plus sign to zoom in, or the square with a minus sign to zoom out.
-
-**Viewing Data Point Details:**
+- **Viewing Data Point Details:**
 To access specific value descriptions on the graph, hover over the data point of interest. A display box will appear, containing relevant information such as neighborhood, x-axis, and y-axis values.
-
-**Customizing Neighborhood Display:**
+- **Customizing Neighborhood Display:**
 Tailor your graph's presentation by choosing which neighborhoods to include or exclude. In the legend on the right side of the graph, simply click on the neighborhoods you wish to hide or reveal. Effortlessly refine your visualizations to meet your needs.
 
 ## Contributions
