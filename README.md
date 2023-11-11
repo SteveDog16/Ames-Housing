@@ -31,7 +31,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/df424f08-9989-4025-9684-97112f86ce12)
 (at 33% zoom view)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/57eb5455-58f6-4f40-9dcc-1ce4a838ad27)
-The "Property and Building Analysis" section provides a comprehensive exploration of the dataset, offering valuable insights into property features and building classifications. Key components include:
+The Property and Building Analysis section provides a comprehensive exploration of the dataset, offering valuable insights into property features and building classifications. Key components include:
 - **Building Class Explanation Table:** A table enumerates various building classes with clear explanations, aiding users in understanding the significance of each class.
 - **Distribution of Building Classes:** A dynamic pie chart illustrates the distribution of building classes based on their counts, providing an overview of the dataset's composition.
 - **Sliders:** Users can look at, filter, and explore each graph and their characteristics through a dropdown containing specific variables and interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
@@ -44,8 +44,19 @@ This section empowers users to delve into the dataset, explore building classes,
 - **Indoor Size:** The Indoor Size section empowers users to investigate features such as finished basement area. Through sliders for price, construction date, and remodel date, users can tailor their analysis. The section presents graphs that unveil insights into top neighborhoods and the distribution of basement and ground floor variables.
 - **Outdoor Size:** In the Outdoor Size section, users can delve into features like lot size, utilizing sliders for price, construction date, and remodel date. Informative charts visually represent top neighborhoods and the distribution of porch counts, providing a comprehensive exploration experience.
 
-## How to run the project
+### Sales Analysis Page
+The "Sales Analysis" section provides a comprehensive exploration of the dataset, offering valuable insights into property sales trends, average prices, and construction/remodel dates.
+- **Price Range Slider:** Dynamically filter sales data based on specified price ranges, allowing users to focus their analysis on properties within their desired financial scope.
+- **Original Construction Date and Remodel Date Sliders:** Filter properties based on the original construction and remodel dates, offering insights into how these factors influence sales frequencies and average sale prices over time.
+- **Neighborhood Dropdown:** Select specific neighborhoods for a detailed analysis of sales trends, providing valuable insights into how different areas contribute to overall market dynamics.
+- **Charts for Original Construction and Remodel Dates:** Visualize the frequency of property sales over time, segmented by original construction and remodel dates. Scatter plots complement line charts to enhance data interpretation.
+- **Charts for Average Sale Prices Over Time:** Explore trends in average sale prices over time, both for the entire dataset and specific neighborhoods. Scatter plots provide additional data points for a more comprehensive analysis.
+**Charts for Original Construction Date and Remodel Date by Neighborhood:** Drill down into specific neighborhoods to analyze how original construction dates and remodel dates influence average sale prices, providing localized insights.
+**Month and Year Sold Frequency Charts:** Examine the frequency of property sales based on the month and year of sale, uncovering seasonal and yearly patterns that contribute to a nuanced understanding of market dynamics.
+**Month and Year Sold Average Sale Price Charts:** Understand the average sale prices over time, both monthly and yearly, allowing users to identify trends and patterns in property values for more informed decision-making.
+**Neighborhood-Specific Analysis:** Conduct in-depth analysis by selecting specific neighborhoods for a detailed exploration of trends in original construction, remodel dates, and average sale prices, tailoring insights to specific geographic areas.
 
+## How to run the project
 Run the ames_house_price_dashboard.py file, and you will see the dashboard in your locally hosted site
 
 ## How to use the Dash application
