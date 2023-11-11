@@ -37,10 +37,12 @@ The "Property and Building Analysis" section provides a comprehensive exploratio
 - **Sliders:** Users can look at, filter, and explore each graph and their characteristics through a dropdown containing specific variables and interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
 - **Building Class Filtering:** Users can select specific building classes and explore their characteristics through interactive sliders, refining the dataset based on price range, original construction date, and remodel date.
 - **Neighborhood Analysis:** Stacked bar charts highlight the top neighborhoods based on selected building features, offering insights into how these features are distributed across different areas.
-**Property Assessment Metrics:** Users can assess property features like material quality, condition ratings, and fireplace quality. Stacked bar charts showcase the frequency of these features in the top neighborhoods, providing a nuanced understanding.
-**Dwelling and Unique Features:** Analysis extends to dwelling types and unique features such as pool quality and fence quality. Stacked bar charts reveal feature distribution in the top neighborhoods within specified price and date ranges.
-**Gauge Charts:** Gauge charts offer a visual representation of average quality and condition ratings, enhancing the overall understanding of property assessments.
+- **Property Assessment Metrics:** Users can assess property features like material quality, condition ratings, and fireplace quality. Stacked bar charts showcase the frequency of these features in the top neighborhoods, providing a nuanced understanding.
+- **Dwelling and Unique Features:** Analysis extends to dwelling types and unique features such as pool quality and fence quality. Stacked bar charts reveal feature distribution in the top neighborhoods within specified price and date ranges.
+- **Gauge Charts:** Gauge charts offer a visual representation of average quality and condition ratings, enhancing the overall understanding of property assessments.
 This section empowers users to delve into the dataset, explore building classes, assess property features, and gain neighborhood-specific insights for informed decision-making in real estate analysis.
+- **Indoor Size:** The Indoor Size section empowers users to investigate features such as finished basement area. Through sliders for price, construction date, and remodel date, users can tailor their analysis. The section presents graphs that unveil insights into top neighborhoods and the distribution of basement and ground floor variables.
+- **Outdoor Size:** In the Outdoor Size section, users can delve into features like lot size, utilizing sliders for price, construction date, and remodel date. Informative charts visually represent top neighborhoods and the distribution of porch counts, providing a comprehensive exploration experience.
 
 ## How to run the project
 
