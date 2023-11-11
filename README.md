@@ -10,9 +10,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/e5211f6d-8d39-46c4-9201-3faf6c73a6e3)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/b2629f0e-96b7-4234-a456-5a7ce2838db3)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/62858b3c-5c99-4cf7-88d8-240641713556)
-
-
-- Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
+Upon accessing the dashboard, you'll be greeted by a welcoming landing page. This initial view offers a snapshot of valuable information, providing insights into the property dataset.
 
 ### Key Features
 
