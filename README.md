@@ -45,6 +45,13 @@ This section empowers users to delve into the dataset, explore building classes,
 - **Outdoor Size:** In the Outdoor Size section, users can delve into features like lot size, utilizing sliders for price, construction date, and remodel date. Informative charts visually represent top neighborhoods and the distribution of porch counts, providing a comprehensive exploration experience.
 
 ### Sales Analysis Page
+
+(at 50% zoom view)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/8142f9d7-c210-408f-98ca-afc24c01f64c)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/a7c48120-94cb-4bae-9b62-bb7bd548d235)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/530e728c-b7d6-43fd-bf2c-18c0dcf7bea4)
+
+
 The "Sales Analysis" section provides a comprehensive exploration of the dataset, offering valuable insights into property sales trends, average prices, and construction/remodel dates.
 - **Price Range Slider:** Dynamically filter sales data based on specified price ranges, allowing users to focus their analysis on properties within their desired financial scope.
 - **Original Construction Date and Remodel Date Sliders:** Filter properties based on the original construction and remodel dates, offering insights into how these factors influence sales frequencies and average sale prices over time.
