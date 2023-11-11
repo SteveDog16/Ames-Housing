@@ -58,10 +58,10 @@ The "Sales Analysis" section provides a comprehensive exploration of the dataset
 - **Neighborhood Dropdown:** Select specific neighborhoods for a detailed analysis of sales trends, providing valuable insights into how different areas contribute to overall market dynamics.
 - **Charts for Original Construction and Remodel Dates:** Visualize the frequency of property sales over time, segmented by original construction and remodel dates. Scatter plots complement line charts to enhance data interpretation.
 - **Charts for Average Sale Prices Over Time:** Explore trends in average sale prices over time, both for the entire dataset and specific neighborhoods. Scatter plots provide additional data points for a more comprehensive analysis.
-**Charts for Original Construction Date and Remodel Date by Neighborhood:** Drill down into specific neighborhoods to analyze how original construction dates and remodel dates influence average sale prices, providing localized insights.
-**Month and Year Sold Frequency Charts:** Examine the frequency of property sales based on the month and year of sale, uncovering seasonal and yearly patterns that contribute to a nuanced understanding of market dynamics.
-**Month and Year Sold Average Sale Price Charts:** Understand the average sale prices over time, both monthly and yearly, allowing users to identify trends and patterns in property values for more informed decision-making.
-**Neighborhood-Specific Analysis:** Conduct in-depth analysis by selecting specific neighborhoods for a detailed exploration of trends in original construction, remodel dates, and average sale prices, tailoring insights to specific geographic areas.
+- **Charts for Original Construction Date and Remodel Date by Neighborhood:** Drill down into specific neighborhoods to analyze how original construction dates and remodel dates influence average sale prices, providing localized insights.
+- **Month and Year Sold Frequency Charts:** Examine the frequency of property sales based on the month and year of sale, uncovering seasonal and yearly patterns that contribute to a nuanced understanding of market dynamics.
+- **Month and Year Sold Average Sale Price Charts:** Understand the average sale prices over time, both monthly and yearly, allowing users to identify trends and patterns in property values for more informed decision-making.
+- **Neighborhood-Specific Analysis:** Conduct in-depth analysis by selecting specific neighborhoods for a detailed exploration of trends in original construction, remodel dates, and average sale prices, tailoring insights to specific geographic areas.
 
 ## How to run the project
 Run the ames_house_price_dashboard.py file, and you will see the dashboard in your locally hosted site
