@@ -28,7 +28,7 @@ Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess
 
 ## How to run the project
 
-Run the ames_analytics_final_draft.py file, and you will see the dashboard in your locally hosted site
+Run the ames_house_price_dashboard.py file, and you will see the dashboard in your locally hosted site
 
 ## How to use the Dash application
 
