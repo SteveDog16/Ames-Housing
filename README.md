@@ -5,7 +5,8 @@ Utilized Kaggle's extensive dataset to conduct a comprehensive analysis of housi
 Primary Objective: Empower individuals seeking residence in Ames, Iowa to assess neighborhood characteristics and make informed decisions on their choice of residence, guided by the frequency and sale prices of these characteristics within each neighborhood.
 
 ## Dashboard Landing Page
-![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/483d62d4-d929-42ad-8555-f8f0f201209b)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/0ea5fcb3-2f04-4fd8-822c-479b57ea1348)
+![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/291ec525-c1dd-4343-8431-033e1b74876b)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/e5211f6d-8d39-46c4-9201-3faf6c73a6e3)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/b2629f0e-96b7-4234-a456-5a7ce2838db3)
 ![image](https://github.com/SteveDog16/Ames-Housing/assets/96502117/62858b3c-5c99-4cf7-88d8-240641713556)
