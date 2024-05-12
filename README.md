@@ -108,7 +108,7 @@ I want to express my gratitude to my fellow mentor, Charlie, for his invaluable 
 https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
 
 ## Links to external sources used for the key features section
-- https://en.wikipedia.org/wiki/Ames,_Iowa (About Ames)
-- https://medium.com/@ying.geng5/house-price-analysis-of-ames-iowa-2006-2010-66e307f836f#:~:text=The%20median%20sale%20price%20for,cheaper%20than%20the%20national%20average. (Median Home Value)
-- https://www.census.gov/quickfacts/fact/table/amescityiowa# (Population)
-- https://www.bestplaces.net/crime/city/iowa/ames (Crime Rates)
+- https://en.wikipedia.org/wiki/Ames,_Iowa (for About Ames)
+- https://medium.com/@ying.geng5/house-price-analysis-of-ames-iowa-2006-2010-66e307f836f#:~:text=The%20median%20sale%20price%20for,cheaper%20than%20the%20national%20average. (for Median Home Value)
+- https://www.census.gov/quickfacts/fact/table/amescityiowa# (for Population)
+- https://www.bestplaces.net/crime/city/iowa/ames (for Crime Rates)
